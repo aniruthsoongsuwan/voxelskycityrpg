@@ -1,0 +1,2926 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aetheris: Voxel Sky City RPG — ผจญภัยในเมืองลอยฟ้า</title>
+  <style>
+    :root {
+      --bg-dark: #0b1021;
+      --panel-bg: rgba(15, 23, 42, 0.84);
+      --panel-border: rgba(148, 163, 184, 0.25);
+      --ink: #f8fafc;
+      --muted: #94a3b8;
+      --brand: #38bdf8;
+      --brand-glow: rgba(56, 189, 248, 0.35);
+      --accent: #f59e0b;
+      --hp: #ef4444;
+      --mp: #3b82f6;
+      --exp: #10b981;
+      --radius: 12px;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans Thai", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg-dark);
+      font-family: var(--font);
+      color: var(--ink);
+    }
+
+    #game-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    #game-canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+      touch-action: none;
+    }
+
+    #game-canvas:active {
+      cursor: grabbing;
+    }
+
+    /* HUD Overlay Layer */
+    .hud-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+      z-index: 10;
+    }
+
+    .hud-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .panel {
+      background: var(--panel-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      pointer-events: auto;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.45);
+    }
+
+    /* Player Status Card */
+    .hero-card {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 270px;
+    }
+
+    .hero-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .hero-identity {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .voxel-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #38bdf8, #6366f1);
+      border: 2px solid #e0f2fe;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 16px;
+      color: #fff;
+      box-shadow: 0 0 12px var(--brand-glow);
+    }
+
+    .hero-title {
+      font-weight: 700;
+      font-size: 15px;
+      line-height: 1.2;
+    }
+
+    .hero-subtitle {
+      font-size: 12px;
+      color: var(--brand);
+      font-weight: 600;
+    }
+
+    .gold-badge {
+      background: rgba(245, 158, 11, 0.16);
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      color: #fcd34d;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .stat-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .stat-label {
+      width: 34px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .bar-track {
+      flex: 1;
+      height: 10px;
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.25s ease;
+    }
+
+    .bar-hp { background: linear-gradient(90deg, #dc2626, #f87171); }
+    .bar-mp { background: linear-gradient(90deg, #2563eb, #60a5fa); }
+    .bar-exp { background: linear-gradient(90deg, #059669, #34d399); }
+
+    .stat-val {
+      width: 64px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      font-size: 11px;
+      color: #cbd5e1;
+    }
+
+    .hero-attributes {
+      display: flex;
+      gap: 12px;
+      padding-top: 4px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 12px;
+      color: #cbd5e1;
+    }
+
+    .hero-attributes span strong {
+      color: #fff;
+    }
+
+    /* Center Top Zone Bar */
+    .zone-banner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .zone-pill {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      pointer-events: auto;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+    }
+
+    .zone-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #38bdf8;
+      box-shadow: 0 0 8px #38bdf8;
+    }
+
+    .toolbar-btns {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+      pointer-events: auto;
+    }
+
+    .btn-chip {
+      background: rgba(15, 23, 42, 0.8);
+      color: #e2e8f0;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      border-radius: 8px;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-chip:hover {
+      background: rgba(56, 189, 248, 0.2);
+      border-color: var(--brand);
+      color: #fff;
+    }
+
+    .btn-chip.active {
+      background: rgba(56, 189, 248, 0.28);
+      border-color: var(--brand);
+      color: #38bdf8;
+    }
+
+    /* Right Panel: Minimap & Quests */
+    .right-hud {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-end;
+      max-width: 290px;
+    }
+
+    .minimap-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    #minimap-canvas {
+      width: 112px;
+      height: 112px;
+      border-radius: 10px;
+      border: 2px solid rgba(56, 189, 248, 0.45);
+      background: #070b19;
+    }
+
+    .quest-card {
+      width: 280px;
+    }
+
+    .quest-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .quest-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 12px;
+    }
+
+    .quest-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 7px;
+      line-height: 1.35;
+      color: #e2e8f0;
+      padding: 4px 6px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .quest-item.done {
+      color: #64748b;
+      text-decoration: line-through;
+    }
+
+    .quest-check {
+      width: 15px;
+      height: 15px;
+      border-radius: 4px;
+      border: 1.5px solid #38bdf8;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .quest-item.done .quest-check {
+      background: #10b981;
+      border-color: #10b981;
+      color: #052e16;
+    }
+
+    /* Interaction Prompt */
+    #interact-prompt {
+      position: absolute;
+      left: 50%;
+      bottom: 132px;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.92);
+      border: 1.5px solid #38bdf8;
+      color: #fff;
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+      pointer-events: auto;
+      cursor: pointer;
+      z-index: 15;
+      animation: floatPulse 1.6s infinite ease-in-out;
+    }
+
+    @keyframes floatPulse {
+      0%, 100% { transform: translate(-50%, 0); }
+      50% { transform: translate(-50%, -4px); }
+    }
+
+    .key-badge {
+      background: #38bdf8;
+      color: #0f172a;
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    /* Dialogue / Shop Modal */
+    #dialogue-box {
+      position: absolute;
+      left: 50%;
+      bottom: 120px;
+      transform: translateX(-50%);
+      width: min(560px, 92vw);
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 25;
+      border-color: rgba(56, 189, 248, 0.55);
+    }
+
+    .dlg-speaker {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 800;
+      color: #38bdf8;
+      font-size: 15px;
+    }
+
+    .dlg-text {
+      font-size: 14px;
+      line-height: 1.55;
+      color: #f1f5f9;
+    }
+
+    .dlg-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      margin-top: 4px;
+    }
+
+    .btn-action {
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.1s ease, filter 0.15s ease;
+    }
+
+    .btn-action:hover {
+      filter: brightness(1.12);
+    }
+
+    .btn-action.secondary {
+      background: rgba(51, 65, 85, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    /* Bottom Action Bar & Controls */
+    .hud-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+    }
+
+    /* Virtual Joystick for Touch / Mouse */
+    .joystick-zone {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: rgba(15, 23, 42, 0.65);
+      border: 2px solid rgba(148, 163, 184, 0.3);
+      position: relative;
+      pointer-events: auto;
+      touch-action: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .joystick-knob {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #7dd3fc, #0284c7);
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.6);
+      position: absolute;
+      pointer-events: none;
+      transition: transform 0.05s linear;
+    }
+
+    .joystick-hint {
+      position: absolute;
+      bottom: -20px;
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* Skill & Inventory Hotbar */
+    .hotbar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      padding: 8px 12px;
+    }
+
+    .slot-btn {
+      width: 58px;
+      height: 58px;
+      border-radius: 12px;
+      background: rgba(30, 41, 59, 0.92);
+      border: 1.5px solid rgba(148, 163, 184, 0.4);
+      color: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      cursor: pointer;
+      position: relative;
+      font-family: inherit;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform 0.1s ease, background 0.1s ease, border-color 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    #act-attack {
+      background: linear-gradient(145deg, rgba(2, 132, 199, 0.45), rgba(30, 41, 59, 0.95));
+      border-color: rgba(56, 189, 248, 0.7);
+    }
+
+    #act-skill {
+      background: linear-gradient(145deg, rgba(124, 58, 237, 0.45), rgba(30, 41, 59, 0.95));
+      border-color: rgba(167, 139, 250, 0.7);
+    }
+
+    .slot-btn:hover {
+      border-color: var(--brand);
+      transform: translateY(-2px);
+      background: rgba(56, 189, 248, 0.22);
+    }
+
+    .slot-btn:active,
+    .slot-btn.active-press {
+      transform: scale(0.92);
+      border-color: #38bdf8;
+      background: rgba(56, 189, 248, 0.45) !important;
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.75);
+    }
+
+    .slot-key {
+      position: absolute;
+      top: 3px;
+      left: 5px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #94a3b8;
+    }
+
+    .slot-count {
+      position: absolute;
+      bottom: 3px;
+      right: 5px;
+      font-size: 10px;
+      font-weight: 800;
+      color: #fcd34d;
+    }
+
+    .slot-icon {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .slot-name {
+      font-size: 10px;
+      color: #cbd5e1;
+      font-weight: 600;
+    }
+
+    .controls-legend {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.5;
+      max-width: 230px;
+    }
+
+    .controls-legend strong {
+      color: #e2e8f0;
+    }
+
+    /* Floating Combat / Event Text */
+    #floating-labels {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 12;
+    }
+
+    .float-text {
+      position: absolute;
+      font-weight: 800;
+      font-size: 14px;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.85);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      transition: opacity 0.2s;
+      white-space: nowrap;
+    }
+
+    .npc-tag {
+      position: absolute;
+      transform: translate(-50%, -100%);
+      background: rgba(15, 23, 42, 0.82);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #f8fafc;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .npc-tag.enemy {
+      border-color: rgba(239, 68, 68, 0.65);
+      color: #fca5a5;
+    }
+
+    .npc-tag.quest {
+      border-color: rgba(245, 158, 11, 0.7);
+      color: #fde68a;
+    }
+
+    .npc-tag.boss {
+      border-color: rgba(236, 72, 153, 0.9);
+      background: rgba(80, 7, 36, 0.9);
+      color: #fbcfe8;
+      font-size: 12px;
+      padding: 3px 10px;
+      box-shadow: 0 0 12px rgba(236, 72, 153, 0.6);
+    }
+
+    /* Stage Complete & Airship Cutscene Banner */
+    #airship-ready-banner {
+      position: absolute;
+      top: 96px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 58, 138, 0.92));
+      border: 2px solid #fbbf24;
+      border-radius: 14px;
+      padding: 10px 20px;
+      display: none;
+      align-items: center;
+      gap: 14px;
+      z-index: 22;
+      pointer-events: auto;
+      box-shadow: 0 0 28px rgba(251, 191, 36, 0.45);
+      animation: floatPulse 1.8s infinite ease-in-out;
+    }
+
+    .airship-banner-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .airship-banner-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #fde047;
+    }
+
+    .airship-banner-sub {
+      font-size: 12px;
+      color: #e2e8f0;
+    }
+
+    .btn-board-airship {
+      background: linear-gradient(135deg, #f59e0b, #ea580c);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 8px 16px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.5);
+      transition: transform 0.12s ease, filter 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .btn-board-airship:hover {
+      filter: brightness(1.12);
+      transform: scale(1.04);
+    }
+
+    /* Cinematic Cutscene Overlay */
+    #cutscene-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 30;
+    }
+
+    .cutscene-bar {
+      width: 100%;
+      height: 68px;
+      background: rgba(2, 6, 23, 0.92);
+      border-bottom: 1px solid rgba(56, 189, 248, 0.35);
+       display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 20px;
+    }
+
+    .cutscene-bar.bottom {
+      height: 84px;
+      border-bottom: none;
+      border-top: 1px solid rgba(56, 189, 248, 0.35);
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .cutscene-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #38bdf8;
+      letter-spacing: 0.04em;
+    }
+
+    .cutscene-caption {
+      font-size: 14px;
+      font-weight: 600;
+      color: #f8fafc;
+    }
+
+    /* Invasion Warning Badge */
+    .invasion-pill {
+      background: rgba(127, 29, 29, 0.88);
+      border: 1px solid rgba(248, 113, 113, 0.65);
+      color: #fecaca;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      pointer-events: auto;
+    }
+
+    @media (max-width: 768px) {
+      .controls-legend { display: none; }
+      .hud-top { gap: 8px; }
+      .hero-card { min-width: 175px; padding: 8px 10px; gap: 5px; }
+      .hero-title { font-size: 13px; }
+      .hero-subtitle { font-size: 11px; }
+      .voxel-avatar { width: 30px; height: 30px; font-size: 12px; }
+      .hero-attributes { font-size: 11px; gap: 6px; flex-wrap: wrap; }
+      .zone-pill { padding: 5px 12px; font-size: 12px; }
+      .btn-chip { padding: 4px 8px; font-size: 11px; }
+      .right-hud { max-width: 165px; gap: 6px; }
+      #minimap-canvas { width: 78px; height: 78px; }
+      .quest-card { width: 165px; padding: 8px 10px; }
+      .quest-header { font-size: 11px; margin-bottom: 4px; }
+      .quest-list { font-size: 10px; gap: 4px; }
+      .joystick-zone { width: 96px; height: 96px; flex-shrink: 0; }
+      .joystick-knob { width: 38px; height: 38px; }
+      .joystick-hint { font-size: 10px; bottom: -16px; }
+      .hotbar {
+        display: grid;
+        grid-template-columns: repeat(3, 52px);
+        gap: 6px;
+        padding: 8px;
+      }
+      .slot-btn { width: 52px; height: 52px; }
+      #interact-prompt { bottom: 148px; font-size: 13px; padding: 7px 14px; }
+      #airship-ready-banner {
+        top: 82px;
+        width: 94vw;
+        padding: 8px 12px;
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+      }
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+  <div id="game-container">
+    <canvas id="game-canvas"></canvas>
+    <div id="floating-labels"></div>
+
+    <!-- Interactive Prompt -->
+    <div id="interact-prompt" role="button" tabindex="0">
+      <span class="key-badge">E</span>
+      <span id="interact-text">สนทนา</span>
+    </div>
+
+    <!-- Stage Complete Banner: Board Airship to New Stage -->
+    <div id="airship-ready-banner">
+      <div class="airship-banner-text">
+        <div class="airship-banner-title" id="airship-banner-title">🎉 ภารกิจครบสมบูรณ์! เรือเหาะพร้อมออกเดินทางแล้ว</div>
+        <div class="airship-banner-sub" id="airship-banner-sub">ไปที่ท่าเรือเหาะทิศตะวันออก หรือกดปุ่มเพื่อขึ้นเรือเหาะไปยังเมืองลอยฟ้าด่านใหม่!</div>
+      </div>
+      <button class="btn-board-airship" id="btn-board-airship" type="button">🚢 ขึ้นเรือเหาะไปเมืองใหม่</button>
+    </div>
+
+    <!-- Cinematic Airship Cutscene Overlay -->
+    <div id="cutscene-overlay">
+      <div class="cutscene-bar">
+        <div class="cutscene-title" id="cutscene-title">🚢 เรือเหาะเวหาออกเดินทางสู่ด่านใหม่...</div>
+      </div>
+      <div class="cutscene-bar bottom">
+        <div class="cutscene-caption" id="cutscene-caption">กำลังบินข้ามทะเลเมฆสู่มหานครลอยฟ้าแห่งใหม่!</div>
+      </div>
+    </div>
+
+    <!-- NPC / Quest Dialogue Box -->
+    <div id="dialogue-box" class="panel">
+      <div class="dlg-speaker">
+        <span id="dlg-name">ผู้บัญชาการ เอลดริน</span>
+        <span id="dlg-role" style="font-size: 12px; color: #94a3b8;">ผู้พิทักษ์จัตุรัสเวหา</span>
+      </div>
+      <div class="dlg-text" id="dlg-body">
+        ยินดีต้อนรับสู่ Aetheris เมืองลอยฟ้า Voxel! แกนพลังงานของเมืองกำลังอ่อนแรงลง
+      </div>
+      <div class="dlg-actions" id="dlg-actions"></div>
+    </div>
+
+    <!-- Main HUD -->
+    <div class="hud-layer">
+      <div class="hud-top">
+        <!-- Player Status -->
+        <div class="panel hero-card">
+          <div class="hero-header">
+            <div class="hero-identity">
+              <div class="voxel-avatar" id="hero-lvl-badge">Lv.1</div>
+              <div>
+                <div class="hero-title">นักสำรวจเวหา (Sky Walker)</div>
+                <div class="hero-subtitle" id="hero-weapon-name">ดาบเวหาขั้นต้น +1</div>
+              </div>
+            </div>
+            <div class="gold-badge" title="เหรียญทองเวหา">
+              <span>🪙</span>
+              <span id="gold-val">120</span>
+            </div>
+          </div>
+
+          <div class="stat-row">
+            <span class="stat-label">HP</span>
+            <div class="bar-track"><div class="bar-fill bar-hp" id="hp-bar" style="width: 100%;"></div></div>
+            <span class="stat-val" id="hp-text">120 / 120</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">MP</span>
+            <div class="bar-track"><div class="bar-fill bar-mp" id="mp-bar" style="width: 100%;"></div></div>
+            <span class="stat-val" id="mp-text">60 / 60</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">EXP</span>
+            <div class="bar-track"><div class="bar-fill bar-exp" id="exp-bar" style="width: 0%;"></div></div>
+            <span class="stat-val" id="exp-text">0 / 100</span>
+          </div>
+
+          <div class="hero-attributes">
+            <span>⚔️ โจมตี: <strong id="atk-val">18</strong></span>
+            <span>🛡️ ป้องกัน: <strong id="def-val">6</strong></span>
+            <span>💎 ผลึกเอเธอร์: <strong id="shard-val">0 / 5</strong></span>
+          </div>
+        </div>
+
+        <!-- Center Zone & Atmosphere Controls -->
+        <div class="zone-banner">
+          <div class="zone-pill">
+            <span class="zone-dot"></span>
+            <span id="stage-badge" style="color: #fde047; margin-right: 4px;">[ด่าน 1]</span>
+            <span id="zone-name">จัตุรัสกลางเวหา (Central Sky Plaza)</span>
+          </div>
+          <div class="toolbar-btns">
+            <button class="btn-chip active" id="btn-time-day" type="button">☀️ กลางวัน</button>
+            <button class="btn-chip" id="btn-time-sunset" type="button">🌅 ยามสนธยา</button>
+            <button class="btn-chip" id="btn-time-night" type="button">🌙 ไซเบอร์ไนท์</button>
+            <button class="btn-chip" id="btn-cam-mode" type="button">🎥 มุมกล้อง: ติดตาม</button>
+            <button class="btn-chip" id="btn-spawn-invasion" type="button" style="border-color: rgba(248,113,113,0.6); color: #fca5a5;">👾 เรียกทัพโกเลมบุกเมือง</button>
+          </div>
+        </div>
+
+        <!-- Right HUD: Minimap & Quests -->
+        <div class="right-hud">
+          <div class="panel minimap-wrap">
+            <canvas id="minimap-canvas" width="140" height="140"></canvas>
+          </div>
+          <div class="panel quest-card">
+            <div class="quest-header">
+              <span id="quest-stage-title">📜 ภารกิจด่านที่ 1: นครเอเธอร์ริส</span>
+              <span id="quest-progress-badge">0/4</span>
+            </div>
+            <ul class="quest-list" id="quest-list">
+              <li class="quest-item" id="q-eldrin">
+                <span class="quest-check"></span>
+                <span id="q-eldrin-text">คุยกับผู้บัญชาการ เอลดริน ที่จัตุรัสกลาง</span>
+              </li>
+              <li class="quest-item" id="q-shards">
+                <span class="quest-check"></span>
+                <span id="q-shards-text">รวบรวมผลึกเอเธอร์ลอยฟ้า (<span id="q-shard-count">0</span>/<span id="q-shard-goal">5</span>)</span>
+              </li>
+              <li class="quest-item" id="q-golems">
+                <span class="quest-check"></span>
+                <span id="q-golems-text">ปราบทัพโกเลมบุกเมือง (<span id="q-golem-count">0</span>/<span id="q-golem-goal">6</span>)</span>
+              </li>
+              <li class="quest-item" id="q-beacon">
+                <span class="quest-check"></span>
+                <span id="q-beacon-text">จุดประภาคารและขึ้นเรือเหาะไปด่านใหม่</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom HUD -->
+      <div class="hud-bottom">
+        <div class="joystick-zone" id="joystick-zone">
+          <div class="joystick-knob" id="joystick-knob"></div>
+          <span class="joystick-hint">ลากเพื่อเดิน / WASD</span>
+        </div>
+
+        <div class="panel hotbar">
+          <button class="slot-btn" id="act-attack" type="button" title="โจมตีด้วยดาบเวหา (J หรือ คลิก)">
+            <span class="slot-key">J</span>
+            <span class="slot-icon">⚔️</span>
+            <span class="slot-name">ฟันดาบ</span>
+          </button>
+          <button class="slot-btn" id="act-skill" type="button" title="คลื่นพลังเอเธอร์ (K) ใช้ 15 MP">
+            <span class="slot-key">K</span>
+            <span class="slot-icon">🌀</span>
+            <span class="slot-name">คลื่นเวหา</span>
+          </button>
+          <button class="slot-btn" id="act-jump" type="button" title="กระโดด (Space)">
+            <span class="slot-key">SPC</span>
+            <span class="slot-icon">🪽</span>
+            <span class="slot-name">กระโดด</span>
+          </button>
+          <button class="slot-btn" id="act-dash" type="button" title="พุ่งตัว (Shift)">
+            <span class="slot-key">SHF</span>
+            <span class="slot-icon">⚡</span>
+            <span class="slot-name">พุ่งตัว</span>
+          </button>
+          <button class="slot-btn" id="act-potion" type="button" title="ดื่มยาฟื้นฟู HP (1)">
+            <span class="slot-key">1</span>
+            <span class="slot-icon">🧪</span>
+            <span class="slot-name">ยา HP</span>
+            <span class="slot-count" id="potion-count">x3</span>
+          </button>
+          <button class="slot-btn" id="act-teleport" type="button" title="วาร์ปกลับจัตุรัสกลาง (R)">
+            <span class="slot-key">R</span>
+            <span class="slot-icon">🧭</span>
+            <span class="slot-name">กลับเมือง</span>
+          </button>
+        </div>
+
+        <div class="panel controls-legend">
+          <div><strong>WASD / ลูกศร</strong> : เดินสำรวจเมืองลอยฟ้า</div>
+          <div><strong>ลากเมาส์ / ล้อเมาส์</strong> : หมุนกล้อง 360° / ซูม</div>
+          <div><strong>Space / Shift</strong> : กระโดด / พุ่งตัว</div>
+          <div><strong>J / K / E</strong> : โจมตี / สกิลเอเธอร์ / โต้ตอบ</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // --- Game State & Multi-Stage City System ---
+      const stageThemes = [
+        {
+          stage: 1,
+          name: 'นครเวหาเอเธอร์ริส (Aetheris Sky City)',
+          shortTitle: 'ภารกิจด่านที่ 1: นครเอเธอร์ริส',
+          skyMode: 'day',
+          grassMain: 0x4ade80,
+          grassEast: 0x34d399,
+          grassWest: 0x86efac,
+          grassSouth: 0x6ee7b7,
+          grassNorth: 0x2dd4bf,
+          grassBoss: 0x38bdf8,
+          roofPrimary: 0x2563eb,
+          roofSecondary: 0xd97706,
+          crystalHex: 0x38bdf8,
+          shardGoal: 5,
+          golemGoal: 6,
+          q1Text: 'คุยกับผู้บัญชาการ เอลดริน รับแผนป้องกันเมือง',
+          q2Text: 'รวบรวมผลึกเอเธอร์ซ่อมแกนเมือง',
+          q3Text: 'ปราบทัพโกเลมคลั่งที่บุกเมือง',
+          q4Text: 'จุดประภาคารและขึ้นเรือเหาะไปด่านใหม่'
+        },
+        {
+          stage: 2,
+          name: 'มหานครนีโอ-เซฟีเรีย (Neo-Zephyria Citadel)',
+          shortTitle: 'ภารกิจด่านที่ 2: นีโอ-เซฟีเรีย',
+          skyMode: 'sunset',
+          grassMain: 0xfbbf24,
+          grassEast: 0xf59e0b,
+          grassWest: 0xfb923c,
+          grassSouth: 0xfacc15,
+          grassNorth: 0xf43f5e,
+          grassBoss: 0xa855f7,
+          roofPrimary: 0x7c3aed,
+          roofSecondary: 0xbe123c,
+          crystalHex: 0xf43f5e,
+          shardGoal: 6,
+          golemGoal: 8,
+          q1Text: 'รายงานตัวกับผู้บัญชาการ เอลดริน ที่มหานครใหม่',
+          q2Text: 'เก็บผลึกสุริยะเอเธอร์ทั่ว 6 หมู่เกาะ',
+          q3Text: 'สกัดกั้นกองทัพโกเลมเพลิงและบอสบุกเมือง',
+          q4Text: 'เปิดประภาคารดาราจักรเพื่อทะยานสู่ด่านถัดไป'
+        },
+        {
+          stage: 3,
+          name: 'ปราการดาราจักรไซเบอร์ (Astral Cyber Bastion)',
+          shortTitle: 'ภารกิจด่านที่ 3: ปราการดาราจักร',
+          skyMode: 'night',
+          grassMain: 0x38bdf8,
+          grassEast: 0x818cf8,
+          grassWest: 0xc084fc,
+          grassSouth: 0x2dd4bf,
+          grassNorth: 0xf472b6,
+          grassBoss: 0xec4899,
+          roofPrimary: 0x0284c7,
+          roofSecondary: 0x9333ea,
+          crystalHex: 0xa855f7,
+          shardGoal: 7,
+          golemGoal: 10,
+          q1Text: 'รับคำสั่งศึกตัดสินจากผู้บัญชาการ เอลดริน',
+          q2Text: 'รวบรวมผลึกดาราจักรพลังงานสูง',
+          q3Text: 'ถล่มกองทัพโกเลมดาราจักรและราชันย์โกเลม',
+          q4Text: 'เดินเครื่องเรือเหาะธงเดินทางข้ามมิติเวหา'
+        }
+      ];
+
+      const playerState = {
+        stage: 1,
+        level: 1,
+        hp: 140,
+        maxHp: 140,
+        mp: 70,
+        maxMp: 70,
+        exp: 0,
+        nextExp: 100,
+        gold: 150,
+        atk: 22,
+        def: 7,
+        weaponLevel: 1,
+        potions: 4,
+        shards: 0,
+        totalShards: 5,
+        golemsDefeated: 0,
+        golemGoal: 6,
+        quests: {
+          talkedEldrin: false,
+          collectedShards: false,
+          defeatedGolems: false,
+          activatedBeacon: false
+        }
+      };
+
+      function getCurrentTheme() {
+        const idx = (playerState.stage - 1) % stageThemes.length;
+        const base = stageThemes[idx];
+        if (playerState.stage <= 3) return base;
+        return Object.assign({}, base, {
+          stage: playerState.stage,
+          name: base.name + ' (ระดับ ' + playerState.stage + ')',
+          shortTitle: 'ภารกิจด่านที่ ' + playerState.stage + ': มิติเวหาขั้นสูง',
+          shardGoal: 7,
+          golemGoal: 10 + (playerState.stage - 3) * 2
+        });
+      }
+
+      // --- DOM Elements ---
+      const canvas = document.getElementById('game-canvas');
+      const minimapCanvas = document.getElementById('minimap-canvas');
+      const minimapCtx = minimapCanvas.getContext('2d');
+      const floatingLabels = document.getElementById('floating-labels');
+      const interactPrompt = document.getElementById('interact-prompt');
+      const interactText = document.getElementById('interact-text');
+      const dialogueBox = document.getElementById('dialogue-box');
+      const dlgName = document.getElementById('dlg-name');
+      const dlgRole = document.getElementById('dlg-role');
+      const dlgBody = document.getElementById('dlg-body');
+      const dlgActions = document.getElementById('dlg-actions');
+      const airshipBanner = document.getElementById('airship-ready-banner');
+      const cutsceneOverlay = document.getElementById('cutscene-overlay');
+
+      function isReadyForAirship() {
+        return (
+          playerState.quests.talkedEldrin &&
+          playerState.quests.collectedShards &&
+          playerState.quests.defeatedGolems &&
+          playerState.quests.activatedBeacon
+        );
+      }
+
+      // --- Update HUD UI ---
+      function updateHUD() {
+        const theme = getCurrentTheme();
+        document.getElementById('stage-badge').textContent = '[ด่าน ' + playerState.stage + ']';
+        document.getElementById('quest-stage-title').textContent = '📜 ' + theme.shortTitle;
+        document.getElementById('q-eldrin-text').textContent = theme.q1Text;
+        document.getElementById('q-beacon-text').textContent = theme.q4Text;
+
+        document.getElementById('hero-lvl-badge').textContent = 'Lv.' + playerState.level;
+        document.getElementById('hero-weapon-name').textContent = 'ดาบเวหาอารยธรรม +' + playerState.weaponLevel;
+        document.getElementById('gold-val').textContent = playerState.gold;
+        document.getElementById('atk-val').textContent = playerState.atk;
+        document.getElementById('def-val').textContent = playerState.def;
+        document.getElementById('shard-val').textContent = playerState.shards + ' / ' + playerState.totalShards;
+        document.getElementById('potion-count').textContent = 'x' + playerState.potions;
+
+        const hpPct = Math.max(0, Math.min(100, (playerState.hp / playerState.maxHp) * 100));
+        const mpPct = Math.max(0, Math.min(100, (playerState.mp / playerState.maxMp) * 100));
+        const expPct = Math.max(0, Math.min(100, (playerState.exp / playerState.nextExp) * 100));
+
+        document.getElementById('hp-bar').style.width = hpPct + '%';
+        document.getElementById('mp-bar').style.width = mpPct + '%';
+        document.getElementById('exp-bar').style.width = expPct + '%';
+
+        document.getElementById('hp-text').textContent = Math.ceil(playerState.hp) + ' / ' + playerState.maxHp;
+        document.getElementById('mp-text').textContent = Math.floor(playerState.mp) + ' / ' + playerState.maxMp;
+        document.getElementById('exp-text').textContent = playerState.exp + ' / ' + playerState.nextExp;
+
+        // Quests
+        document.getElementById('q-shard-count').textContent = Math.min(playerState.totalShards, playerState.shards);
+        document.getElementById('q-shard-goal').textContent = playerState.totalShards;
+        document.getElementById('q-golem-count').textContent = Math.min(playerState.golemGoal, playerState.golemsDefeated);
+        document.getElementById('q-golem-goal').textContent = playerState.golemGoal;
+
+        const qMap = [
+          ['q-eldrin', playerState.quests.talkedEldrin],
+          ['q-shards', playerState.quests.collectedShards],
+          ['q-golems', playerState.quests.defeatedGolems],
+          ['q-beacon', playerState.quests.activatedBeacon]
+        ];
+        let doneCount = 0;
+        qMap.forEach(([id, done]) => {
+          const el = document.getElementById(id);
+          if (done) {
+            el.classList.add('done');
+            el.querySelector('.quest-check').textContent = '✓';
+            doneCount++;
+          } else {
+            el.classList.remove('done');
+            el.querySelector('.quest-check').textContent = '';
+          }
+        });
+        document.getElementById('quest-progress-badge').textContent = doneCount + '/4';
+
+        // Show Airship Departure Banner when either all 4 quests are done OR beacon is activated & 3 quests done
+        if (doneCount === 4 || (playerState.quests.activatedBeacon && doneCount >= 3)) {
+          airshipBanner.style.display = 'flex';
+          document.getElementById('airship-banner-title').textContent =
+            '🎉 ภารกิจด่านที่ ' + playerState.stage + ' สำเร็จ! เรือเหาะพร้อมบินสู่เมืองใหม่แล้ว!';
+          document.getElementById('airship-banner-sub').textContent =
+            'กดปุ่ม "ขึ้นเรือเหาะไปเมืองใหม่" หรือเดินไปขึ้นเรือเหาะที่ท่าเรือทิศตะวันออกเพื่อเดินทางสู่ด่านที่ ' + (playerState.stage + 1);
+        } else {
+          airshipBanner.style.display = 'none';
+        }
+      }
+
+      function gainExp(amount) {
+        playerState.exp += amount;
+        while (playerState.exp >= playerState.nextExp) {
+          playerState.exp -= playerState.nextExp;
+          playerState.level += 1;
+          playerState.nextExp = Math.floor(playerState.nextExp * 1.35);
+          playerState.maxHp += 25;
+          playerState.hp = playerState.maxHp;
+          playerState.maxMp += 10;
+          playerState.mp = playerState.maxMp;
+          playerState.atk += 5;
+          playerState.def += 2;
+          spawnFloatingText(playerObj.position.clone().add(new THREE.Vector3(0, 3.2, 0)), '🎉 เลเวลอัป! Lv.' + playerState.level, '#fde047');
+        }
+        updateHUD();
+      }
+
+      // --- Initialize Three.js Scene ---
+      const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x68b5e8);
+      scene.fog = new THREE.FogExp2(0x68b5e8, 0.0065);
+
+      const camera = new THREE.PerspectiveCamera(52, window.innerWidth / window.innerHeight, 0.1, 350);
+
+      // Lighting
+      const ambientLight = new THREE.AmbientLight(0xdbeafe, 0.68);
+      scene.add(ambientLight);
+
+      const sunLight = new THREE.DirectionalLight(0xfffbeb, 1.05);
+      sunLight.position.set(45, 75, 35);
+      sunLight.castShadow = true;
+      sunLight.shadow.mapSize.width = 2048;
+      sunLight.shadow.mapSize.height = 2048;
+      sunLight.shadow.camera.near = 10;
+      sunLight.shadow.camera.far = 180;
+      const d = 65;
+      sunLight.shadow.camera.left = -d;
+      sunLight.shadow.camera.right = d;
+      sunLight.shadow.camera.top = d;
+      sunLight.shadow.camera.bottom = -d;
+      scene.add(sunLight);
+
+      const cityGlowLight = new THREE.PointLight(0x38bdf8, 1.4, 45);
+      cityGlowLight.position.set(0, 8, 0);
+      scene.add(cityGlowLight);
+
+      // --- Shared Geometries & Materials for Fast Voxel Building ---
+      const unitBoxGeo = new THREE.BoxGeometry(1, 1, 1);
+      const matCache = {};
+      function getVoxelMat(hex, emissiveHex = 0x000000, emissiveIntensity = 0) {
+        const key = hex + '_' + emissiveHex + '_' + emissiveIntensity;
+        if (!matCache[key]) {
+          matCache[key] = new THREE.MeshLambertMaterial({
+            color: hex,
+            emissive: emissiveHex,
+            emissiveIntensity: emissiveIntensity
+          });
+        }
+        return matCache[key];
+      }
+
+      function addVoxelBox(parent, x, y, z, sx, sy, sz, color, emissive = 0x000000, emissiveIntensity = 0, castShadow = true) {
+        const mesh = new THREE.Mesh(unitBoxGeo, getVoxelMat(color, emissive, emissiveIntensity));
+        mesh.position.set(x, y, z);
+        mesh.scale.set(sx, sy, sz);
+        mesh.castShadow = castShadow;
+        mesh.receiveShadow = true;
+        parent.add(mesh);
+        return mesh;
+      }
+
+      // Walkable Surfaces Registry for Height & Platform Collision
+      const walkablePlatforms = [];
+      function registerPlatform(x, z, width, depth, topY, zoneTitle) {
+        walkablePlatforms.push({
+          minX: x - width / 2,
+          maxX: x + width / 2,
+          minZ: z - depth / 2,
+          maxZ: z + depth / 2,
+          topY: topY,
+          zoneTitle: zoneTitle
+        });
+      }
+
+      // Solid Obstacle Colliders (buildings, pillars)
+      const solidObstacles = [];
+      function registerObstacle(x, z, radius) {
+        solidObstacles.push({ x, z, radius });
+      }
+
+      // --- Build Voxel Sky Islands (Expanded 6-Island Metropolis) ---
+      const worldGroup = new THREE.Group();
+      scene.add(worldGroup);
+
+      const islandGrassMeshes = [];
+      const roofMeshes = [];
+      const crystalMeshes = [];
+
+      function createFloatingIsland(cx, topY, cz, width, depth, thickness, grassColor, zoneName) {
+        const island = new THREE.Group();
+        // Top grass layer
+        const grassMesh = addVoxelBox(island, cx, topY - 0.5, cz, width, 1, depth, grassColor);
+        islandGrassMeshes.push(grassMesh);
+        // Stone trim
+        addVoxelBox(island, cx, topY - 2, cz, width - 1.2, 2, depth - 1.2, 0x64748b);
+        // Deep rock underside layers tapering down
+        addVoxelBox(island, cx, topY - 4.5, cz, width * 0.78, 3, depth * 0.78, 0x475569);
+        addVoxelBox(island, cx, topY - 7.5, cz, width * 0.52, 3, depth * 0.52, 0x334155);
+        addVoxelBox(island, cx, topY - 10, cz, width * 0.26, 2.5, depth * 0.26, 0x1e293b);
+        // Glowing Aether crystal under-core
+        const underCore = addVoxelBox(island, cx, topY - 11.8, cz, 2.4, 2.4, 2.4, 0x38bdf8, 0x0284c7, 0.8, false);
+        crystalMeshes.push(underCore);
+
+        worldGroup.add(island);
+        registerPlatform(cx, cz, width, depth, topY, zoneName);
+        return island;
+      }
+
+      // 1. Central Sky Plaza Island (Expanded to 38x38)
+      createFloatingIsland(0, 0, 0, 38, 38, 8, 0x4ade80, 'จัตุรัสกลางเวหา (Central Sky Plaza)');
+      addVoxelBox(worldGroup, 0, 0.06, 0, 22, 0.12, 22, 0xcbd5e1, 0, 0, false);
+      addVoxelBox(worldGroup, 0, 0.12, 0, 10, 0.12, 10, 0x94a3b8, 0, 0, false);
+
+      // Central Aether Fountain & Floating Spire
+      addVoxelBox(worldGroup, 0, 0.6, 0, 4.5, 1.0, 4.5, 0xe2e8f0);
+      addVoxelBox(worldGroup, 0, 1.1, 0, 3.6, 0.4, 3.6, 0x38bdf8, 0x0284c7, 0.5);
+      const centralCrystal = addVoxelBox(worldGroup, 0, 3.8, 0, 1.5, 2.8, 1.5, 0x7dd3fc, 0x38bdf8, 0.9);
+      crystalMeshes.push(centralCrystal);
+      registerObstacle(0, 0, 2.5);
+
+      // Voxel Clocktower on Central Plaza
+      function buildClocktower(x, z) {
+        const g = new THREE.Group();
+        addVoxelBox(g, x, 4.5, z, 5, 9, 5, 0xf1f5f9);
+        addVoxelBox(g, x, 4.5, z, 5.3, 1, 5.3, 0x475569);
+        addVoxelBox(g, x, 9.5, z, 5.6, 1.2, 5.6, 0x334155);
+        addVoxelBox(g, x, 7.2, z + 2.55, 2.2, 2.2, 0.2, 0xfef08a, 0xf59e0b, 0.8);
+        addVoxelBox(g, x, 7.2, z - 2.55, 2.2, 2.2, 0.2, 0xfef08a, 0xf59e0b, 0.8);
+        const r1 = addVoxelBox(g, x, 11, z, 4.6, 1.8, 4.6, 0x2563eb);
+        const r2 = addVoxelBox(g, x, 12.6, z, 3.2, 1.6, 3.2, 0x1d4ed8);
+        const topC = addVoxelBox(g, x, 14.5, z, 1.4, 2.4, 1.4, 0x38bdf8, 0x0284c7, 0.7);
+        roofMeshes.push(r1, r2);
+        crystalMeshes.push(topC);
+        worldGroup.add(g);
+        registerObstacle(x, z, 3.1);
+      }
+      buildClocktower(8, -12.5);
+
+      // Build Voxel Houses / Shops
+      function buildVoxelHouse(x, y, z, w, h, d, wallColor, roofColor) {
+        const g = new THREE.Group();
+        addVoxelBox(g, x, y + h / 2, z, w, h, d, wallColor);
+        const r1 = addVoxelBox(g, x, y + h + 0.6, z, w + 1.0, 1.2, d + 1.0, roofColor);
+        const r2 = addVoxelBox(g, x, y + h + 1.6, z, w * 0.7, 1.0, d * 0.7, roofColor);
+        roofMeshes.push(r1, r2);
+        addVoxelBox(g, x + w * 0.25, y + h * 0.55, z + d / 2 + 0.08, 1.1, 1.1, 0.1, 0xfef08a, 0xf59e0b, 0.85);
+        addVoxelBox(g, x - w * 0.25, y + h * 0.55, z + d / 2 + 0.08, 1.1, 1.1, 0.1, 0xfef08a, 0xf59e0b, 0.85);
+        worldGroup.add(g);
+        registerObstacle(x, z, Math.max(w, d) * 0.55);
+      }
+
+      buildVoxelHouse(-12, 0, -10, 5.5, 4.5, 5, 0xfef3c7, 0xd97706);
+      buildVoxelHouse(13, 0, -6, 5.5, 5.0, 5, 0xe0f2fe, 0x0284c7);
+      buildVoxelHouse(-13, 0, 10, 5.2, 4.2, 4.8, 0xf3e8ff, 0x7c3aed);
+      buildVoxelHouse(13, 0, 10, 5.2, 4.2, 4.8, 0xdcfce7, 0x059669);
+
+      // Voxel Trees (Sakura & Emerald Sky Trees)
+      function buildVoxelTree(x, y, z, leafColor = 0xf472b6) {
+        addVoxelBox(worldGroup, x, y + 1.5, z, 0.8, 3.0, 0.8, 0x78350f);
+        addVoxelBox(worldGroup, x, y + 3.4, z, 3.2, 1.6, 3.2, leafColor);
+        addVoxelBox(worldGroup, x, y + 4.6, z, 2.2, 1.2, 2.2, leafColor);
+        registerObstacle(x, z, 0.75);
+      }
+
+      buildVoxelTree(-15, 0, 3, 0xf472b6);
+      buildVoxelTree(15, 0, 3, 0xf472b6);
+      buildVoxelTree(-8, 0, 15, 0x34d399);
+      buildVoxelTree(8, 0, 15, 0x34d399);
+
+      // Street Lamps
+      function buildStreetLamp(x, y, z) {
+        addVoxelBox(worldGroup, x, y + 1.6, z, 0.35, 3.2, 0.35, 0x334155);
+        addVoxelBox(worldGroup, x, y + 3.4, z, 0.9, 0.9, 0.9, 0xfef08a, 0xf59e0b, 0.95);
+      }
+      buildStreetLamp(-7, 0, -7);
+      buildStreetLamp(7, 0, -7);
+      buildStreetLamp(-7, 0, 7);
+      buildStreetLamp(7, 0, 7);
+
+      // 2. East Island: Artisan Market & Airship Dock (cx = 38, topY = 2, cz = 0, expanded to 28x28)
+      createFloatingIsland(38, 2, 0, 28, 28, 7, 0x34d399, 'ท่าเรือเหาะและตลาดช่างฝีมือ (Airship Dock)');
+      for (let i = 0; i < 4; i++) {
+        const bx = 20.2 + i * 1.4;
+        const by = 0.5 * (i + 1);
+        addVoxelBox(worldGroup, bx, by - 0.25, 0, 2.2, 0.5, 4.8, 0xe2e8f0);
+        addVoxelBox(worldGroup, bx, by + 0.3, -2.2, 1.8, 0.4, 0.3, 0x38bdf8, 0x0284c7, 0.6);
+        addVoxelBox(worldGroup, bx, by + 0.3, 2.2, 1.8, 0.4, 0.3, 0x38bdf8, 0x0284c7, 0.6);
+        registerPlatform(bx, 0, 2.5, 4.8, by, 'สะพานเวหาตะวันออก (East Sky Bridge)');
+      }
+
+      // Airship Boarding Pier extending to the Airship
+      addVoxelBox(worldGroup, 53.5, 2.2, 4, 7.5, 0.6, 4.8, 0xb45309);
+      registerPlatform(53.5, 4, 8.0, 5.0, 2.5, 'สะพานเทียบเรือเหาะเวหา (Airship Boarding Pier)');
+
+      // Blacksmith Forge & Alchemist Shop on East Island
+      buildVoxelHouse(35, 2, -8, 6, 4.5, 5, 0xe2e8f0, 0xb91c1c);
+      buildVoxelHouse(35, 2, 8.5, 5.5, 4.2, 4.8, 0xfef3c7, 0x0284c7);
+      // Airship Beacon Tower on East Dock
+      addVoxelBox(worldGroup, 45, 4.5, -1, 2.6, 5, 2.6, 0x475569);
+      const beaconCrystal = addVoxelBox(worldGroup, 45, 8.2, -1, 1.6, 2.0, 1.6, 0x64748b, 0x000000, 0);
+      registerObstacle(45, -1, 1.8);
+
+      // Floating Voxel Airship docked beside East Island Boarding Pier
+      const airshipBasePos = new THREE.Vector3(60, 4.2, 4);
+      const airshipGroup = new THREE.Group();
+      airshipGroup.position.copy(airshipBasePos);
+      // Hull & Deck
+      addVoxelBox(airshipGroup, 0, 0, 0, 11, 2.4, 4.4, 0x78350f);
+      addVoxelBox(airshipGroup, 0, 1.4, 0, 9.5, 0.6, 4.6, 0xb45309);
+      // Glowing Rear Thrusters
+      const airshipThruster = addVoxelBox(airshipGroup, -5.8, 0.4, 0, 1.2, 1.2, 2.6, 0x38bdf8, 0x0284c7, 0.95);
+      // Balloon above
+      addVoxelBox(airshipGroup, 0, 6.5, 0, 13.5, 4.5, 5.8, 0xf8fafc);
+      const airshipStripe = addVoxelBox(airshipGroup, 0, 6.5, 0, 13.7, 1.3, 6.0, 0x0284c7, 0x0284c7, 0.5);
+      roofMeshes.push(airshipStripe);
+      scene.add(airshipGroup);
+      const airshipLabel = createLabelElement('🚢 เรือเหาะเวหา (เดินทางข้ามด่าน)', 'quest');
+
+      // 3. West Island: Ancient Cloud Sanctuary (cx = -38, topY = 3, cz = 0, expanded to 28x28)
+      createFloatingIsland(-38, 3, 0, 28, 28, 8, 0x86efac, 'วิหารเมฆาโบราณ (Ancient Cloud Sanctuary)');
+      for (let i = 0; i < 4; i++) {
+        const bx = -20.2 - i * 1.4;
+        const by = 0.75 * (i + 1);
+        addVoxelBox(worldGroup, bx, by - 0.25, 0, 2.2, 0.5, 4.8, 0xe2e8f0);
+        addVoxelBox(worldGroup, bx, by + 0.3, -2.2, 1.8, 0.4, 0.3, 0xf59e0b, 0xd97706, 0.6);
+        addVoxelBox(worldGroup, bx, by + 0.3, 2.2, 1.8, 0.4, 0.3, 0xf59e0b, 0xd97706, 0.6);
+        registerPlatform(bx, 0, 2.5, 4.8, by, 'สะพานวิหารเมฆา (Sanctuary Bridge)');
+      }
+
+      // Sanctuary Pillars & Altar
+      addVoxelBox(worldGroup, -38, 3.3, 0, 14, 0.6, 14, 0xe2e8f0);
+      [[-43, -5.5], [-43, 5.5], [-33, -5.5], [-33, 5.5]].forEach(([px, pz]) => {
+        addVoxelBox(worldGroup, px, 6.5, pz, 1.4, 7, 1.4, 0xf1f5f9);
+        const pc = addVoxelBox(worldGroup, px, 10.3, pz, 1.8, 0.8, 1.8, 0x38bdf8, 0x0284c7, 0.8);
+        crystalMeshes.push(pc);
+        registerObstacle(px, pz, 1.1);
+      });
+
+      // 4. South Island: Windmill Observatory (cx = 0, topY = 2, cz = 36, expanded to 24x24)
+      createFloatingIsland(0, 2, 36, 24, 24, 6, 0x6ee7b7, 'เกาะหอคอยกังหันลม (Windmill Observatory)');
+      for (let i = 0; i < 4; i++) {
+        const bz = 20.0 + i * 1.45;
+        const by = 0.5 * (i + 1);
+        addVoxelBox(worldGroup, 0, by - 0.25, bz, 4.6, 0.5, 2.2, 0xe2e8f0);
+        registerPlatform(0, bz, 4.6, 2.5, by, 'สะพานหอคอยกังหันลม (Windmill Bridge)');
+      }
+      addVoxelBox(worldGroup, 0, 6.5, 40, 4.5, 9, 4.5, 0xfef3c7);
+      const wmRoof = addVoxelBox(worldGroup, 0, 11.8, 40, 5.0, 2, 5.0, 0xd97706);
+      roofMeshes.push(wmRoof);
+      registerObstacle(0, 40, 2.8);
+      const windmillBlades = new THREE.Group();
+      windmillBlades.position.set(0, 9.2, 37.5);
+      addVoxelBox(windmillBlades, 0, 0, 0, 0.8, 0.8, 0.8, 0x78350f);
+      addVoxelBox(windmillBlades, 0, 0, -0.3, 9.5, 0.7, 0.2, 0xfef08a);
+      addVoxelBox(windmillBlades, 0, 0, -0.3, 0.7, 9.5, 0.2, 0xfef08a);
+      scene.add(windmillBlades);
+
+      // 5. NEW North Island: North Crystal Bastion (cx = 0, topY = 2.5, cz = -38, size 28x26)
+      createFloatingIsland(0, 2.5, -38, 28, 26, 7, 0x2dd4bf, 'ป้อมปราการคริสตัลทิศเหนือ (North Crystal Bastion)');
+      for (let i = 0; i < 4; i++) {
+        const bz = -20.0 - i * 1.45;
+        const by = 0.6 * (i + 1);
+        addVoxelBox(worldGroup, 0, by - 0.25, bz, 4.8, 0.5, 2.2, 0xe2e8f0);
+        addVoxelBox(worldGroup, -2.2, by + 0.3, bz, 0.3, 0.4, 1.8, 0x38bdf8, 0x0284c7, 0.6);
+        addVoxelBox(worldGroup, 2.2, by + 0.3, bz, 0.3, 0.4, 1.8, 0x38bdf8, 0x0284c7, 0.6);
+        registerPlatform(0, bz, 4.8, 2.5, by, 'สะพานป้อมปราการเหนือ (North Bastion Bridge)');
+      }
+      // Twin Bastion Watchtowers & Archway on North Island
+      [[-8, -42], [8, -42]].forEach(([tx, tz]) => {
+        addVoxelBox(worldGroup, tx, 6.5, tz, 4.2, 8, 4.2, 0xe2e8f0);
+        const tr = addVoxelBox(worldGroup, tx, 11.2, tz, 4.8, 1.6, 4.8, 0x1d4ed8);
+        const tc = addVoxelBox(worldGroup, tx, 13.0, tz, 1.4, 2.0, 1.4, 0x38bdf8, 0x0284c7, 0.85);
+        roofMeshes.push(tr);
+        crystalMeshes.push(tc);
+        registerObstacle(tx, tz, 2.6);
+      });
+      buildVoxelTree(-10, 2.5, -32, 0xf472b6);
+      buildVoxelTree(10, 2.5, -32, 0xf472b6);
+
+      // 6. NEW Northwest Island: Starlight Boss Arena (cx = -38, topY = 3.5, cz = -38, size 28x28)
+      createFloatingIsland(-38, 3.5, -38, 28, 28, 8, 0x38bdf8, 'ลานประลองราชันย์โกเลม (Golem King Citadel)');
+      // Bridge from North Bastion to Northwest Boss Arena
+      for (let i = 0; i < 6; i++) {
+        const bx = -15.5 - i * 1.65;
+        const by = 2.5 + (i + 1) * 0.16;
+        addVoxelBox(worldGroup, bx, by - 0.25, -38, 2.2, 0.5, 4.6, 0xcbd5e1);
+        registerPlatform(bx, -38, 2.5, 4.6, by, 'สะพานศิลาดาราจักร (Citadel Bridge)');
+      }
+      // Bridge from West Sanctuary to Northwest Boss Arena
+      for (let i = 0; i < 6; i++) {
+        const bz = -15.5 - i * 1.65;
+        const by = 3.0 + (i + 1) * 0.08;
+        addVoxelBox(worldGroup, -38, by - 0.25, bz, 4.6, 0.5, 2.2, 0xcbd5e1);
+        registerPlatform(-38, bz, 4.6, 2.5, by, 'สะพานวิหารเหนือ (Sanctuary North Bridge)');
+      }
+      // Boss Arena Dark Obelisks
+      [[-46, -46], [-30, -46], [-46, -30], [-30, -30]].forEach(([ox, oz]) => {
+        addVoxelBox(worldGroup, ox, 7.0, oz, 1.6, 7, 1.6, 0x1e293b);
+        const oc = addVoxelBox(worldGroup, ox, 11.2, oz, 2.0, 1.2, 2.0, 0xec4899, 0xbe185d, 0.9);
+        crystalMeshes.push(oc);
+        registerObstacle(ox, oz, 1.2);
+      });
+
+      // --- Drifting Voxel Clouds ---
+      const clouds = [];
+      for (let i = 0; i < 22; i++) {
+        const cg = new THREE.Group();
+        const cw = 5 + Math.random() * 6;
+        const cd = 3 + Math.random() * 4;
+        addVoxelBox(cg, 0, 0, 0, cw, 1.4, cd, 0xffffff, 0xffffff, 0.15, false);
+        addVoxelBox(cg, cw * 0.2, 0.8, 0, cw * 0.6, 1.0, cd * 0.7, 0xffffff, 0xffffff, 0.15, false);
+        cg.position.set(
+          (Math.random() - 0.5) * 170,
+          -6 + (Math.random() * 30),
+          (Math.random() - 0.5) * 170
+        );
+        scene.add(cg);
+        clouds.push({ mesh: cg, speed: 0.8 + Math.random() * 1.4 });
+      }
+
+      // --- Create Voxel Character Helper ---
+      function createVoxelCharacter(bodyColor, headColor, capeColor) {
+        const root = new THREE.Group();
+        const leftLeg = addVoxelBox(root, -0.22, 0.4, 0, 0.32, 0.8, 0.32, 0x1e293b);
+        const rightLeg = addVoxelBox(root, 0.22, 0.4, 0, 0.32, 0.8, 0.32, 0x1e293b);
+        addVoxelBox(root, 0, 1.15, 0, 0.78, 0.85, 0.48, bodyColor);
+        addVoxelBox(root, 0, 1.92, 0, 0.68, 0.68, 0.68, headColor);
+        addVoxelBox(root, -0.15, 1.96, 0.35, 0.12, 0.12, 0.05, 0x0f172a);
+        addVoxelBox(root, 0.15, 1.96, 0.35, 0.12, 0.12, 0.05, 0x0f172a);
+        addVoxelBox(root, 0, 2.3, 0, 0.74, 0.22, 0.74, capeColor);
+        addVoxelBox(root, 0, 1.12, -0.28, 0.68, 0.82, 0.1, capeColor);
+        const rightArm = new THREE.Group();
+        rightArm.position.set(0.55, 1.4, 0);
+        addVoxelBox(rightArm, 0, -0.25, 0, 0.28, 0.65, 0.28, bodyColor);
+        addVoxelBox(rightArm, 0, -0.45, 0.55, 0.12, 0.14, 1.15, 0x38bdf8, 0x0284c7, 0.85);
+        root.add(rightArm);
+
+        root.userData = { leftLeg, rightLeg, rightArm };
+        return root;
+      }
+
+      const playerObj = createVoxelCharacter(0x2563eb, 0xfde68a, 0x38bdf8);
+      playerObj.position.set(0, 0, 6);
+      scene.add(playerObj);
+
+      // Attack Slash Ring Visual
+      const slashGeo = new THREE.RingGeometry(1.1, 2.5, 24);
+      slashGeo.rotateX(-Math.PI / 2);
+      const slashMat = new THREE.MeshBasicMaterial({
+        color: 0x38bdf8,
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0
+      });
+      const slashMesh = new THREE.Mesh(slashGeo, slashMat);
+      slashMesh.position.y = 1.0;
+      playerObj.add(slashMesh);
+
+      // --- Interactive Entities: NPCs, Shards, Enemies, Boss ---
+      const npcs = [];
+      const shards = [];
+      const enemies = [];
+      const particles = [];
+
+      function createLabelElement(text, cls = '') {
+        const el = document.createElement('div');
+        el.className = 'npc-tag ' + cls;
+        el.textContent = text;
+        floatingLabels.appendChild(el);
+        return el;
+      }
+
+      function addNPC(name, role, x, y, z, color, cape, id) {
+        const mesh = createVoxelCharacter(color, 0xfde68a, cape);
+        mesh.position.set(x, y, z);
+        scene.add(mesh);
+        const label = createLabelElement('💬 ' + name, 'quest');
+        npcs.push({ id, name, role, mesh, label });
+      }
+
+      addNPC('ผู้บัญชาการ เอลดริน', 'หัวหน้าผู้พิทักษ์เวหา', -4.2, 0, -4.2, 0x0284c7, 0xf59e0b, 'eldrin');
+      addNPC('ช่างตีเหล็ก โบรค', 'ปรมาจารย์ศัสตราเวหา', 33, 2, -4.5, 0xb91c1c, 0x475569, 'blacksmith');
+      addNPC('นักปราชญ์ ลูมินา', 'ผู้ดูแลหอคอยกังหันลม', 3.2, 2, 33, 0x7c3aed, 0x38bdf8, 'lumina');
+      addNPC('อัศวินหญิง วาลคีเรีย', 'แม่ทัพป้อมปราการเหนือ', 0, 2.5, -33, 0x059669, 0xfacc15, 'valkyrie');
+
+      // Collectible Aether Shards (7 positions across the 6 islands)
+      const shardCoords = [
+        [8, 0, -16.5, 'หลังหอนาฬิกาเวหา'],
+        [15, 0, 14, 'สวนซากุระตะวันออก'],
+        [43, 2, -9, 'ท่าเรือเหาะตะวันออก'],
+        [-38, 3.6, 0, 'แท่นบูชาวิหารเมฆา'],
+        [0, 2, 44.5, 'จุดชมวิวหอคอยกังหันลม'],
+        [0, 2.5, -45.5, 'ยอดป้อมปราการคริสตัลเหนือ'],
+        [-38, 3.5, -44, 'แท่นศิลาลานประลองราชันย์']
+      ];
+
+      shardCoords.forEach(([sx, sy, sz, locName], idx) => {
+        const sg = new THREE.Group();
+        const box = addVoxelBox(sg, 0, 1.3, 0, 0.8, 1.4, 0.8, 0x38bdf8, 0x0284c7, 0.95);
+        crystalMeshes.push(box);
+        sg.position.set(sx, sy, sz);
+        scene.add(sg);
+        const label = createLabelElement('💎 ผลึกเอเธอร์ #' + (idx + 1));
+        shards.push({ mesh: sg, baseY: sy, collected: false, label, locName });
+      });
+
+      // Expanded Golem Invasion Forces (9 Golems + 1 Giant Boss Golem)
+      // Invader Golems actively march toward the Central Sky Plaza!
+      const golemSpawns = [
+        // City Plaza & Bridge Invaders (บุกเข้ากลางเมืองและสะพาน!)
+        { pos: [-16, 0, 0], invader: true, patrolTarget: new THREE.Vector3(-5, 0, 2), isBoss: false, name: 'โกเลมทัพหน้าบุกเมือง' },
+        { pos: [0, 0, -16], invader: true, patrolTarget: new THREE.Vector3(2, 0, -6), isBoss: false, name: 'โกเลมบุกจัตุรัสเหนือ' },
+        { pos: [15, 0, 3], invader: true, patrolTarget: new THREE.Vector3(6, 0, 3), isBoss: false, name: 'โกเลมจู่โจมตะวันออก' },
+        { pos: [0, 0, 16], invader: true, patrolTarget: new THREE.Vector3(0, 0, 7), isBoss: false, name: 'โกเลมบุกสะพานใต้' },
+        // North Bastion Golems
+        { pos: [-6, 2.5, -38], invader: true, patrolTarget: new THREE.Vector3(0, 0, -10), isBoss: false, name: 'โกเลมคลั่งป้อมเหนือ' },
+        { pos: [6, 2.5, -38], invader: false, patrolTarget: new THREE.Vector3(0, 2.5, -36), isBoss: false, name: 'โกเลมพิทักษ์คริสตัล' },
+        // West Sanctuary Golems
+        { pos: [-34, 3, -6], invader: false, patrolTarget: new THREE.Vector3(-38, 3, 0), isBoss: false, name: 'โกเลมวิหารเมฆา' },
+        { pos: [-42, 3, 5], invader: false, patrolTarget: new THREE.Vector3(-36, 3, 2), isBoss: false, name: 'โกเลมศิลาโบราณ' },
+        // Northwest Arena Guard & Giant Boss Golem
+        { pos: [-32, 3.5, -34], invader: false, patrolTarget: new THREE.Vector3(-36, 3.5, -36), isBoss: false, name: 'โกเลมองครักษ์' },
+        { pos: [-38, 3.5, -38], invader: false, patrolTarget: new THREE.Vector3(-38, 3.5, -36), isBoss: true, name: '👑 ราชันย์โกเลมคลั่ง (Boss)' }
+      ];
+
+      golemSpawns.forEach((cfg, idx) => {
+        const [gx, gy, gz] = cfg.pos;
+        const g = new THREE.Group();
+        const scale = cfg.isBoss ? 1.85 : 1.0;
+        const bodyHex = cfg.isBoss ? 0x4c0519 : (cfg.invader ? 0x451a03 : 0x334155);
+        const coreHex = cfg.isBoss ? 0xec4899 : 0xef4444;
+
+        addVoxelBox(g, 0, 1.1 * scale, 0, 1.35 * scale, 1.5 * scale, 1.0 * scale, bodyHex);
+        addVoxelBox(g, 0, 1.2 * scale, 0.52 * scale, 0.65 * scale, 0.55 * scale, 0.12 * scale, coreHex, coreHex, 0.95);
+        addVoxelBox(g, 0, 2.15 * scale, 0, 0.9 * scale, 0.75 * scale, 0.9 * scale, 0x1e293b);
+        addVoxelBox(g, -0.95 * scale, 1.1 * scale, 0, 0.45 * scale, 1.3 * scale, 0.45 * scale, 0x475569);
+        addVoxelBox(g, 0.95 * scale, 1.1 * scale, 0, 0.45 * scale, 1.3 * scale, 0.45 * scale, 0x475569);
+
+        if (cfg.isBoss) {
+          // Golden Crown on Boss Golem
+          addVoxelBox(g, 0, 2.75 * scale, 0, 0.95 * scale, 0.35 * scale, 0.95 * scale, 0xfacc15, 0xd97706, 0.8);
+        }
+
+        g.position.set(gx, gy, gz);
+        scene.add(g);
+        const maxHp = cfg.isBoss ? 220 : 65;
+        const label = createLabelElement(
+          `${cfg.isBoss ? '👑' : '👾'} ${cfg.name} HP ${maxHp}/${maxHp}`,
+          cfg.isBoss ? 'boss' : 'enemy'
+        );
+        enemies.push({
+          id: idx,
+          name: cfg.name,
+          isBoss: cfg.isBoss,
+          invader: cfg.invader,
+          patrolTarget: cfg.patrolTarget.clone(),
+          mesh: g,
+          spawnPos: new THREE.Vector3(gx, gy, gz),
+          hp: maxHp,
+          maxHp: maxHp,
+          alive: true,
+          respawnTimer: 0,
+          attackCooldown: 0,
+          label: label
+        });
+      });
+
+      // Trigger Immediate Golem Invasion Wave into Central Plaza
+      function triggerCityInvasionWave() {
+        const invasionPoints = [
+          [-10, 0, -4],
+          [10, 0, -4],
+          [0, 0, -11],
+          [-8, 0, 8],
+          [8, 0, 8]
+        ];
+        let count = 0;
+        enemies.forEach((en, i) => {
+          if (!en.isBoss && count < 5) {
+            const pt = invasionPoints[count % invasionPoints.length];
+            en.alive = true;
+            en.hp = en.maxHp;
+            en.mesh.visible = true;
+            en.mesh.position.set(pt[0] + (Math.random() - 0.5) * 2, pt[1], pt[2] + (Math.random() - 0.5) * 2);
+            en.invader = true;
+            en.patrolTarget.set(0, 0, 2);
+            spawnVoxelBurst(en.mesh.position.clone().add(new THREE.Vector3(0, 1.5, 0)), 0xef4444, 10);
+            count++;
+          }
+        });
+        spawnFloatingText(
+          playerObj.position.clone().add(new THREE.Vector3(0, 3.4, 0)),
+          '🚨 กองทัพโกเลมบุกเข้าจัตุรัสกลางเมืองแล้ว! เตรียมรับมือ!',
+          '#f87171'
+        );
+      }
+
+      document.getElementById('btn-spawn-invasion').addEventListener('click', triggerCityInvasionWave);
+
+      // --- Floating Combat Text ---
+      function spawnFloatingText(worldPos, text, color = '#ffffff') {
+        const el = document.createElement('div');
+        el.className = 'float-text';
+        el.style.color = color;
+        el.textContent = text;
+        floatingLabels.appendChild(el);
+        particles.push({
+          type: 'label',
+          el: el,
+          pos: worldPos.clone(),
+          vy: 1.8,
+          life: 1.25
+        });
+      }
+
+      function spawnVoxelBurst(worldPos, colorHex, count = 10) {
+        for (let i = 0; i < count; i++) {
+          const m = new THREE.Mesh(unitBoxGeo, getVoxelMat(colorHex, colorHex, 0.5));
+          m.scale.setScalar(0.22 + Math.random() * 0.18);
+          m.position.copy(worldPos);
+          scene.add(m);
+          particles.push({
+            type: 'voxel',
+            mesh: m,
+            vel: new THREE.Vector3(
+              (Math.random() - 0.5) * 6,
+              2.5 + Math.random() * 4,
+              (Math.random() - 0.5) * 6
+            ),
+            life: 0.55 + Math.random() * 0.3
+          });
+        }
+      }
+
+      // --- Airship Cinematic Cutscene & Next Stage Transition ---
+      let cutsceneState = {
+        active: false,
+        timer: 0,
+        duration: 4.2
+      };
+
+      function startAirshipCutscene() {
+        if (cutsceneState.active) return;
+        closeDialogue();
+        airshipBanner.style.display = 'none';
+        cutsceneState.active = true;
+        cutsceneState.timer = 0;
+
+        const nextStageNum = playerState.stage + 1;
+        const nextTheme = stageThemes[(nextStageNum - 1) % stageThemes.length];
+
+        document.getElementById('cutscene-title').textContent =
+          '🚢 เรือเหาะเวหาออกเดินทางสู่ ด่านที่ ' + nextStageNum + ' : ' + nextTheme.name;
+        document.getElementById('cutscene-caption').textContent =
+          'ภารกิจด่านที่ ' + playerState.stage + ' สำเร็จครบสมบูรณ์! กำลังทะยานข้ามหมู่เมฆสู่มหานครลอยฟ้าแห่งใหม่...';
+        cutsceneOverlay.style.display = 'flex';
+
+        // Place player onto the Airship deck
+        playerObj.position.copy(airshipGroup.position).add(new THREE.Vector3(0, 1.8, 0));
+        playerVelY = 0;
+        spawnVoxelBurst(airshipGroup.position.clone(), 0xfacc15, 28);
+      }
+
+      function completeAirshipTransitionToNewStage() {
+        cutsceneState.active = false;
+        cutsceneOverlay.style.display = 'none';
+
+        // Advance stage & grant stage completion rewards
+        playerState.stage += 1;
+        const theme = getCurrentTheme();
+
+        playerState.gold += 150;
+        playerState.potions += 2;
+        gainExp(120);
+        playerState.hp = playerState.maxHp;
+        playerState.mp = playerState.maxMp;
+
+        // Reset & scale new quests for the new Sky City stage
+        playerState.shards = 0;
+        playerState.totalShards = theme.shardGoal;
+        playerState.golemsDefeated = 0;
+        playerState.golemGoal = theme.golemGoal;
+        playerState.quests.talkedEldrin = false;
+        playerState.quests.collectedShards = false;
+        playerState.quests.defeatedGolems = false;
+        playerState.quests.activatedBeacon = false;
+
+        // Reset beacon crystal look for new stage
+        beaconCrystal.material = getVoxelMat(0x64748b, 0x000000, 0);
+
+        // Apply new Stage visual theme to the 6 islands, roofs, crystals & sky
+        setTimeOfDay(theme.skyMode);
+        const grassColors = [
+          theme.grassMain,
+          theme.grassEast,
+          theme.grassWest,
+          theme.grassSouth,
+          theme.grassNorth,
+          theme.grassBoss
+        ];
+        islandGrassMeshes.forEach((m, idx) => {
+          m.material = getVoxelMat(grassColors[idx % grassColors.length]);
+        });
+        roofMeshes.forEach((m, idx) => {
+          m.material = getVoxelMat(idx % 2 === 0 ? theme.roofPrimary : theme.roofSecondary);
+        });
+        crystalMeshes.forEach((m) => {
+          m.material = getVoxelMat(theme.crystalHex, theme.crystalHex, 0.85);
+        });
+
+        // Respawn Collectible Shards for the new stage
+        shards.forEach((s, idx) => {
+          if (idx < playerState.totalShards) {
+            s.collected = false;
+            s.mesh.visible = true;
+          } else {
+            s.collected = true;
+            s.mesh.visible = false;
+            s.label.style.display = 'none';
+          }
+        });
+
+        // Upgrade & respawn Golem Invasion Army for the new stage
+        enemies.forEach((en) => {
+          const stageMult = 1 + (playerState.stage - 1) * 0.35;
+          en.maxHp = Math.round((en.isBoss ? 220 : 65) * stageMult);
+          en.hp = en.maxHp;
+          en.alive = true;
+          en.mesh.visible = true;
+          en.mesh.position.copy(en.spawnPos);
+        });
+
+        // Return Airship to dock & land player at the new city plaza
+        airshipGroup.position.copy(airshipBasePos);
+        airshipGroup.rotation.set(0, 0, 0);
+        playerObj.position.set(0, 1.5, 6);
+        playerVelY = 0;
+
+        updateHUD();
+        spawnVoxelBurst(playerObj.position.clone(), theme.crystalHex, 25);
+        spawnFloatingText(
+          playerObj.position.clone().add(new THREE.Vector3(0, 3.2, 0)),
+          '🌟 เดินทางถึง ด่านที่ ' + playerState.stage + ': ' + theme.name + '!',
+          '#fde047'
+        );
+
+        // Open welcome briefing for the new city
+        openDialogue(
+          'ผู้บัญชาการ เอลดริน (ด่านที่ ' + playerState.stage + ')',
+          theme.name,
+          'ยินดีต้อนรับสู่มหานครลอยฟ้าด่านที่ ' +
+            playerState.stage +
+            ' (' +
+            theme.name +
+            ')! ที่นี่กองทัพโกเลมคลั่งกำลังบุกโจมตีสะพานเวหาและจัตุรัสกลางเมืองอย่างหนัก พร้อมด้วยราชันย์โกเลมที่เกาะปราการทิศตะวันตกเฉียงเหนือ มาเริ่มภารกิจครั้งใหม่กันเลย!',
+          [
+            {
+              label: 'รับภารกิจด่านที่ ' + playerState.stage + ' (+40 EXP)',
+              onClick: () => {
+                playerState.quests.talkedEldrin = true;
+                gainExp(40);
+                updateHUD();
+                closeDialogue();
+                triggerCityInvasionWave();
+              }
+            }
+          ]
+        );
+      }
+
+      document.getElementById('btn-board-airship').addEventListener('click', startAirshipCutscene);
+
+      // --- Controls & Input (Supports EN/TH Keyboard + iPhone Multi-Touch) ---
+      const keys = {};
+      const codes = {};
+      let joyVec = { x: 0, y: 0 };
+      let camYaw = 0;
+      let camPitch = 0.48;
+      let camDist = 15.5;
+      let camMode = 'follow';
+      let isDraggingCam = false;
+      let prevMouse = { x: 0, y: 0 };
+
+      let playerVelY = 0;
+      let isGrounded = true;
+      let swingTimer = 0;
+      let dashTimer = 0;
+
+      function flashButton(btnId) {
+        const el = document.getElementById(btnId);
+        if (!el) return;
+        el.classList.add('active-press');
+        setTimeout(() => el.classList.remove('active-press'), 160);
+      }
+
+      window.addEventListener('keydown', (e) => {
+        const k = (e.key || '').toLowerCase();
+        const c = e.code || '';
+        keys[k] = true;
+        codes[c] = true;
+        if (cutsceneState.active) return;
+
+        if (c === 'Space' || k === ' ') {
+          e.preventDefault();
+          flashButton('act-jump');
+          triggerJump();
+        } else if (c === 'KeyJ' || k === 'j' || k === '่') {
+          e.preventDefault();
+          flashButton('act-attack');
+          triggerAttack();
+        } else if (c === 'KeyK' || k === 'k' || k === 'า') {
+          e.preventDefault();
+          flashButton('act-skill');
+          triggerSkill();
+        } else if (c === 'ShiftLeft' || c === 'ShiftRight' || k === 'shift') {
+          e.preventDefault();
+          flashButton('act-dash');
+          triggerDash();
+        } else if (c === 'Digit1' || k === '1' || k === 'ๅ') {
+          e.preventDefault();
+          flashButton('act-potion');
+          usePotion();
+        } else if (c === 'KeyR' || k === 'r' || k === 'พ') {
+          e.preventDefault();
+          flashButton('act-teleport');
+          teleportHome();
+        } else if (c === 'KeyE' || k === 'e' || k === 'ำ') {
+          e.preventDefault();
+          triggerInteract();
+        }
+      });
+
+      window.addEventListener('keyup', (e) => {
+        const k = (e.key || '').toLowerCase();
+        const c = e.code || '';
+        keys[k] = false;
+        codes[c] = false;
+      });
+
+      // Ensure iframe receives keyboard focus when clicked/touched
+      window.addEventListener('pointerdown', () => {
+        try { window.focus(); } catch (_) {}
+      });
+
+      // Camera Orbit with Mouse & iPhone Touch Drag on Canvas
+      let camTouchId = null;
+
+      canvas.addEventListener('mousedown', (e) => {
+        isDraggingCam = true;
+        prevMouse.x = e.clientX;
+        prevMouse.y = e.clientY;
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDraggingCam) return;
+        const dx = e.clientX - prevMouse.x;
+        const dy = e.clientY - prevMouse.y;
+        prevMouse.x = e.clientX;
+        prevMouse.y = e.clientY;
+        camYaw -= dx * 0.007;
+        camPitch = Math.max(0.18, Math.min(1.25, camPitch + dy * 0.006));
+      });
+
+      window.addEventListener('mouseup', () => {
+        isDraggingCam = false;
+      });
+
+      // Touch drag on canvas to rotate camera on iPhone / Mobile
+      canvas.addEventListener('touchstart', (e) => {
+        if (camTouchId !== null) return;
+        const t = e.changedTouches[0];
+        if (!t) return;
+        camTouchId = t.identifier;
+        prevMouse.x = t.clientX;
+        prevMouse.y = t.clientY;
+      }, { passive: true });
+
+      canvas.addEventListener('touchmove', (e) => {
+        if (camTouchId === null) return;
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          const t = e.changedTouches[i];
+          if (t.identifier === camTouchId) {
+            const dx = t.clientX - prevMouse.x;
+            const dy = t.clientY - prevMouse.y;
+            prevMouse.x = t.clientX;
+            prevMouse.y = t.clientY;
+            camYaw -= dx * 0.008;
+            camPitch = Math.max(0.18, Math.min(1.25, camPitch + dy * 0.006));
+            break;
+          }
+        }
+      }, { passive: true });
+
+      const endCamTouch = (e) => {
+        if (camTouchId === null) return;
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          if (e.changedTouches[i].identifier === camTouchId) {
+            camTouchId = null;
+            break;
+          }
+        }
+      };
+      canvas.addEventListener('touchend', endCamTouch, { passive: true });
+      canvas.addEventListener('touchcancel', endCamTouch, { passive: true });
+
+      canvas.addEventListener('wheel', (e) => {
+        camDist = Math.max(7, Math.min(32, camDist + e.deltaY * 0.01));
+      }, { passive: true });
+
+      // Virtual Joystick Logic (Multi-Touch safe for iPhone)
+      const joyZone = document.getElementById('joystick-zone');
+      const joyKnob = document.getElementById('joystick-knob');
+      let joyPointerId = null;
+      let joyTouchId = null;
+
+      function handleJoyMove(clientX, clientY) {
+        const rect = joyZone.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        let dx = clientX - cx;
+        let dy = clientY - cy;
+        const maxR = rect.width * 0.34;
+        const dist = Math.hypot(dx, dy);
+        if (dist > maxR) {
+          dx = (dx / dist) * maxR;
+          dy = (dy / dist) * maxR;
+        }
+        joyKnob.style.transform = `translate(${dx}px, ${dy}px)`;
+        joyVec.x = dx / maxR;
+        joyVec.y = dy / maxR;
+      }
+
+      const resetJoy = () => {
+        joyPointerId = null;
+        joyTouchId = null;
+        joyKnob.style.transform = 'translate(0px, 0px)';
+        joyVec.x = 0;
+        joyVec.y = 0;
+      };
+
+      // Touch events for iOS Safari multi-touch reliability
+      joyZone.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const t = e.changedTouches[0];
+        if (!t) return;
+        joyTouchId = t.identifier;
+        handleJoyMove(t.clientX, t.clientY);
+      }, { passive: false });
+
+      joyZone.addEventListener('touchmove', (e) => {
+        if (joyTouchId === null) return;
+        e.preventDefault();
+        e.stopPropagation();
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          const t = e.changedTouches[i];
+          if (t.identifier === joyTouchId) {
+            handleJoyMove(t.clientX, t.clientY);
+            break;
+          }
+        }
+      }, { passive: false });
+
+      const endJoyTouch = (e) => {
+        if (joyTouchId === null) return;
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          if (e.changedTouches[i].identifier === joyTouchId) {
+            resetJoy();
+            break;
+          }
+        }
+      };
+      joyZone.addEventListener('touchend', endJoyTouch, { passive: false });
+      joyZone.addEventListener('touchcancel', endJoyTouch, { passive: false });
+
+      // Pointer fallback for desktop mouse dragging on joystick
+      joyZone.addEventListener('mousedown', (e) => {
+        e.stopPropagation();
+        joyPointerId = 'mouse';
+        handleJoyMove(e.clientX, e.clientY);
+      });
+      window.addEventListener('mousemove', (e) => {
+        if (joyPointerId === 'mouse') handleJoyMove(e.clientX, e.clientY);
+      });
+      window.addEventListener('mouseup', () => {
+        if (joyPointerId === 'mouse') resetJoy();
+      });
+
+      // --- Combat & Movement Actions ---
+      function triggerJump() {
+        if (isGrounded) {
+          playerVelY = 10.8;
+          isGrounded = false;
+          spawnVoxelBurst(playerObj.position.clone(), 0xe0f2fe, 5);
+        }
+      }
+
+      function triggerDash() {
+        if (dashTimer <= 0) {
+          dashTimer = 0.25;
+          const forward = new THREE.Vector3(Math.sin(playerObj.rotation.y), 0, Math.cos(playerObj.rotation.y));
+          playerObj.position.addScaledVector(forward, 3.4);
+          spawnVoxelBurst(playerObj.position.clone().add(new THREE.Vector3(0, 1, 0)), 0x38bdf8, 8);
+        }
+      }
+
+      function findNearestEnemy(maxDist) {
+        let nearest = null;
+        let bestD = maxDist;
+        enemies.forEach((en) => {
+          if (!en.alive) return;
+          const d = en.mesh.position.distanceTo(playerObj.position);
+          if (d < bestD) {
+            bestD = d;
+            nearest = en;
+          }
+        });
+        return nearest;
+      }
+
+      function triggerAttack() {
+        if (swingTimer > 0.12) return;
+        swingTimer = 0.34;
+        slashMat.color.setHex(0x38bdf8);
+        slashMat.opacity = 0.92;
+        slashMesh.scale.setScalar(1.25);
+
+        // Auto-face nearest enemy for smooth combat on iPhone & Keyboard
+        const targetEn = findNearestEnemy(6.5);
+        if (targetEn) {
+          const dir = targetEn.mesh.position.clone().sub(playerObj.position);
+          playerObj.rotation.y = Math.atan2(dir.x, dir.z);
+          if (dir.length() > 1.8) {
+            dir.normalize();
+            playerObj.position.x += dir.x * 0.45;
+            playerObj.position.z += dir.z * 0.45;
+          }
+        }
+
+        // Sword tip voxel slash effect so every press of J is visibly responsive
+        const forward = new THREE.Vector3(Math.sin(playerObj.rotation.y), 0, Math.cos(playerObj.rotation.y));
+        const slashPos = playerObj.position.clone().add(new THREE.Vector3(0, 1.2, 0)).addScaledVector(forward, 1.5);
+        spawnVoxelBurst(slashPos, 0x38bdf8, 7);
+
+        let hitCount = 0;
+        enemies.forEach((en) => {
+          if (!en.alive) return;
+          const hitRange = en.isBoss ? 5.2 : 4.5;
+          const dist = en.mesh.position.distanceTo(playerObj.position);
+          if (dist <= hitRange) {
+            const dmg = playerState.atk + Math.floor(Math.random() * 6);
+            damageEnemy(en, dmg);
+            hitCount++;
+          }
+        });
+
+        if (hitCount === 0) {
+          spawnFloatingText(slashPos.clone().add(new THREE.Vector3(0, 0.8, 0)), '⚔️ ฟันดาบ!', '#7dd3fc');
+        }
+      }
+
+      function triggerSkill() {
+        if (playerState.mp < 15) {
+          spawnFloatingText(playerObj.position.clone().add(new THREE.Vector3(0, 2.5, 0)), 'MP ไม่พอ! (ใช้ 15 MP)', '#60a5fa');
+          return;
+        }
+        playerState.mp -= 15;
+        swingTimer = 0.45;
+        slashMat.color.setHex(0xa855f7);
+        slashMat.opacity = 1.0;
+        slashMesh.scale.setScalar(2.2);
+
+        const targetEn = findNearestEnemy(8.5);
+        if (targetEn) {
+          const dir = targetEn.mesh.position.clone().sub(playerObj.position);
+          playerObj.rotation.y = Math.atan2(dir.x, dir.z);
+        }
+
+        spawnVoxelBurst(playerObj.position.clone().add(new THREE.Vector3(0, 1.2, 0)), 0xa855f7, 20);
+        spawnVoxelBurst(playerObj.position.clone().add(new THREE.Vector3(0, 1.5, 0)), 0x38bdf8, 12);
+        spawnFloatingText(playerObj.position.clone().add(new THREE.Vector3(0, 3.0, 0)), '🌀 คลื่นพลังเอเธอร์!', '#c084fc');
+
+        enemies.forEach((en) => {
+          if (!en.alive) return;
+          const hitRange = en.isBoss ? 7.8 : 7.0;
+          const dist = en.mesh.position.distanceTo(playerObj.position);
+          if (dist <= hitRange) {
+            const dmg = Math.floor(playerState.atk * 1.95);
+            damageEnemy(en, dmg);
+          }
+        });
+        updateHUD();
+      }
+
+      function damageEnemy(en, dmg) {
+        en.hp = Math.max(0, en.hp - dmg);
+        spawnFloatingText(en.mesh.position.clone().add(new THREE.Vector3(0, 2.6, 0)), '-' + dmg + ' HP', '#f87171');
+        spawnVoxelBurst(en.mesh.position.clone().add(new THREE.Vector3(0, 1.2, 0)), 0xef4444, 8);
+
+        if (en.hp <= 0) {
+          en.alive = false;
+          en.mesh.visible = false;
+          en.respawnTimer = en.isBoss ? 18 : 9;
+          const goldReward = en.isBoss ? 120 : 35;
+          const expReward = en.isBoss ? 110 : 45;
+          playerState.gold += goldReward;
+          playerState.golemsDefeated += en.isBoss ? 2 : 1;
+
+          if (playerState.golemsDefeated >= playerState.golemGoal && !playerState.quests.defeatedGolems) {
+            playerState.quests.defeatedGolems = true;
+            spawnFloatingText(
+              playerObj.position.clone().add(new THREE.Vector3(0, 3.4, 0)),
+              '🏆 ภารกิจปราบทัพโกเลมสำเร็จครบแล้ว!',
+              '#34d399'
+            );
+          }
+          gainExp(expReward);
+          spawnFloatingText(
+            en.mesh.position.clone().add(new THREE.Vector3(0, 3.1, 0)),
+            `+${goldReward} Gold / +${expReward} EXP`,
+            '#fde047'
+          );
+        }
+        updateHUD();
+      }
+
+      function usePotion() {
+        if (playerState.potions <= 0) {
+          spawnFloatingText(playerObj.position.clone().add(new THREE.Vector3(0, 2.5, 0)), 'ยาฟื้นฟูหมด!', '#f87171');
+          return;
+        }
+        if (playerState.hp >= playerState.maxHp) {
+          spawnFloatingText(playerObj.position.clone().add(new THREE.Vector3(0, 2.5, 0)), 'HP เต็มอยู่แล้ว', '#4ade80');
+          return;
+        }
+        playerState.potions -= 1;
+        playerState.hp = Math.min(playerState.maxHp, playerState.hp + 70);
+        spawnFloatingText(playerObj.position.clone().add(new THREE.Vector3(0, 2.6, 0)), '+70 HP', '#4ade80');
+        spawnVoxelBurst(playerObj.position.clone().add(new THREE.Vector3(0, 1, 0)), 0x4ade80, 10);
+        updateHUD();
+      }
+
+      function teleportHome() {
+        playerObj.position.set(0, 1.5, 6);
+        playerVelY = 0;
+        spawnVoxelBurst(playerObj.position.clone(), 0x38bdf8, 14);
+        spawnFloatingText(playerObj.position.clone().add(new THREE.Vector3(0, 2.6, 0)), '✨ วาร์ปกลับจัตุรัสเวหา', '#38bdf8');
+      }
+
+      // Bind Hotbar Buttons with instant iPhone Touch + Desktop Click support
+      function bindActionBtn(id, fn) {
+        const btn = document.getElementById(id);
+        if (!btn) return;
+        let lastTouchTime = 0;
+        btn.addEventListener('touchstart', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          lastTouchTime = performance.now();
+          flashButton(id);
+          fn();
+        }, { passive: false });
+        btn.addEventListener('click', (e) => {
+          if (performance.now() - lastTouchTime < 450) return;
+          flashButton(id);
+          fn();
+        });
+      }
+
+      bindActionBtn('act-attack', triggerAttack);
+      bindActionBtn('act-skill', triggerSkill);
+      bindActionBtn('act-jump', triggerJump);
+      bindActionBtn('act-dash', triggerDash);
+      bindActionBtn('act-potion', usePotion);
+      bindActionBtn('act-teleport', teleportHome);
+
+      // --- Atmosphere & Camera Presets ---
+      function setTimeOfDay(mode) {
+        document.querySelectorAll('#btn-time-day, #btn-time-sunset, #btn-time-night').forEach(b => b.classList.remove('active'));
+        if (mode === 'day') {
+          document.getElementById('btn-time-day').classList.add('active');
+          scene.background.setHex(0x68b5e8);
+          scene.fog.color.setHex(0x68b5e8);
+          ambientLight.color.setHex(0xdbeafe);
+          ambientLight.intensity = 0.72;
+          sunLight.color.setHex(0xfffbeb);
+          sunLight.intensity = 1.05;
+        } else if (mode === 'sunset') {
+          document.getElementById('btn-time-sunset').classList.add('active');
+          scene.background.setHex(0xf97316);
+          scene.fog.color.setHex(0xfb923c);
+          ambientLight.color.setHex(0xfed7aa);
+          ambientLight.intensity = 0.62;
+          sunLight.color.setHex(0xfef08a);
+          sunLight.intensity = 0.95;
+        } else if (mode === 'night') {
+          document.getElementById('btn-time-night').classList.add('active');
+          scene.background.setHex(0x090d1e);
+          scene.fog.color.setHex(0x090d1e);
+          ambientLight.color.setHex(0x38bdf8);
+          ambientLight.intensity = 0.38;
+          sunLight.color.setHex(0x818cf8);
+          sunLight.intensity = 0.5;
+        }
+      }
+
+      document.getElementById('btn-time-day').addEventListener('click', () => setTimeOfDay('day'));
+      document.getElementById('btn-time-sunset').addEventListener('click', () => setTimeOfDay('sunset'));
+      document.getElementById('btn-time-night').addEventListener('click', () => setTimeOfDay('night'));
+
+      document.getElementById('btn-cam-mode').addEventListener('click', (e) => {
+        if (camMode === 'follow') {
+          camMode = 'iso';
+          camPitch = 0.78;
+          camDist = 22;
+          e.currentTarget.textContent = '🎥 มุมกล้อง: มุมสูง RPG';
+        } else if (camMode === 'iso') {
+          camMode = 'orbit';
+          camPitch = 0.42;
+          camDist = 28;
+          e.currentTarget.textContent = '🎥 มุมกล้อง: ชมวิวเมือง';
+        } else {
+          camMode = 'follow';
+          camPitch = 0.48;
+          camDist = 15.5;
+          e.currentTarget.textContent = '🎥 มุมกล้อง: ติดตาม';
+        }
+      });
+
+      // --- NPC, Beacon & Airship Interaction System ---
+      let activeInteractTarget = null;
+
+      function openDialogue(title, role, text, buttons) {
+        dlgName.textContent = title;
+        dlgRole.textContent = role;
+        dlgBody.textContent = text;
+        dlgActions.innerHTML = '';
+        buttons.forEach((b) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'btn-action ' + (b.secondary ? 'secondary' : '');
+          btn.textContent = b.label;
+          btn.addEventListener('click', b.onClick);
+          dlgActions.appendChild(btn);
+        });
+        dialogueBox.style.display = 'flex';
+      }
+
+      function closeDialogue() {
+        dialogueBox.style.display = 'none';
+      }
+
+      function triggerInteract() {
+        if (!activeInteractTarget) return;
+
+        if (activeInteractTarget.type === 'npc') {
+          const npc = activeInteractTarget.data;
+          if (npc.id === 'eldrin') {
+            if (!playerState.quests.talkedEldrin) {
+              playerState.quests.talkedEldrin = true;
+              gainExp(35);
+              updateHUD();
+            }
+            const allDone = isReadyForAirship();
+            const actions = [
+              {
+                label: '✨ ฟื้นฟู HP/MP เต็ม (ฟรี)',
+                onClick: () => {
+                  playerState.hp = playerState.maxHp;
+                  playerState.mp = playerState.maxMp;
+                  updateHUD();
+                  spawnFloatingText(playerObj.position.clone().add(new THREE.Vector3(0, 2.5, 0)), '✨ ฟื้นฟูพลังเต็มเปี่ยม!', '#38bdf8');
+                  closeDialogue();
+                }
+              }
+            ];
+            if (allDone) {
+              actions.unshift({
+                label: '🚢 ขึ้นเรือเหาะเดินทางไปด่านที่ ' + (playerState.stage + 1) + ' ทันที!',
+                onClick: startAirshipCutscene
+              });
+            }
+            actions.push({ label: 'รับทราบ', secondary: true, onClick: closeDialogue });
+
+            openDialogue(
+              npc.name,
+              npc.role,
+              allDone
+                ? 'ภารกิจในด่านที่ ' + playerState.stage + ' สำเร็จครบถ้วนแล้ว! กดขึ้นเรือเหาะเพื่อออกเดินทางไปยังมหานครลอยฟ้าด่านที่ ' + (playerState.stage + 1) + ' และรับภารกิจใหม่ได้เลย!'
+                : `ขณะนี้เราอยู่ในด่านที่ ${playerState.stage}! กองทัพโกเลมคลั่งกำลังบุกเข้ามาในจัตุรัสกลางเมือง ช่วยรวบรวมผลึกเอเธอร์ให้ครบ ${playerState.totalShards} ชิ้น ปราบโกเลมบุกเมือง ${playerState.golemGoal} ตัว และไปจุดประภาคารเรือเหาะที่ท่าเรือตะวันออกเพื่อเดินทางสู่เมืองถัดไป!`,
+              actions
+            );
+          } else if (npc.id === 'blacksmith') {
+            const upgCost = playerState.weaponLevel * 50;
+            openDialogue(
+              npc.name,
+              npc.role,
+              `ต้องการตีบวกดาบเวหาสำหรับรับมือทัพโกเลมและบอสราชันย์โกเลมไหม? ตอนนี้ดาบของคุณอยู่ในระดับ +${playerState.weaponLevel}`,
+              [
+                {
+                  label: `ตีบวกดาบเวหา (+7 ATK) [${upgCost} 🪙]`,
+                  onClick: () => {
+                    if (playerState.gold >= upgCost) {
+                      playerState.gold -= upgCost;
+                      playerState.weaponLevel += 1;
+                      playerState.atk += 7;
+                      updateHUD();
+                      spawnFloatingText(playerObj.position.clone().add(new THREE.Vector3(0, 2.6, 0)), '⚔️ ตีบวกดาบสำเร็จ! +' + playerState.weaponLevel, '#fde047');
+                      triggerInteract();
+                    } else {
+                      spawnFloatingText(playerObj.position.clone().add(new THREE.Vector3(0, 2.6, 0)), 'เหรียญทองไม่พอ!', '#f87171');
+                    }
+                  }
+                },
+                {
+                  label: 'ซื้อยา HP x1 [25 🪙]',
+                  onClick: () => {
+                    if (playerState.gold >= 25) {
+                      playerState.gold -= 25;
+                      playerState.potions += 1;
+                      updateHUD();
+                      spawnFloatingText(playerObj.position.clone().add(new THREE.Vector3(0, 2.6, 0)), '🧪 ได้รับยา HP +1', '#4ade80');
+                    } else {
+                      spawnFloatingText(playerObj.position.clone().add(new THREE.Vector3(0, 2.6, 0)), 'เหรียญทองไม่พอ!', '#f87171');
+                    }
+                  }
+                },
+                { label: 'ปิดหน้าต่าง', secondary: true, onClick: closeDialogue }
+              ]
+            );
+          } else if (npc.id === 'lumina') {
+            openDialogue(
+              npc.name,
+              npc.role,
+              'ตอนนี้เมืองลอยฟ้าของเราขยายใหญ่ขึ้นเป็น 6 หมู่เกาะแล้ว! หากทำภารกิจครบทั้ง 4 ข้อ คุณสามารถขึ้นเรือเหาะที่ท่าเรือตะวันออกเพื่อบินไปยังมหานครลอยฟ้าด่านถัดไปได้ทันที!',
+              [
+                {
+                  label: 'รับพรสายลม (+35 EXP)',
+                  onClick: () => {
+                    gainExp(35);
+                    closeDialogue();
+                  }
+                },
+                { label: 'ขอบคุณ', secondary: true, onClick: closeDialogue }
+              ]
+            );
+          } else if (npc.id === 'valkyrie') {
+            openDialogue(
+              npc.name,
+              npc.role,
+              'ระวังตัวด้วยนักสำรวจ! ทางทิศตะวันตกเฉียงเหนือของป้อมปราการแห่งนี้คือ "ลานประลองราชันย์โกเลม" ที่มีบอสโกเลมยักษ์เฝ้าผลึกเอเธอร์อยู่ หรือจะเรียกทัพโกเลมบุกเมืองมาฝึกฝีมือก็ได้นะ!',
+              [
+                {
+                  label: '🚨 เรียกทัพโกเลมบุกเมืองเดี๋ยวนี้!',
+                  onClick: () => {
+                    closeDialogue();
+                    triggerCityInvasionWave();
+                  }
+                },
+                { label: 'รับทราบ', secondary: true, onClick: closeDialogue }
+              ]
+            );
+          }
+        } else if (activeInteractTarget.type === 'beacon' || activeInteractTarget.type === 'airship') {
+          if (!playerState.quests.activatedBeacon) {
+            playerState.quests.activatedBeacon = true;
+            beaconCrystal.material = getVoxelMat(0x38bdf8, 0x0284c7, 0.95);
+            gainExp(65);
+            playerState.gold += 90;
+            spawnVoxelBurst(beaconCrystal.position.clone(), 0x38bdf8, 24);
+            spawnFloatingText(beaconCrystal.position.clone().add(new THREE.Vector3(0, 2, 0)), '🚢 เปิดใช้งานประภาคารเรือเหาะแล้ว!', '#38bdf8');
+            updateHUD();
+          }
+
+          openDialogue(
+            '🚢 เรือเหาะเวหาข้ามมิติ (Sky Armada Flagship)',
+            'พร้อมเดินทางสู่ด่านที่ ' + (playerState.stage + 1),
+            isReadyForAirship()
+              ? 'ภารกิจทั้งหมดของด่านที่ ' + playerState.stage + ' เสร็จสมบูรณ์แล้ว! คุณต้องการขึ้นเรือเหาะเพื่อชมฉากเดินทางข้ามทะเลเมฆไปยังมหานครลอยฟ้าด่านที่ ' + (playerState.stage + 1) + ' และเริ่มภารกิจใหม่เลยหรือไม่?'
+              : 'ประภาคารเรือเหาะเปิดทำงานแล้ว! คุณสามารถออกเดินทางสู่เมืองลอยฟ้าด่านที่ ' + (playerState.stage + 1) + ' ได้ทันที หรือจะอยู่เก็บผลึกและปราบโกเลมในด่านนี้ต่อก็ได้!',
+            [
+              {
+                label: '🚢 ขึ้นเรือเหาะไปด่านที่ ' + (playerState.stage + 1) + ' เลย!',
+                onClick: startAirshipCutscene
+              },
+              {
+                label: 'สำรวจเมืองนี้ต่ออีกนิด',
+                secondary: true,
+                onClick: closeDialogue
+              }
+            ]
+          );
+        }
+      }
+
+      interactPrompt.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        triggerInteract();
+      }, { passive: false });
+      interactPrompt.addEventListener('click', triggerInteract);
+
+      // --- Physics & Platform Height Lookup ---
+      function getPlatformAt(x, z) {
+        let best = null;
+        for (let i = 0; i < walkablePlatforms.length; i++) {
+          const p = walkablePlatforms[i];
+          if (x >= p.minX && x <= p.maxX && z >= p.minZ && z <= p.maxZ) {
+            if (!best || p.topY > best.topY) {
+              best = p;
+            }
+          }
+        }
+        return best;
+      }
+
+      // --- Project 3D to 2D Screen for Labels ---
+      function projectToScreen(pos3D) {
+        const v = pos3D.clone().project(camera);
+        if (v.z > 1) return null;
+        return {
+          x: (v.x * 0.5 + 0.5) * window.innerWidth,
+          y: (-(v.y * 0.5) + 0.5) * window.innerHeight
+        };
+      }
+
+      // --- Draw Live Minimap ---
+      function renderMinimap() {
+        const w = minimapCanvas.width;
+        const h = minimapCanvas.height;
+        minimapCtx.clearRect(0, 0, w, h);
+
+        minimapCtx.fillStyle = '#070b19';
+        minimapCtx.fillRect(0, 0, w, h);
+
+        const scale = 1.02;
+        const cx = w / 2;
+        const cy = h / 2;
+
+        // Draw Islands
+        walkablePlatforms.forEach((p) => {
+          const rx = cx + p.minX * scale;
+          const rz = cy + p.minZ * scale;
+          const rw = (p.maxX - p.minX) * scale;
+          const rd = (p.maxZ - p.minZ) * scale;
+          minimapCtx.fillStyle = 'rgba(56, 189, 248, 0.22)';
+          minimapCtx.strokeStyle = 'rgba(56, 189, 248, 0.55)';
+          minimapCtx.fillRect(rx, rz, rw, rd);
+          minimapCtx.strokeRect(rx, rz, rw, rd);
+        });
+
+        // Draw Shards
+        shards.forEach((s) => {
+          if (s.collected) return;
+          minimapCtx.fillStyle = '#38bdf8';
+          minimapCtx.beginPath();
+          minimapCtx.arc(cx + s.mesh.position.x * scale, cy + s.mesh.position.z * scale, 3, 0, Math.PI * 2);
+          minimapCtx.fill();
+        });
+
+        // Draw Enemies & Boss
+        enemies.forEach((en) => {
+          if (!en.alive) return;
+          minimapCtx.fillStyle = en.isBoss ? '#ec4899' : '#ef4444';
+          minimapCtx.beginPath();
+          minimapCtx.arc(cx + en.mesh.position.x * scale, cy + en.mesh.position.z * scale, en.isBoss ? 4.5 : 3.0, 0, Math.PI * 2);
+          minimapCtx.fill();
+        });
+
+        // Draw NPCs
+        npcs.forEach((n) => {
+          minimapCtx.fillStyle = '#f59e0b';
+          minimapCtx.beginPath();
+          minimapCtx.arc(cx + n.mesh.position.x * scale, cy + n.mesh.position.z * scale, 3, 0, Math.PI * 2);
+          minimapCtx.fill();
+        });
+
+        // Draw Player
+        minimapCtx.fillStyle = '#ffffff';
+        minimapCtx.beginPath();
+        minimapCtx.arc(cx + playerObj.position.x * scale, cy + playerObj.position.z * scale, 4, 0, Math.PI * 2);
+        minimapCtx.fill();
+      }
+
+      // --- Main Game Loop ---
+      let lastTime = performance.now();
+
+      function animate(now) {
+        requestAnimationFrame(animate);
+        const dt = Math.min(0.05, (now - lastTime) / 1000);
+        lastTime = now;
+        const elapsed = now * 0.001;
+
+        // Handle Active Airship Cutscene Flight
+        if (cutsceneState.active) {
+          cutsceneState.timer += dt;
+          const progress = Math.min(1, cutsceneState.timer / cutsceneState.duration);
+
+          // Fly the Airship upward and forward across the sky
+          airshipGroup.position.x = airshipBasePos.x + progress * 48;
+          airshipGroup.position.y = airshipBasePos.y + Math.pow(progress, 1.3) * 28;
+          airshipGroup.position.z = airshipBasePos.z - Math.sin(progress * Math.PI) * 14;
+          airshipGroup.rotation.z = 0.08 * Math.sin(progress * Math.PI);
+
+          // Keep player on the flying Airship deck
+          playerObj.position.copy(airshipGroup.position).add(new THREE.Vector3(0, 1.8, 0));
+          playerObj.rotation.y = Math.PI / 2;
+
+          // Emit thruster voxel trail
+          if (Math.random() < 0.65) {
+            spawnVoxelBurst(airshipGroup.position.clone().add(new THREE.Vector3(-6, 0.5, 0)), 0x38bdf8, 2);
+          }
+
+          // Dramatic Orbiting Cutscene Camera around the flying Airship
+          const angle = elapsed * 0.9;
+          camera.position.set(
+            airshipGroup.position.x - 16 + Math.cos(angle) * 8,
+            airshipGroup.position.y + 8 + progress * 6,
+            airshipGroup.position.z + 18 + Math.sin(angle) * 6
+          );
+          camera.lookAt(airshipGroup.position.x, airshipGroup.position.y + 2, airshipGroup.position.z);
+
+          if (cutsceneState.timer >= cutsceneState.duration) {
+            completeAirshipTransitionToNewStage();
+          }
+
+          renderer.render(scene, camera);
+          return;
+        }
+
+        // Passive MP regen
+        if (playerState.mp < playerState.maxMp) {
+          playerState.mp = Math.min(playerState.maxMp, playerState.mp + dt * 2.5);
+          updateHUD();
+        }
+
+        // Rotate Central Crystal, Windmill, Airship, Clouds
+        centralCrystal.rotation.y = elapsed * 1.4;
+        centralCrystal.position.y = 3.8 + Math.sin(elapsed * 2.5) * 0.35;
+        windmillBlades.rotation.z = elapsed * 1.1;
+        airshipGroup.position.y = airshipBasePos.y + Math.sin(elapsed * 1.6) * 0.45;
+
+        // Update Airship Floating Label
+        const airshipSc = projectToScreen(airshipGroup.position.clone().add(new THREE.Vector3(0, 9.2, 0)));
+        if (airshipSc) {
+          airshipLabel.style.display = 'block';
+          airshipLabel.style.left = airshipSc.x + 'px';
+          airshipLabel.style.top = airshipSc.y + 'px';
+        } else {
+          airshipLabel.style.display = 'none';
+        }
+
+        clouds.forEach((c) => {
+          c.mesh.position.x += c.speed * dt;
+          if (c.mesh.position.x > 90) c.mesh.position.x = -90;
+        });
+
+        // Player Movement Input (Supports both EN and TH keyboard layouts + Joystick)
+        let moveX = joyVec.x;
+        let moveZ = joyVec.y;
+        if (codes['KeyW'] || keys['w'] || keys['ไ'] || keys['arrowup']) moveZ -= 1;
+        if (codes['KeyS'] || keys['s'] || keys['ห'] || keys['arrowdown']) moveZ += 1;
+        if (codes['KeyA'] || keys['a'] || keys['ฟ'] || keys['arrowleft']) moveX -= 1;
+        if (codes['KeyD'] || keys['d'] || keys['ก'] || keys['arrowright']) moveX += 1;
+
+        const moveLen = Math.hypot(moveX, moveZ);
+        const speed = 8.2;
+
+        if (moveLen > 0.05) {
+          moveX /= moveLen;
+          moveZ /= moveLen;
+
+          const sinY = Math.sin(camYaw);
+          const cosY = Math.cos(camYaw);
+          const worldDX = moveX * cosY + moveZ * sinY;
+          const worldDZ = -moveX * sinY + moveZ * cosY;
+
+          let nextX = playerObj.position.x + worldDX * speed * dt;
+          let nextZ = playerObj.position.z + worldDZ * speed * dt;
+
+          for (let i = 0; i < solidObstacles.length; i++) {
+            const obs = solidObstacles[i];
+            const dist = Math.hypot(nextX - obs.x, nextZ - obs.z);
+            if (dist < obs.radius + 0.55) {
+              const pushAngle = Math.atan2(nextZ - obs.z, nextX - obs.x);
+              nextX = obs.x + Math.cos(pushAngle) * (obs.radius + 0.55);
+              nextZ = obs.z + Math.sin(pushAngle) * (obs.radius + 0.55);
+            }
+          }
+
+          playerObj.position.x = nextX;
+          playerObj.position.z = nextZ;
+          playerObj.rotation.y = Math.atan2(worldDX, worldDZ);
+
+          playerObj.userData.leftLeg.rotation.x = Math.sin(elapsed * 12) * 0.6;
+          playerObj.userData.rightLeg.rotation.x = -Math.sin(elapsed * 12) * 0.6;
+        } else {
+          playerObj.userData.leftLeg.rotation.x = 0;
+          playerObj.userData.rightLeg.rotation.x = 0;
+        }
+
+        // Sword Swing Animation
+        if (swingTimer > 0) {
+          swingTimer -= dt;
+          playerObj.userData.rightArm.rotation.x = -Math.sin((swingTimer / 0.32) * Math.PI) * 1.9;
+          slashMat.opacity = Math.max(0, swingTimer * 2.5);
+        } else {
+          playerObj.userData.rightArm.rotation.x = 0;
+          slashMat.opacity = 0;
+        }
+
+        if (dashTimer > 0) dashTimer -= dt;
+
+        // Vertical Gravity & Island Floor Detection
+        const currentPlat = getPlatformAt(playerObj.position.x, playerObj.position.z);
+        playerVelY -= 24 * dt;
+        playerObj.position.y += playerVelY * dt;
+
+        if (currentPlat && playerObj.position.y <= currentPlat.topY && playerObj.position.y >= currentPlat.topY - 2.4 && playerVelY <= 0) {
+          playerObj.position.y = currentPlat.topY;
+          playerVelY = 0;
+          isGrounded = true;
+          document.getElementById('zone-name').textContent = currentPlat.zoneTitle;
+        } else {
+          isGrounded = false;
+        }
+
+        if (playerObj.position.y < -22) {
+          teleportHome();
+        }
+
+        // Check Collectible Shards
+        shards.forEach((s) => {
+          if (s.collected) return;
+          s.mesh.rotation.y = elapsed * 2.2;
+          s.mesh.position.y = s.baseY + Math.sin(elapsed * 3) * 0.25;
+          if (s.mesh.position.distanceTo(playerObj.position) < 1.9) {
+            s.collected = true;
+            s.mesh.visible = false;
+            s.label.style.display = 'none';
+            playerState.shards += 1;
+            playerState.gold += 35;
+            gainExp(40);
+            spawnVoxelBurst(s.mesh.position.clone(), 0x38bdf8, 16);
+            spawnFloatingText(
+              s.mesh.position.clone().add(new THREE.Vector3(0, 2, 0)),
+              `💎 เก็บผลึกเอเธอร์สำเร็จ! (${playerState.shards}/${playerState.totalShards})`,
+              '#38bdf8'
+            );
+            if (playerState.shards >= playerState.totalShards && !playerState.quests.collectedShards) {
+              playerState.quests.collectedShards = true;
+            }
+            updateHUD();
+          } else {
+            const sc = projectToScreen(s.mesh.position.clone().add(new THREE.Vector3(0, 2.3, 0)));
+            if (sc) {
+              s.label.style.display = 'block';
+              s.label.style.left = sc.x + 'px';
+              s.label.style.top = sc.y + 'px';
+            } else {
+              s.label.style.display = 'none';
+            }
+          }
+        });
+
+        // Update Enemies & City Invader Golem AI
+        enemies.forEach((en) => {
+          if (!en.alive) {
+            en.label.style.display = 'none';
+            en.respawnTimer -= dt;
+            if (en.respawnTimer <= 0) {
+              en.alive = true;
+              en.hp = en.maxHp;
+              en.mesh.position.copy(en.spawnPos);
+              en.mesh.visible = true;
+            }
+            return;
+          }
+
+          const distToPlayer = en.mesh.position.distanceTo(playerObj.position);
+          const aggroRange = en.invader ? 15.0 : 9.5;
+          const moveSpeed = en.isBoss ? 2.3 : 3.0;
+
+          if (distToPlayer < aggroRange && distToPlayer > 1.55) {
+            // Chase player
+            const dir = playerObj.position.clone().sub(en.mesh.position).normalize();
+            en.mesh.position.x += dir.x * moveSpeed * dt;
+            en.mesh.position.z += dir.z * moveSpeed * dt;
+            en.mesh.rotation.y = Math.atan2(dir.x, dir.z);
+          } else if (en.invader) {
+            // Invader Golems march toward the city plaza patrol target when player is far
+            const distToTarget = Math.hypot(
+              en.patrolTarget.x - en.mesh.position.x,
+              en.patrolTarget.z - en.mesh.position.z
+            );
+            if (distToTarget > 1.2) {
+              const dir = en.patrolTarget.clone().sub(en.mesh.position).normalize();
+              en.mesh.position.x += dir.x * 1.9 * dt;
+              en.mesh.position.z += dir.z * 1.9 * dt;
+              en.mesh.rotation.y = Math.atan2(dir.x, dir.z);
+            } else {
+              // Patrol back and forth in the city plaza
+              const tmp = en.patrolTarget.clone();
+              en.patrolTarget.copy(en.spawnPos);
+              en.spawnPos.copy(tmp);
+            }
+          }
+
+          // Snap enemy Y to current platform height
+          const ePlat = getPlatformAt(en.mesh.position.x, en.mesh.position.z);
+          if (ePlat) {
+            en.mesh.position.y = ePlat.topY;
+          }
+
+          const attackRange = en.isBoss ? 2.6 : 1.9;
+          if (distToPlayer <= attackRange) {
+            en.attackCooldown -= dt;
+            if (en.attackCooldown <= 0) {
+              en.attackCooldown = 1.5;
+              const rawAtk = (en.isBoss ? 24 : 14) + (playerState.stage - 1) * 3;
+              const dmg = Math.max(3, rawAtk - playerState.def);
+              playerState.hp = Math.max(0, playerState.hp - dmg);
+              spawnFloatingText(playerObj.position.clone().add(new THREE.Vector3(0, 2.4, 0)), '-' + dmg + ' HP', '#ef4444');
+              if (playerState.hp <= 0) {
+                playerState.hp = playerState.maxHp;
+                teleportHome();
+              }
+              updateHUD();
+            }
+          }
+
+          const labelOffsetY = en.isBoss ? 4.8 : 2.8;
+          const sc = projectToScreen(en.mesh.position.clone().add(new THREE.Vector3(0, labelOffsetY, 0)));
+          if (sc) {
+            en.label.style.display = 'block';
+            en.label.textContent = `${en.isBoss ? '👑' : '👾'} ${en.name} HP ${en.hp}/${en.maxHp}`;
+            en.label.style.left = sc.x + 'px';
+            en.label.style.top = sc.y + 'px';
+          } else {
+            en.label.style.display = 'none';
+          }
+        });
+
+        // Update NPCs & Interaction Prompt
+        activeInteractTarget = null;
+        npcs.forEach((n) => {
+          const d = n.mesh.position.distanceTo(playerObj.position);
+          if (d < 3.4) {
+            activeInteractTarget = { type: 'npc', data: n };
+          }
+          const sc = projectToScreen(n.mesh.position.clone().add(new THREE.Vector3(0, 2.6, 0)));
+          if (sc) {
+            n.label.style.display = 'block';
+            n.label.style.left = sc.x + 'px';
+            n.label.style.top = sc.y + 'px';
+          } else {
+            n.label.style.display = 'none';
+          }
+        });
+
+        // Check Airship Beacon or Boarding Pier distance
+        const beaconPos = new THREE.Vector3(45, 2, -1);
+        const boardingPierPos = new THREE.Vector3(54, 2.5, 4);
+        if (beaconPos.distanceTo(playerObj.position) < 4.2) {
+          activeInteractTarget = { type: 'beacon' };
+        } else if (boardingPierPos.distanceTo(playerObj.position) < 5.0) {
+          activeInteractTarget = { type: 'airship' };
+        }
+
+        if (activeInteractTarget) {
+          interactPrompt.style.display = 'inline-flex';
+          if (activeInteractTarget.type === 'beacon') {
+            interactText.textContent = playerState.quests.activatedBeacon
+              ? '🚢 ขึ้นเรือเหาะเดินทางไปด่านถัดไป'
+              : '🔥 จุดประภาคาร & ขึ้นเรือเหาะไปด่านใหม่';
+          } else if (activeInteractTarget.type === 'airship') {
+            interactText.textContent = '🚢 ขึ้นเรือเหาะเดินทางไปเมืองลอยฟ้าด่านที่ ' + (playerState.stage + 1);
+          } else {
+            interactText.textContent = 'คุยกับ ' + activeInteractTarget.data.name;
+          }
+        } else {
+          interactPrompt.style.display = 'none';
+        }
+
+        // Update Particles & Floating Damage Labels
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          p.life -= dt;
+          if (p.type === 'voxel') {
+            p.vel.y -= 12 * dt;
+            p.mesh.position.addScaledVector(p.vel, dt);
+            p.mesh.rotation.x += 4 * dt;
+            if (p.life <= 0) {
+              scene.remove(p.mesh);
+              particles.splice(i, 1);
+            }
+          } else if (p.type === 'label') {
+            p.pos.y += p.vy * dt;
+            const sc = projectToScreen(p.pos);
+            if (sc && p.life > 0) {
+              p.el.style.left = sc.x + 'px';
+              p.el.style.top = sc.y + 'px';
+              p.el.style.opacity = Math.min(1, p.life * 2);
+            } else {
+              p.el.remove();
+              particles.splice(i, 1);
+            }
+          }
+        }
+
+        // Camera Positioning
+        if (camMode === 'orbit') {
+          camYaw += dt * 0.25;
+        }
+        const camOffset = new THREE.Vector3(
+          Math.sin(camYaw) * Math.cos(camPitch) * camDist,
+          Math.sin(camPitch) * camDist,
+          Math.cos(camYaw) * Math.cos(camPitch) * camDist
+        );
+        camera.position.copy(playerObj.position).add(new THREE.Vector3(0, 1.5, 0)).add(camOffset);
+        camera.lookAt(playerObj.position.x, playerObj.position.y + 1.4, playerObj.position.z);
+
+        renderMinimap();
+        renderer.render(scene, camera);
+      }
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      updateHUD();
+      requestAnimationFrame(animate);
+    })();
+  </script>
+</body>
+</html>
