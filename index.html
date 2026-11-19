@@ -1030,6 +1030,60 @@
         text-align: center;
       }
     }
+
+    /* iPad & Tablet Touch Ergonomics (769px - 1366px) */
+    @media (min-width: 769px) and (max-width: 1366px) and (hover: none) and (pointer: coarse) {
+      .controls-legend { display: none; }
+      .hud-layer {
+        padding: max(14px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(22px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
+      }
+      .joystick-zone { width: 126px; height: 126px; }
+      .joystick-knob { width: 50px; height: 50px; }
+      .hotbar {
+        display: grid;
+        grid-template-columns: repeat(3, 64px);
+        gap: 8px;
+        padding: 10px;
+      }
+      .slot-btn { width: 64px; height: 64px; border-radius: 14px; }
+      .slot-icon { font-size: 22px; }
+      .slot-name { font-size: 11px; }
+      .quest-card { width: 220px; padding: 10px 12px; background: rgba(15, 23, 42, 0.7); }
+      #minimap-canvas { width: 88px; height: 88px; }
+    }
+
+    /* Mobile Landscape Mode (Most Popular Pro Action RPG Orientation) */
+    @media (max-height: 540px) and (orientation: landscape) {
+      .controls-legend { display: none; }
+      .hud-layer {
+        padding: max(6px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
+      }
+      .hud-top { flex-wrap: nowrap; align-items: flex-start; gap: 8px; }
+      .zone-banner { order: 0; width: auto; flex: 1; gap: 3px; }
+      .zone-pill { padding: 3px 10px; font-size: 11px; }
+      .toolbar-btns { max-width: 54vw; overflow-x: auto; flex-wrap: nowrap; justify-content: center; }
+      .btn-chip { padding: 3px 7px; font-size: 10px; flex-shrink: 0; }
+      .right-hud { flex-direction: row; align-items: flex-start; gap: 6px; max-width: none; }
+      .minimap-wrap { padding: 3px; background: rgba(15, 23, 42, 0.62); }
+      #minimap-canvas { width: 50px; height: 50px; }
+      .quest-card { width: 150px; padding: 4px 7px; background: rgba(15, 23, 42, 0.62); }
+      .quest-header { font-size: 9px; margin-bottom: 2px; }
+      .quest-list { font-size: 8.5px; gap: 2px; }
+      .quest-item { padding: 1px 4px; }
+      .joystick-zone { width: 88px; height: 88px; }
+      .joystick-knob { width: 34px; height: 34px; }
+      .joystick-hint { display: none; }
+      .hotbar {
+        display: grid;
+        grid-template-columns: repeat(3, 46px);
+        gap: 5px;
+        padding: 6px;
+      }
+      .slot-btn { width: 46px; height: 46px; }
+      #interact-prompt { bottom: 18px; font-size: 12px; padding: 5px 12px; }
+      #dialogue-box { bottom: 16px; width: min(480px, 84vw); padding: 8px 12px; }
+      #airship-ready-banner { top: 62px; padding: 5px 12px; flex-direction: row; }
+    }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
