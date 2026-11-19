@@ -739,38 +739,224 @@
       color: #f8fafc;
     }
 
+    /* Heroic Death Overlay */
+    #death-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle, rgba(69, 10, 10, 0.72) 0%, rgba(2, 6, 23, 0.92) 100%);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      z-index: 40;
+      pointer-events: auto;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .death-card {
+      background: rgba(15, 23, 42, 0.95);
+      border: 2px solid #ef4444;
+      border-radius: 16px;
+      padding: 24px 28px;
+      max-width: 460px;
+      width: 92vw;
+      box-shadow: 0 0 40px rgba(239, 68, 68, 0.45);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .death-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: #f87171;
+      letter-spacing: 0.02em;
+    }
+
+    .death-desc {
+      font-size: 14px;
+      color: #e2e8f0;
+      line-height: 1.5;
+    }
+
+    .death-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 6px;
+    }
+
+    /* Commercial Intro Sky Flyover & Title Screen Overlay */
+    #intro-showcase-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(15, 23, 42, 0.25) 0%, rgba(2, 6, 23, 0.78) 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: max(24px, env(safe-area-inset-top)) 20px max(28px, env(safe-area-inset-bottom)) 20px;
+      z-index: 50;
+      pointer-events: auto;
+      transition: opacity 0.45s ease;
+    }
+
+    .intro-top-pill {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(56, 189, 248, 0.5);
+      color: #7dd3fc;
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+    }
+
+    .intro-hero-box {
+      background: rgba(15, 23, 42, 0.84);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1.5px solid rgba(56, 189, 248, 0.45);
+      border-radius: 20px;
+      padding: 26px 30px;
+      max-width: 520px;
+      width: 92vw;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), 0 0 35px rgba(56, 189, 248, 0.25);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .intro-game-logo {
+      font-size: clamp(24px, 5vw, 34px);
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      background: linear-gradient(135deg, #ffffff 0%, #7dd3fc 55%, #f59e0b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.15;
+    }
+
+    .intro-game-sub {
+      font-size: 14px;
+      color: #cbd5e1;
+      line-height: 1.5;
+      max-width: 440px;
+    }
+
+    .intro-poi-badge {
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #fde047;
+      padding: 5px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .intro-btn-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 6px;
+    }
+
+    .btn-start-main {
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      color: #fff;
+      border: 1.5px solid #7dd3fc;
+      padding: 11px 22px;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      touch-action: manipulation;
+      box-shadow: 0 0 24px rgba(56, 189, 248, 0.55);
+      transition: transform 0.12s ease, filter 0.15s ease;
+    }
+
+    .btn-start-main:hover {
+      transform: scale(1.04);
+      filter: brightness(1.12);
+    }
+
+    #intro-tour-bar {
+      position: absolute;
+      bottom: max(24px, env(safe-area-inset-bottom));
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.92);
+      border: 1.5px solid #38bdf8;
+      border-radius: 999px;
+      padding: 8px 18px;
+      display: none;
+      align-items: center;
+      gap: 14px;
+      z-index: 48;
+      pointer-events: auto;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    }
+
     @media (max-width: 768px) {
       .controls-legend { display: none; }
-      .hud-top { gap: 8px; }
-      .hero-card { min-width: 175px; padding: 8px 10px; gap: 5px; }
-      .hero-title { font-size: 13px; }
-      .hero-subtitle { font-size: 11px; }
-      .voxel-avatar { width: 30px; height: 30px; font-size: 12px; }
-      .hero-attributes { font-size: 11px; gap: 6px; flex-wrap: wrap; }
-      .zone-pill { padding: 5px 12px; font-size: 12px; }
-      .btn-chip { padding: 4px 8px; font-size: 11px; }
-      .right-hud { max-width: 165px; gap: 6px; }
-      #minimap-canvas { width: 78px; height: 78px; }
-      .quest-card { width: 165px; padding: 8px 10px; }
-      .quest-header { font-size: 11px; margin-bottom: 4px; }
-      .quest-list { font-size: 10px; gap: 4px; }
-      .joystick-zone { width: 96px; height: 96px; flex-shrink: 0; }
-      .joystick-knob { width: 38px; height: 38px; }
+      .hud-top { gap: 6px; align-items: stretch; }
+      .hero-card { min-width: 155px; flex: 1; padding: 7px 9px; gap: 4px; }
+      .hero-title { font-size: 12px; }
+      .hero-subtitle { font-size: 10px; }
+      .voxel-avatar { width: 28px; height: 28px; font-size: 11px; }
+      .gold-badge { padding: 2px 7px; font-size: 11px; }
+      .stat-row { font-size: 10px; gap: 5px; }
+      .bar-track { height: 7px; }
+      .stat-val { width: 52px; font-size: 10px; }
+      .hero-attributes { font-size: 10px; gap: 6px; flex-wrap: wrap; }
+      .zone-banner { order: 3; width: 100%; gap: 4px; }
+      .zone-pill { padding: 4px 10px; font-size: 11px; }
+      .toolbar-btns {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        max-width: 96vw;
+        justify-content: flex-start;
+        padding-bottom: 2px;
+        -webkit-overflow-scrolling: touch;
+      }
+      .btn-chip { padding: 4px 8px; font-size: 11px; flex-shrink: 0; }
+      .right-hud { max-width: 165px; gap: 5px; flex-direction: row; align-items: flex-start; }
+      .minimap-wrap { padding: 4px; }
+      #minimap-canvas { width: 64px; height: 64px; }
+      .quest-card { width: 155px; padding: 6px 8px; }
+      .quest-header { font-size: 10px; margin-bottom: 3px; }
+      .quest-list { font-size: 9.5px; gap: 3px; }
+      .joystick-zone { width: 98px; height: 98px; flex-shrink: 0; }
+      .joystick-knob { width: 40px; height: 40px; }
       .joystick-hint { font-size: 10px; bottom: -16px; }
       .hotbar {
         display: grid;
         grid-template-columns: repeat(3, 52px);
         gap: 6px;
-        padding: 8px;
+        padding: 7px;
       }
       .slot-btn { width: 52px; height: 52px; }
-      #interact-prompt { bottom: 148px; font-size: 13px; padding: 7px 14px; }
+      #interact-prompt { bottom: 146px; font-size: 13px; padding: 7px 14px; }
+      #dialogue-box { bottom: 135px; padding: 10px 12px; }
       #airship-ready-banner {
-        top: 82px;
+        top: 118px;
         width: 94vw;
         padding: 8px 12px;
         flex-direction: column;
-        gap: 8px;
+        gap: 6px;
         text-align: center;
       }
     }
@@ -807,6 +993,44 @@
       </div>
     </div>
 
+    <!-- Heroic Death Overlay -->
+    <div id="death-overlay">
+      <div class="death-card">
+        <div class="death-title" id="death-title">⚔️ นอนตายอย่างวีรชน!</div>
+        <div class="death-desc" id="death-desc">นักสำรวจเวหาพ่ายแพ้ในการศึก... เลือกโหลดเซฟที่เล่นค้างไว้ หรือชุบชีวิตที่จัตุรัสกลางเมือง</div>
+        <div class="death-actions">
+          <button class="btn-action" id="btn-death-load" type="button">📂 โหลดเซฟล่าสุด (เล่นต่อที่ค้างไว้)</button>
+          <button class="btn-action secondary" id="btn-death-revive" type="button">✨ ชุบชีวิตที่จัตุรัสกลางเมือง</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Commercial Opening Sky City Flyover & Title Screen -->
+    <div id="intro-showcase-overlay">
+      <div class="intro-top-pill" id="intro-top-pill">🎬 กำลังบินชมรอบมหานครลอยฟ้า 360° (3D Sky City Showcase)</div>
+      <div class="intro-hero-box" id="intro-hero-box">
+        <div class="intro-poi-badge" id="intro-poi-badge">📍 จุดชมวิว: จัตุรัสกลางเวหา (Central Sky Plaza)</div>
+        <div class="intro-game-logo">AETHERIS: VOXEL SKY CITY</div>
+        <div class="intro-game-sub" id="intro-game-sub">
+          ผจญภัยแนว Action RPG 3 มิติเหนือหมู่เกาะลอยฟ้าทั้ง 6 โซน ต่อสู้ทัพโกเลมคลั่ง ปราบราชันย์โกเลม และทะยานด้วยเรือเหาะข้ามทะเลเมฆ!
+        </div>
+        <div class="intro-btn-group">
+          <button class="btn-start-main" id="btn-start-game" type="button">⚔️ เริ่มผจญภัยทันที (Start Game)</button>
+          <button class="btn-action secondary" id="btn-watch-flyover" type="button">🎥 ซ่อนหน้าต่างเพื่อชมวิวรอบเมือง</button>
+          <button class="btn-action secondary" id="btn-intro-lang" type="button">🌐 EN / TH</button>
+        </div>
+      </div>
+      <div style="font-size: 12px; color: #cbd5e1; text-shadow: 0 2px 4px rgba(0,0,0,0.8);" id="intro-footer-hint">
+        💡 กล้องกำลังบินพาทัวร์รอบ 6 เกาะลอยฟ้า — กด "เริ่มผจญภัยทันที" เพื่อเข้าควบคุมตัวละคร
+      </div>
+    </div>
+
+    <!-- Floating Bar when watching full-screen Sky Tour -->
+    <div id="intro-tour-bar">
+      <span id="tour-poi-live" style="font-size: 13px; font-weight: 700; color: #fde047;">🎬 กำลังบินชม: จัตุรัสกลางเวหา</span>
+      <button class="btn-action" id="btn-exit-tour" type="button" style="padding: 6px 14px; font-size: 12px;">⚔️ เข้าสู่เกม (Play Now)</button>
+    </div>
+
     <!-- NPC / Quest Dialogue Box -->
     <div id="dialogue-box" class="panel">
       <div class="dlg-speaker">
@@ -828,11 +1052,11 @@
             <div class="hero-identity">
               <div class="voxel-avatar" id="hero-lvl-badge">Lv.1</div>
               <div>
-                <div class="hero-title">นักสำรวจเวหา (Sky Walker)</div>
+                <div class="hero-title" id="hero-title-text">นักสำรวจเวหา (Sky Walker)</div>
                 <div class="hero-subtitle" id="hero-weapon-name">ดาบเวหาอารยธรรม +1</div>
               </div>
             </div>
-            <div class="gold-badge" title="เหรียญทองเวหา">
+            <div class="gold-badge" title="Sky Gold">
               <span>🪙</span>
               <span id="gold-val">150</span>
             </div>
@@ -855,9 +1079,9 @@
           </div>
 
           <div class="hero-attributes">
-            <span>⚔️ โจมตี: <strong id="atk-val">22</strong></span>
-            <span>🛡️ ป้องกัน: <strong id="def-val">7</strong></span>
-            <span>💎 ผลึกเอเธอร์: <strong id="shard-val">0 / 5</strong></span>
+            <span>⚔️ <span id="lbl-atk">โจมตี</span>: <strong id="atk-val">22</strong></span>
+            <span>🛡️ <span id="lbl-def">ป้องกัน</span>: <strong id="def-val">7</strong></span>
+            <span>💎 <span id="lbl-shard">ผลึกเอเธอร์</span>: <strong id="shard-val">0 / 5</strong></span>
           </div>
         </div>
 
@@ -869,14 +1093,17 @@
             <span id="zone-name">จัตุรัสกลางเวหา (Central Sky Plaza)</span>
           </div>
           <div class="toolbar-btns">
+            <button class="btn-chip active" id="btn-lang-toggle" type="button" style="border-color: rgba(56,189,248,0.75); color: #7dd3fc;" title="Switch Language (Thai / English)">🌐 EN / TH</button>
             <button class="btn-chip active" id="btn-time-day" type="button">☀️ กลางวัน</button>
             <button class="btn-chip" id="btn-time-sunset" type="button">🌅 ยามสนธยา</button>
             <button class="btn-chip" id="btn-time-night" type="button">🌙 ไซเบอร์ไนท์</button>
             <button class="btn-chip" id="btn-cam-mode" type="button">🎥 มุมกล้อง: ติดตาม</button>
+            <button class="btn-chip" id="btn-sky-tour" type="button" style="border-color: rgba(250,204,21,0.65); color: #fde047;">🎬 บินชมรอบเมือง</button>
             <button class="btn-chip" id="btn-spawn-invasion" type="button" style="border-color: rgba(248,113,113,0.6); color: #fca5a5;">👾 เรียกทัพโกเลมบุกเมือง</button>
-            <button class="btn-chip active" id="btn-audio-toggle" type="button" title="เปิด/ปิดเสียงเอฟเฟกต์และดนตรีประกอบ">🔊 เสียง/BGM: เปิด</button>
-            <button class="btn-chip" id="btn-save-game" type="button" title="บันทึกเกมลงเครื่องทันที">💾 เซฟเกม</button>
-            <button class="btn-chip" id="btn-reset-save" type="button" title="รีเซ็ตข้อมูลและเริ่มเกมใหม่ตั้งแต่ด่าน 1">🔄 เริ่มใหม่</button>
+            <button class="btn-chip active" id="btn-audio-toggle" type="button" title="Toggle Sound & BGM">🔊 เสียง/BGM: เปิด</button>
+            <button class="btn-chip" id="btn-save-game" type="button" title="Save Game">💾 เซฟเกม</button>
+            <button class="btn-chip" id="btn-load-game" type="button" title="Load Saved Game">📂 โหลดเซฟ</button>
+            <button class="btn-chip" id="btn-reset-save" type="button" title="Reset & New Game">🔄 เริ่มใหม่</button>
           </div>
         </div>
 
@@ -897,11 +1124,11 @@
               </li>
               <li class="quest-item" id="q-shards">
                 <span class="quest-check"></span>
-                <span id="q-shards-text">รวบรวมผลึกเอเธอร์ลอยฟ้า (<span id="q-shard-count">0</span>/<span id="q-shard-goal">5</span>)</span>
+                <span id="q-shards-text"><span id="q-shards-lbl">รวบรวมผลึกเอเธอร์ลอยฟ้า</span> (<span id="q-shard-count">0</span>/<span id="q-shard-goal">5</span>)</span>
               </li>
               <li class="quest-item" id="q-golems">
                 <span class="quest-check"></span>
-                <span id="q-golems-text">ปราบทัพโกเลมบุกเมือง (<span id="q-golem-count">0</span>/<span id="q-golem-goal">6</span>)</span>
+                <span id="q-golems-text"><span id="q-golems-lbl">ปราบทัพโกเลมบุกเมือง</span> (<span id="q-golem-count">0</span>/<span id="q-golem-goal">6</span>)</span>
               </li>
               <li class="quest-item" id="q-beacon">
                 <span class="quest-check"></span>
@@ -916,48 +1143,48 @@
       <div class="hud-bottom">
         <div class="joystick-zone" id="joystick-zone">
           <div class="joystick-knob" id="joystick-knob"></div>
-          <span class="joystick-hint">ลากเพื่อเดิน / WASD</span>
+          <span class="joystick-hint" id="joy-hint-text">ลากเพื่อเดิน / WASD</span>
         </div>
 
         <div class="panel hotbar">
-          <button class="slot-btn" id="act-attack" type="button" title="โจมตีด้วยดาบเวหา (J)">
+          <button class="slot-btn" id="act-attack" type="button" title="Sword Slash (J)">
             <span class="slot-key">J</span>
             <span class="slot-icon">⚔️</span>
-            <span class="slot-name">ฟันดาบ</span>
+            <span class="slot-name" id="slot-lbl-attack">ฟันดาบ</span>
           </button>
-          <button class="slot-btn" id="act-skill" type="button" title="คลื่นพลังเอเธอร์ (K) ใช้ 15 MP">
+          <button class="slot-btn" id="act-skill" type="button" title="Aether Wave (K) - 15 MP">
             <span class="slot-key">K</span>
             <span class="slot-icon">🌀</span>
-            <span class="slot-name">คลื่นเวหา</span>
+            <span class="slot-name" id="slot-lbl-skill">คลื่นเวหา</span>
           </button>
-          <button class="slot-btn" id="act-jump" type="button" title="กระโดด (Space)">
+          <button class="slot-btn" id="act-jump" type="button" title="Jump (Space)">
             <span class="slot-key">SPC</span>
             <span class="slot-icon">🪽</span>
-            <span class="slot-name">กระโดด</span>
+            <span class="slot-name" id="slot-lbl-jump">กระโดด</span>
           </button>
-          <button class="slot-btn" id="act-dash" type="button" title="พุ่งตัว (Shift)">
+          <button class="slot-btn" id="act-dash" type="button" title="Dash (Shift)">
             <span class="slot-key">SHF</span>
             <span class="slot-icon">⚡</span>
-            <span class="slot-name">พุ่งตัว</span>
+            <span class="slot-name" id="slot-lbl-dash">พุ่งตัว</span>
           </button>
-          <button class="slot-btn" id="act-potion" type="button" title="ดื่มยาฟื้นฟู HP (1)">
+          <button class="slot-btn" id="act-potion" type="button" title="Heal HP Potion (1)">
             <span class="slot-key">1</span>
             <span class="slot-icon">🧪</span>
-            <span class="slot-name">ยา HP</span>
+            <span class="slot-name" id="slot-lbl-potion">ยา HP</span>
             <span class="slot-count" id="potion-count">x4</span>
           </button>
-          <button class="slot-btn" id="act-teleport" type="button" title="วาร์ปกลับจัตุรัสกลาง (R)">
+          <button class="slot-btn" id="act-teleport" type="button" title="Teleport to Plaza (R)">
             <span class="slot-key">R</span>
             <span class="slot-icon">🧭</span>
-            <span class="slot-name">กลับเมือง</span>
+            <span class="slot-name" id="slot-lbl-teleport">กลับเมือง</span>
           </button>
         </div>
 
-        <div class="panel controls-legend">
-          <div><strong>WASD / ลูกศร</strong> : เดินสำรวจเมืองลอยฟ้า</div>
-          <div><strong>ลากเมาส์ / นิ้วลากจอ</strong> : หมุนกล้อง 360° / ซูม</div>
-          <div><strong>Space / Shift</strong> : กระโดด / พุ่งตัว</div>
-          <div><strong>J / K / E</strong> : โจมตี / สกิลเอเธอร์ / โต้ตอบ</div>
+        <div class="panel controls-legend" id="controls-legend-box">
+          <div id="leg-1"><strong>WASD / ลูกศร</strong> : เดินสำรวจเมืองลอยฟ้า</div>
+          <div id="leg-2"><strong>ลากเมาส์ / นิ้วลากจอ</strong> : หมุนกล้อง 360° / ซูม</div>
+          <div id="leg-3"><strong>Space / Shift</strong> : กระโดด / พุ่งตัว</div>
+          <div id="leg-4"><strong>J / K / E</strong> : โจมตี / สกิลเอเธอร์ / โต้ตอบ</div>
         </div>
       </div>
     </div>
@@ -1062,6 +1289,11 @@
             playTone(523.25, 659.25, 0.45, 'triangle', 0.1, 0.2);
             playTone(659.25, 783.99, 0.55, 'triangle', 0.1, 0.5);
             playTone(1046.5, 1046.5, 0.85, 'sine', 0.12, 0.85);
+          } else if (name === 'death') {
+            playTone(392.00, 349.23, 0.35, 'sawtooth', 0.12, 0);
+            playTone(329.63, 293.66, 0.40, 'sawtooth', 0.12, 0.28);
+            playTone(261.63, 196.00, 0.55, 'triangle', 0.14, 0.58);
+            playTone(146.83, 65.41, 0.95, 'sawtooth', 0.15, 0.92);
           }
         }
 
@@ -1091,7 +1323,9 @@
         {
           stage: 1,
           name: 'นครเวหาเอเธอร์ริส (Aetheris Sky City)',
+          nameEn: 'Aetheris Sky City',
           shortTitle: 'ภารกิจด่านที่ 1: นครเอเธอร์ริส',
+          shortTitleEn: 'Stage 1 Quests: Aetheris City',
           skyMode: 'day',
           grassMain: 0x4ade80,
           grassEast: 0x34d399,
@@ -1105,14 +1339,20 @@
           shardGoal: 5,
           golemGoal: 6,
           q1Text: 'คุยกับผู้บัญชาการ เอลดริน รับแผนป้องกันเมือง',
+          q1TextEn: 'Talk to Commander Eldrin at Central Plaza',
           q2Text: 'รวบรวมผลึกเอเธอร์ซ่อมแกนเมือง',
+          q2TextEn: 'Collect Aether Shards across the islands',
           q3Text: 'ปราบทัพโกเลมคลั่งที่บุกเมือง',
-          q4Text: 'จุดประภาคารและขึ้นเรือเหาะไปด่านใหม่'
+          q3TextEn: 'Defeat Invading Golems',
+          q4Text: 'จุดประภาคารและขึ้นเรือเหาะไปด่านใหม่',
+          q4TextEn: 'Light the Beacon & Board the Airship'
         },
         {
           stage: 2,
           name: 'มหานครนีโอ-เซฟีเรีย (Neo-Zephyria Citadel)',
+          nameEn: 'Neo-Zephyria Citadel',
           shortTitle: 'ภารกิจด่านที่ 2: นีโอ-เซฟีเรีย',
+          shortTitleEn: 'Stage 2 Quests: Neo-Zephyria',
           skyMode: 'sunset',
           grassMain: 0xfbbf24,
           grassEast: 0xf59e0b,
@@ -1126,14 +1366,20 @@
           shardGoal: 6,
           golemGoal: 8,
           q1Text: 'รายงานตัวกับผู้บัญชาการ เอลดริน ที่มหานครใหม่',
+          q1TextEn: 'Report to Commander Eldrin in Neo-Zephyria',
           q2Text: 'เก็บผลึกสุริยะเอเธอร์ทั่ว 6 หมู่เกาะ',
+          q2TextEn: 'Collect Solar Aether Shards across 6 islands',
           q3Text: 'สกัดกั้นกองทัพโกเลมเพลิงและบอสบุกเมือง',
-          q4Text: 'เปิดประภาคารดาราจักรเพื่อทะยานสู่ด่านถัดไป'
+          q3TextEn: 'Defeat Solar Golem Army & Twin Bosses',
+          q4Text: 'เปิดประภาคารดาราจักรเพื่อทะยานสู่ด่านถัดไป',
+          q4TextEn: 'Activate Astral Beacon & Board Airship'
         },
         {
           stage: 3,
           name: 'ปราการดาราจักรไซเบอร์ (Astral Cyber Bastion)',
+          nameEn: 'Astral Cyber Bastion',
           shortTitle: 'ภารกิจด่านที่ 3: ปราการดาราจักร',
+          shortTitleEn: 'Stage 3 Quests: Astral Bastion',
           skyMode: 'night',
           grassMain: 0x38bdf8,
           grassEast: 0x818cf8,
@@ -1147,13 +1393,18 @@
           shardGoal: 7,
           golemGoal: 10,
           q1Text: 'รับคำสั่งศึกตัดสินจากผู้บัญชาการ เอลดริน',
+          q1TextEn: 'Receive Final Orders from Commander Eldrin',
           q2Text: 'รวบรวมผลึกดาราจักรพลังงานสูง',
+          q2TextEn: 'Collect High-Energy Astral Shards',
           q3Text: 'ถล่มกองทัพโกเลมดาราจักรและราชันย์โกเลม',
-          q4Text: 'เดินเครื่องเรือเหาะธงเดินทางข้ามมิติเวหา'
+          q3TextEn: 'Crush Astral Golem Legion & 3 Bosses',
+          q4Text: 'เดินเครื่องเรือเหาะธงเดินทางข้ามมิติเวหา',
+          q4TextEn: 'Launch Flagship Airship to Next Dimension'
         }
       ];
 
       const defaultPlayerState = {
+        lang: 'th',
         stage: 1,
         level: 1,
         hp: 140,
@@ -1182,6 +1433,14 @@
 
       const playerState = JSON.parse(JSON.stringify(defaultPlayerState));
 
+      function isEn() {
+        return playerState.lang === 'en';
+      }
+
+      function tr(thText, enText) {
+        return isEn() ? enText : thText;
+      }
+
       function saveGameToStorage(showNotification = false) {
         try {
           localStorage.setItem(SAVE_KEY, JSON.stringify(playerState));
@@ -1189,7 +1448,10 @@
             AudioEngine.playSfx('heal');
             spawnFloatingText(
               playerObj.position.clone().add(new THREE.Vector3(0, 3.0, 0)),
-              '💾 บันทึกเกมสำเร็จ! (ด่าน ' + playerState.stage + ' / Lv.' + playerState.level + ')',
+              tr(
+                '💾 บันทึกเกมสำเร็จ! (ด่าน ' + playerState.stage + ' / Lv.' + playerState.level + ')',
+                '💾 Game Saved! (Stage ' + playerState.stage + ' / Lv.' + playerState.level + ')'
+              ),
               '#34d399'
             );
           }
@@ -1203,6 +1465,7 @@
           const parsed = JSON.parse(raw);
           if (parsed && typeof parsed.level === 'number') {
             Object.assign(playerState, parsed);
+            if (!playerState.lang) playerState.lang = 'th';
             if (!playerState.quests) {
               playerState.quests = Object.assign({}, defaultPlayerState.quests);
             }
@@ -1222,7 +1485,9 @@
         return Object.assign({}, base, {
           stage: playerState.stage,
           name: base.name + ' (ระดับ ' + playerState.stage + ')',
+          nameEn: base.nameEn + ' (Tier ' + playerState.stage + ')',
           shortTitle: 'ภารกิจด่านที่ ' + playerState.stage + ': มิติเวหาขั้นสูง',
+          shortTitleEn: 'Stage ' + playerState.stage + ' Quests: High Aether',
           shardGoal: 7,
           golemGoal: 10 + (playerState.stage - 3) * 2
         });
@@ -1255,13 +1520,22 @@
       // --- Update HUD UI ---
       function updateHUD(autoSave = false) {
         const theme = getCurrentTheme();
-        document.getElementById('stage-badge').textContent = '[ด่าน ' + playerState.stage + ']';
-        document.getElementById('quest-stage-title').textContent = '📜 ' + theme.shortTitle;
-        document.getElementById('q-eldrin-text').textContent = theme.q1Text;
-        document.getElementById('q-beacon-text').textContent = theme.q4Text;
+        document.getElementById('stage-badge').textContent = tr('[ด่าน ' + playerState.stage + ']', '[Stage ' + playerState.stage + ']');
+        document.getElementById('quest-stage-title').textContent = '📜 ' + tr(theme.shortTitle, theme.shortTitleEn);
+        document.getElementById('q-eldrin-text').textContent = tr(theme.q1Text, theme.q1TextEn);
+        document.getElementById('q-shards-lbl').textContent = tr(theme.q2Text, theme.q2TextEn);
+        document.getElementById('q-golems-lbl').textContent = tr(theme.q3Text, theme.q3TextEn);
+        document.getElementById('q-beacon-text').textContent = tr(theme.q4Text, theme.q4TextEn);
 
+        document.getElementById('hero-title-text').textContent = tr('นักสำรวจเวหา (Sky Walker)', 'Sky Walker (Aether Knight)');
         document.getElementById('hero-lvl-badge').textContent = 'Lv.' + playerState.level;
-        document.getElementById('hero-weapon-name').textContent = 'ดาบเวหาอารยธรรม +' + playerState.weaponLevel;
+        document.getElementById('hero-weapon-name').textContent = tr(
+          'ดาบเวหาอารยธรรม +' + playerState.weaponLevel,
+          'Aether Skyblade +' + playerState.weaponLevel
+        );
+        document.getElementById('lbl-atk').textContent = tr('โจมตี', 'ATK');
+        document.getElementById('lbl-def').textContent = tr('ป้องกัน', 'DEF');
+        document.getElementById('lbl-shard').textContent = tr('ผลึกเอเธอร์', 'Shards');
         document.getElementById('gold-val').textContent = playerState.gold;
         document.getElementById('atk-val').textContent = playerState.atk;
         document.getElementById('def-val').textContent = playerState.def;
@@ -1308,10 +1582,15 @@
 
         if (doneCount === 4 || (playerState.quests.activatedBeacon && doneCount >= 3)) {
           airshipBanner.style.display = 'flex';
-          document.getElementById('airship-banner-title').textContent =
-            '🎉 ภารกิจด่านที่ ' + playerState.stage + ' สำเร็จ! เรือเหาะพร้อมบินสู่เมืองใหม่แล้ว!';
-          document.getElementById('airship-banner-sub').textContent =
-            'กดปุ่ม "ขึ้นเรือเหาะไปเมืองใหม่" หรือเดินไปขึ้นเรือเหาะที่ท่าเรือทิศตะวันออกเพื่อเดินทางสู่ด่านที่ ' + (playerState.stage + 1);
+          document.getElementById('airship-banner-title').textContent = tr(
+            '🎉 ภารกิจด่านที่ ' + playerState.stage + ' สำเร็จ! เรือเหาะพร้อมบินสู่เมืองใหม่แล้ว!',
+            '🎉 Stage ' + playerState.stage + ' Complete! The Airship is Ready to Depart!'
+          );
+          document.getElementById('airship-banner-sub').textContent = tr(
+            'กดปุ่ม "ขึ้นเรือเหาะไปเมืองใหม่" หรือเดินไปขึ้นเรือเหาะที่ท่าเรือทิศตะวันออกเพื่อเดินทางสู่ด่านที่ ' + (playerState.stage + 1),
+            'Tap "Board Airship" or walk to the East Dock to fly to Stage ' + (playerState.stage + 1) + '!'
+          );
+          document.getElementById('btn-board-airship').textContent = tr('🚢 ขึ้นเรือเหาะไปเมืองใหม่', '🚢 Board Airship to Next Stage');
         } else {
           airshipBanner.style.display = 'none';
         }
@@ -1697,18 +1976,18 @@
 
       const airshipLabel = createLabelElement('🚢 เรือเหาะเวหา (เดินทางข้ามด่าน)', 'quest');
 
-      function addNPC(name, role, x, y, z, color, cape, id) {
+      function addNPC(name, nameEn, role, roleEn, x, y, z, color, cape, id) {
         const mesh = createVoxelCharacter(color, 0xfde68a, cape);
         mesh.position.set(x, y, z);
         scene.add(mesh);
         const label = createLabelElement('💬 ' + name, 'quest');
-        npcs.push({ id, name, role, mesh, label });
+        npcs.push({ id, name, nameEn, role, roleEn, mesh, label });
       }
 
-      addNPC('ผู้บัญชาการ เอลดริน', 'หัวหน้าผู้พิทักษ์เวหา', -4.2, 0, -4.2, 0x0284c7, 0xf59e0b, 'eldrin');
-      addNPC('ช่างตีเหล็ก โบรค', 'ปรมาจารย์ศัสตราเวหา', 33, 2, -4.5, 0xb91c1c, 0x475569, 'blacksmith');
-      addNPC('นักปราชญ์ ลูมินา', 'ผู้ดูแลหอคอยกังหันลม', 3.2, 2, 33, 0x7c3aed, 0x38bdf8, 'lumina');
-      addNPC('อัศวินหญิง วาลคีเรีย', 'แม่ทัพป้อมปราการเหนือ', 0, 2.5, -33, 0x059669, 0xfacc15, 'valkyrie');
+      addNPC('ผู้บัญชาการ เอลดริน', 'Commander Eldrin', 'หัวหน้าผู้พิทักษ์เวหา', 'Sky Plaza Guardian', -4.2, 0, -4.2, 0x0284c7, 0xf59e0b, 'eldrin');
+      addNPC('ช่างตีเหล็ก โบรค', 'Master Blacksmith Brok', 'ปรมาจารย์ศัสตราเวหา', 'Aether Weaponsmith', 33, 2, -4.5, 0xb91c1c, 0x475569, 'blacksmith');
+      addNPC('นักปราชญ์ ลูมินา', 'Sage Lumina', 'ผู้ดูแลหอคอยกังหันลม', 'Windmill Observatory Keeper', 3.2, 2, 33, 0x7c3aed, 0x38bdf8, 'lumina');
+      addNPC('อัศวินหญิง วาลคีเรีย', 'Captain Valkyrie', 'แม่ทัพป้อมปราการเหนือ', 'North Bastion Commander', 0, 2.5, -33, 0x059669, 0xfacc15, 'valkyrie');
 
       // Collectible Aether Shards (7 positions across the 6 islands)
       const shardCoords = [
@@ -1731,48 +2010,59 @@
         shards.push({ idx, mesh: sg, baseY: sy, collected: false, label, locName });
       });
 
-      // Expanded Golem Invasion Forces (9 Golems + 1 Giant Boss Golem)
+      // Expanded Golem Invasion Forces + Multi-Boss System for Higher Stages
+      // bossMinStage: 1 = Boss in all stages, 2 = Boss in Stage 2+, 3 = Boss in Stage 3+
       const golemSpawns = [
-        { pos: [-16, 0, 0], invader: true, patrolTarget: new THREE.Vector3(-5, 0, 2), isBoss: false, name: 'โกเลมทัพหน้าบุกเมือง' },
-        { pos: [0, 0, -16], invader: true, patrolTarget: new THREE.Vector3(2, 0, -6), isBoss: false, name: 'โกเลมบุกจัตุรัสเหนือ' },
-        { pos: [15, 0, 3], invader: true, patrolTarget: new THREE.Vector3(6, 0, 3), isBoss: false, name: 'โกเลมจู่โจมตะวันออก' },
-        { pos: [0, 0, 16], invader: true, patrolTarget: new THREE.Vector3(0, 0, 7), isBoss: false, name: 'โกเลมบุกสะพานใต้' },
-        { pos: [-6, 2.5, -38], invader: true, patrolTarget: new THREE.Vector3(0, 0, -10), isBoss: false, name: 'โกเลมคลั่งป้อมเหนือ' },
-        { pos: [6, 2.5, -38], invader: false, patrolTarget: new THREE.Vector3(0, 2.5, -36), isBoss: false, name: 'โกเลมพิทักษ์คริสตัล' },
-        { pos: [-34, 3, -6], invader: false, patrolTarget: new THREE.Vector3(-38, 3, 0), isBoss: false, name: 'โกเลมวิหารเมฆา' },
-        { pos: [-42, 3, 5], invader: false, patrolTarget: new THREE.Vector3(-36, 3, 2), isBoss: false, name: 'โกเลมศิลาโบราณ' },
-        { pos: [-32, 3.5, -34], invader: false, patrolTarget: new THREE.Vector3(-36, 3.5, -36), isBoss: false, name: 'โกเลมองครักษ์' },
-        { pos: [-38, 3.5, -38], invader: false, patrolTarget: new THREE.Vector3(-38, 3.5, -36), isBoss: true, name: '👑 ราชันย์โกเลมคลั่ง (Boss)' }
+        { pos: [-16, 0, 0], invader: true, patrolTarget: new THREE.Vector3(-5, 0, 2), bossMinStage: 0, name: 'โกเลมทัพหน้าบุกเมือง', nameEn: 'Vanguard Invader Golem' },
+        { pos: [0, 0, -16], invader: true, patrolTarget: new THREE.Vector3(2, 0, -6), bossMinStage: 0, name: 'โกเลมบุกจัตุรัสเหนือ', nameEn: 'North Plaza Raider Golem' },
+        { pos: [15, 0, 3], invader: true, patrolTarget: new THREE.Vector3(6, 0, 3), bossMinStage: 0, name: 'โกเลมจู่โจมตะวันออก', nameEn: 'East Striker Golem' },
+        { pos: [0, 0, 16], invader: true, patrolTarget: new THREE.Vector3(0, 0, 7), bossMinStage: 0, name: 'โกเลมบุกสะพานใต้', nameEn: 'South Bridge Golem' },
+        { pos: [-6, 2.5, -38], invader: true, patrolTarget: new THREE.Vector3(0, 0, -10), bossMinStage: 0, name: 'โกเลมคลั่งป้อมเหนือ', nameEn: 'Bastion Berserker Golem' },
+        { pos: [6, 2.5, -38], invader: false, patrolTarget: new THREE.Vector3(0, 2.5, -36), bossMinStage: 2, name: 'โกเลมพิทักษ์คริสตัล', nameEn: 'Crystal Sentinel Golem', bossName: '👑 จอมทัพโกเลมสุริยะ (Boss #2)', bossNameEn: '👑 Solar Golem Warlord (Boss #2)' },
+        { pos: [-34, 3, -6], invader: false, patrolTarget: new THREE.Vector3(-38, 3, 0), bossMinStage: 0, name: 'โกเลมวิหารเมฆา', nameEn: 'Cloud Sanctuary Golem' },
+        { pos: [-42, 3, 5], invader: true, patrolTarget: new THREE.Vector3(-12, 0, 0), bossMinStage: 3, name: 'โกเลมศิลาโบราณ', nameEn: 'Ancient Monolith Golem', bossName: '👑 จักรพรรดิโกเลมดาราจักร (Boss #3)', bossNameEn: '👑 Astral Golem Emperor (Boss #3)' },
+        { pos: [-32, 3.5, -34], invader: false, patrolTarget: new THREE.Vector3(-36, 3.5, -36), bossMinStage: 0, name: 'โกเลมองครักษ์', nameEn: 'Citadel Royal Guard' },
+        { pos: [-38, 3.5, -38], invader: false, patrolTarget: new THREE.Vector3(-38, 3.5, -36), bossMinStage: 1, name: '👑 ราชันย์โกเลมคลั่ง (Boss)', nameEn: '👑 Berserk Golem King (Boss)', bossName: '👑 ราชันย์โกเลมคลั่ง (Boss #1)', bossNameEn: '👑 Berserk Golem King (Boss #1)' }
       ];
 
       golemSpawns.forEach((cfg, idx) => {
         const [gx, gy, gz] = cfg.pos;
         const g = new THREE.Group();
-        const scale = cfg.isBoss ? 1.85 : 1.0;
-        const bodyHex = cfg.isBoss ? 0x4c0519 : (cfg.invader ? 0x451a03 : 0x334155);
-        const coreHex = cfg.isBoss ? 0xec4899 : 0xef4444;
+        const isBossNow = cfg.bossMinStage === 1;
+        const bodyHex = isBossNow ? 0x4c0519 : (cfg.invader ? 0x451a03 : 0x334155);
+        const coreHex = isBossNow ? 0xec4899 : 0xef4444;
 
-        addVoxelBox(g, 0, 1.1 * scale, 0, 1.35 * scale, 1.5 * scale, 1.0 * scale, bodyHex);
-        addVoxelBox(g, 0, 1.2 * scale, 0.52 * scale, 0.65 * scale, 0.55 * scale, 0.12 * scale, coreHex, coreHex, 0.95);
-        addVoxelBox(g, 0, 2.15 * scale, 0, 0.9 * scale, 0.75 * scale, 0.9 * scale, 0x1e293b);
-        addVoxelBox(g, -0.95 * scale, 1.1 * scale, 0, 0.45 * scale, 1.3 * scale, 0.45 * scale, 0x475569);
-        addVoxelBox(g, 0.95 * scale, 1.1 * scale, 0, 0.45 * scale, 1.3 * scale, 0.45 * scale, 0x475569);
+        addVoxelBox(g, 0, 1.1, 0, 1.35, 1.5, 1.0, bodyHex);
+        addVoxelBox(g, 0, 1.2, 0.52, 0.65, 0.55, 0.12, coreHex, coreHex, 0.95);
+        addVoxelBox(g, 0, 2.15, 0, 0.9, 0.75, 0.9, 0x1e293b);
+        addVoxelBox(g, -0.95, 1.1, 0, 0.45, 1.3, 0.45, 0x475569);
+        addVoxelBox(g, 0.95, 1.1, 0, 0.45, 1.3, 0.45, 0x475569);
 
-        if (cfg.isBoss) {
-          addVoxelBox(g, 0, 2.75 * scale, 0, 0.95 * scale, 0.35 * scale, 0.95 * scale, 0xfacc15, 0xd97706, 0.8);
-        }
+        // Crown mesh (visible when this unit is a Boss in the current stage)
+        const crownMesh = addVoxelBox(g, 0, 2.75, 0, 0.95, 0.35, 0.95, 0xfacc15, 0xd97706, 0.85);
+        crownMesh.visible = isBossNow;
 
+        g.scale.setScalar(isBossNow ? 1.95 : 1.0);
         g.position.set(gx, gy, gz);
         scene.add(g);
-        const maxHp = cfg.isBoss ? 220 : 65;
+        const maxHp = isBossNow ? 520 : 75;
+        const displayName = isBossNow ? (cfg.bossName || cfg.name) : cfg.name;
+        const displayNameEn = isBossNow ? (cfg.bossNameEn || cfg.nameEn) : cfg.nameEn;
         const label = createLabelElement(
-          `${cfg.isBoss ? '👑' : '👾'} ${cfg.name} HP ${maxHp}/${maxHp}`,
-          cfg.isBoss ? 'boss' : 'enemy'
+          `${isBossNow ? '👑' : '👾'} ${displayName} HP ${maxHp}/${maxHp}`,
+          isBossNow ? 'boss' : 'enemy'
         );
         enemies.push({
           id: idx,
-          name: cfg.name,
-          isBoss: cfg.isBoss,
+          baseName: cfg.name,
+          baseNameEn: cfg.nameEn,
+          bossName: cfg.bossName || cfg.name,
+          bossNameEn: cfg.bossNameEn || cfg.nameEn,
+          bossMinStage: cfg.bossMinStage,
+          name: displayName,
+          nameEn: displayNameEn,
+          isBoss: isBossNow,
+          crownMesh: crownMesh,
           invader: cfg.invader,
           patrolTarget: cfg.patrolTarget.clone(),
           mesh: g,
@@ -1890,8 +2180,16 @@
         });
 
         enemies.forEach((en) => {
-          const stageMult = 1 + (playerState.stage - 1) * 0.35;
-          en.maxHp = Math.round((en.isBoss ? 220 : 65) * stageMult);
+          const isBossForStage = en.bossMinStage > 0 && playerState.stage >= en.bossMinStage;
+          en.isBoss = isBossForStage;
+          en.name = isBossForStage ? en.bossName : en.baseName;
+          en.nameEn = isBossForStage ? en.bossNameEn : en.baseNameEn;
+          en.crownMesh.visible = isBossForStage;
+          en.mesh.scale.setScalar(isBossForStage ? 1.95 : 1.0);
+          en.label.className = 'npc-tag ' + (isBossForStage ? 'boss' : 'enemy');
+
+          const stageMult = 1 + (playerState.stage - 1) * 0.45;
+          en.maxHp = Math.round((isBossForStage ? 520 : 75) * stageMult);
           en.hp = en.maxHp;
         });
       }
@@ -1914,10 +2212,14 @@
         const nextStageNum = playerState.stage + 1;
         const nextTheme = stageThemes[(nextStageNum - 1) % stageThemes.length];
 
-        document.getElementById('cutscene-title').textContent =
-          '🚢 เรือเหาะเวหาออกเดินทางสู่ ด่านที่ ' + nextStageNum + ' : ' + nextTheme.name;
-        document.getElementById('cutscene-caption').textContent =
-          'ภารกิจด่านที่ ' + playerState.stage + ' สำเร็จครบสมบูรณ์! กำลังทะยานข้ามหมู่เมฆสู่มหานครลอยฟ้าแห่งใหม่...';
+        document.getElementById('cutscene-title').textContent = tr(
+          '🚢 เรือเหาะเวหาออกเดินทางสู่ ด่านที่ ' + nextStageNum + ' : ' + nextTheme.name,
+          '🚢 Airship Departing to Stage ' + nextStageNum + ' : ' + nextTheme.nameEn
+        );
+        document.getElementById('cutscene-caption').textContent = tr(
+          'ภารกิจด่านที่ ' + playerState.stage + ' สำเร็จครบสมบูรณ์! กำลังทะยานข้ามหมู่เมฆสู่มหานครลอยฟ้าแห่งใหม่...',
+          'Stage ' + playerState.stage + ' Complete! Soaring across the cloud sea to a new Sky Metropolis...'
+        );
         cutsceneOverlay.style.display = 'flex';
 
         playerObj.position.copy(airshipGroup.position).add(new THREE.Vector3(0, 1.8, 0));
@@ -1965,21 +2267,31 @@
         spawnVoxelBurst(playerObj.position.clone(), theme.crystalHex, 25);
         spawnFloatingText(
           playerObj.position.clone().add(new THREE.Vector3(0, 3.2, 0)),
-          '🌟 เดินทางถึง ด่านที่ ' + playerState.stage + ': ' + theme.name + ' (บันทึกเกมอัตโนมัติ)',
+          tr(
+            '🌟 เดินทางถึง ด่านที่ ' + playerState.stage + ': ' + theme.name + ' (บันทึกเกมอัตโนมัติ)',
+            '🌟 Arrived at Stage ' + playerState.stage + ': ' + theme.nameEn + ' (Auto-Saved)'
+          ),
           '#fde047'
         );
 
         openDialogue(
-          'ผู้บัญชาการ เอลดริน (ด่านที่ ' + playerState.stage + ')',
-          theme.name,
-          'ยินดีต้อนรับสู่มหานครลอยฟ้าด่านที่ ' +
-            playerState.stage +
-            ' (' +
-            theme.name +
-            ')! ที่นี่กองทัพโกเลมคลั่งกำลังบุกโจมตีสะพานเวหาและจัตุรัสกลางเมืองอย่างหนัก พร้อมด้วยราชันย์โกเลมที่เกาะปราการทิศตะวันตกเฉียงเหนือ มาเริ่มภารกิจครั้งใหม่กันเลย!',
+          tr('ผู้บัญชาการ เอลดริน (ด่านที่ ' + playerState.stage + ')', 'Commander Eldrin (Stage ' + playerState.stage + ')'),
+          tr(theme.name, theme.nameEn),
+          tr(
+            'ยินดีต้อนรับสู่มหานครลอยฟ้าด่านที่ ' +
+              playerState.stage +
+              ' (' +
+              theme.name +
+              ')! ที่นี่กองทัพโกเลมคลั่งกำลังบุกโจมตีสะพานเวหาและจัตุรัสกลางเมืองอย่างหนัก พร้อมด้วยบอสราชันย์โกเลม มาเริ่มภารกิจครั้งใหม่กันเลย!',
+            'Welcome to Sky Metropolis Stage ' +
+              playerState.stage +
+              ' (' +
+              theme.nameEn +
+              ')! A fierce Golem legion and Giant Boss Golems are attacking the sky bridges and central plaza. Let us begin our new mission!'
+          ),
           [
             {
-              label: 'รับภารกิจด่านที่ ' + playerState.stage + ' (+40 EXP)',
+              label: tr('รับภารกิจด่านที่ ' + playerState.stage + ' (+40 EXP)', 'Accept Stage ' + playerState.stage + ' Mission (+40 EXP)'),
               onClick: () => {
                 playerState.quests.talkedEldrin = true;
                 gainExp(40);
@@ -1994,10 +2306,297 @@
 
       document.getElementById('btn-board-airship').addEventListener('click', startAirshipCutscene);
 
+      // --- Heroic Death & Save/Load Management ---
+      let isPlayerDead = false;
+      const deathOverlay = document.getElementById('death-overlay');
+      const deathTitle = document.getElementById('death-title');
+      const deathDesc = document.getElementById('death-desc');
+
+      function standUpPlayer() {
+        isPlayerDead = false;
+        playerObj.rotation.x = 0;
+        playerObj.rotation.z = 0;
+        deathOverlay.style.display = 'none';
+      }
+
+      function triggerPlayerDeath(reasonTh, reasonEn) {
+        if (isPlayerDead || cutsceneState.active) return;
+        isPlayerDead = true;
+        playerState.hp = 0;
+        playerVelY = 0;
+        updateHUD(false);
+
+        AudioEngine.playSfx('death');
+
+        if (playerObj.position.y < -5) {
+          playerObj.position.set(0, 0.25, 10);
+        } else {
+          const plat = getPlatformAt(playerObj.position.x, playerObj.position.z);
+          if (plat) playerObj.position.y = plat.topY + 0.25;
+        }
+
+        // Heroic fallen pose (นอนตายอย่างวีรชน)
+        playerObj.rotation.x = -Math.PI / 2;
+        spawnVoxelBurst(playerObj.position.clone().add(new THREE.Vector3(0, 0.8, 0)), 0xef4444, 22);
+        spawnFloatingText(
+          playerObj.position.clone().add(new THREE.Vector3(0, 2.2, 0)),
+          tr('⚔️ นอนตายอย่างวีรชน!', '⚔️ Fallen Heroically!'),
+          '#f87171'
+        );
+
+        deathTitle.textContent = tr('⚔️ นอนตายอย่างวีรชน!', '⚔️ Fallen Heroically in Battle!');
+        deathDesc.textContent = tr(
+          reasonTh + ' — คุณสามารถกด "โหลดเซฟล่าสุด" เพื่อเล่นต่อจากที่เซฟค้างไว้ หรือชุบชีวิตที่จัตุรัสกลางเมืองได้เลย',
+          (reasonEn || reasonTh) + ' — Choose "Load Last Save" to resume your saved progress, or Revive at Central Plaza!'
+        );
+        document.getElementById('btn-death-load').textContent = tr('📂 โหลดเซฟล่าสุด (เล่นต่อที่ค้างไว้)', '📂 Load Last Save (Resume)');
+        document.getElementById('btn-death-revive').textContent = tr('✨ ชุบชีวิตที่จัตุรัสกลางเมือง', '✨ Revive at Central Plaza');
+        deathOverlay.style.display = 'flex';
+      }
+
+      function loadSavedGameInteractive() {
+        const ok = loadGameFromStorage();
+        standUpPlayer();
+        applyLanguageUI();
+        if (ok) {
+          if (playerState.hp <= 0) playerState.hp = playerState.maxHp;
+          applyStageVisuals();
+          playerObj.position.set(0, 1.5, 6);
+          playerVelY = 0;
+          updateHUD(false);
+          AudioEngine.playSfx('heal');
+          spawnVoxelBurst(playerObj.position.clone(), 0x38bdf8, 18);
+          spawnFloatingText(
+            playerObj.position.clone().add(new THREE.Vector3(0, 3.0, 0)),
+            tr(
+              '📂 โหลดเซฟที่เล่นค้างไว้สำเร็จ! (ด่าน ' + playerState.stage + ' / Lv.' + playerState.level + ')',
+              '📂 Loaded Saved Game! (Stage ' + playerState.stage + ' / Lv.' + playerState.level + ')'
+            ),
+            '#38bdf8'
+          );
+        } else {
+          playerState.hp = playerState.maxHp;
+          playerState.mp = playerState.maxMp;
+          playerObj.position.set(0, 1.5, 6);
+          playerVelY = 0;
+          updateHUD(true);
+          AudioEngine.playSfx('heal');
+          spawnFloatingText(
+            playerObj.position.clone().add(new THREE.Vector3(0, 3.0, 0)),
+            tr(
+              '✨ ยังไม่มีเซฟก่อนหน้า — ชุบชีวิตและเซฟเกมปัจจุบันให้แล้ว!',
+              '✨ No previous save found — Revived & Saved current game!'
+            ),
+            '#fde047'
+          );
+        }
+      }
+
+      function reviveAtPlaza() {
+        standUpPlayer();
+        playerState.hp = playerState.maxHp;
+        playerState.mp = playerState.maxMp;
+        playerObj.position.set(0, 1.5, 6);
+        playerVelY = 0;
+        AudioEngine.playSfx('heal');
+        spawnVoxelBurst(playerObj.position.clone(), 0x4ade80, 18);
+        spawnFloatingText(
+          playerObj.position.clone().add(new THREE.Vector3(0, 2.8, 0)),
+          tr('✨ ฟื้นคืนชีพที่จัตุรัสกลางเวหา!', '✨ Revived at Central Sky Plaza!'),
+          '#4ade80'
+        );
+        updateHUD(true);
+      }
+
+      document.getElementById('btn-death-load').addEventListener('click', loadSavedGameInteractive);
+      document.getElementById('btn-death-revive').addEventListener('click', reviveAtPlaza);
+
+      // --- Opening 360° Sky City Flyover Tour & Commercial Title Showcase ---
+      const introOverlay = document.getElementById('intro-showcase-overlay');
+      const introTourBar = document.getElementById('intro-tour-bar');
+      const skyTourWaypoints = [
+        {
+          look: new THREE.Vector3(0, 4.5, -2),
+          camCenter: new THREE.Vector3(0, 18, 22),
+          titleTh: '📍 จุดชมวิว 1/6: จัตุรัสกลางเวหา & หอนาฬิกา',
+          titleEn: '📍 Landmark 1/6: Central Sky Plaza & Clocktower'
+        },
+        {
+          look: new THREE.Vector3(44, 4.5, 2),
+          camCenter: new THREE.Vector3(62, 17, 22),
+          titleTh: '📍 จุดชมวิว 2/6: ท่าเรือเหาะ & เรือเหาะธงข้ามมิติ',
+          titleEn: '📍 Landmark 2/6: Airship Dock & Sky Flagship'
+        },
+        {
+          look: new THREE.Vector3(0, 5.5, -38),
+          camCenter: new THREE.Vector3(18, 19, -56),
+          titleTh: '📍 จุดชมวิว 3/6: ป้อมปราการคริสตัลทิศเหนือ',
+          titleEn: '📍 Landmark 3/6: North Crystal Bastion'
+        },
+        {
+          look: new THREE.Vector3(-38, 6.0, -38),
+          camCenter: new THREE.Vector3(-56, 20, -20),
+          titleTh: '📍 จุดชมวิว 4/6: ลานประลองราชันย์โกเลม (Boss Arena)',
+          titleEn: '📍 Landmark 4/6: Golem King Citadel (Boss Arena)'
+        },
+        {
+          look: new THREE.Vector3(-38, 5.5, 0),
+          camCenter: new THREE.Vector3(-58, 18, 18),
+          titleTh: '📍 จุดชมวิว 5/6: วิหารเมฆาโบราณทิศตะวันตก',
+          titleEn: '📍 Landmark 5/6: Ancient Cloud Sanctuary'
+        },
+        {
+          look: new THREE.Vector3(0, 6.5, 36),
+          camCenter: new THREE.Vector3(-18, 18, 56),
+          titleTh: '📍 จุดชมวิว 6/6: เกาะหอคอยกังหันลมทิศใต้',
+          titleEn: '📍 Landmark 6/6: Windmill Observatory Island'
+        }
+      ];
+
+      const introFlyover = {
+        active: true,
+        cardVisible: true,
+        timer: 0,
+        segDuration: 4.5,
+        curLook: new THREE.Vector3(0, 4.5, -2)
+      };
+
+      function startSkyTour(showTitleCard = false) {
+        closeDialogue();
+        introFlyover.active = true;
+        introFlyover.cardVisible = showTitleCard;
+        if (showTitleCard) {
+          introOverlay.style.display = 'flex';
+          introTourBar.style.display = 'none';
+        } else {
+          introOverlay.style.display = 'none';
+          introTourBar.style.display = 'inline-flex';
+        }
+        AudioEngine.playSfx('shard');
+      }
+
+      function exitIntroFlyover() {
+        if (!introFlyover.active) return;
+        introFlyover.active = false;
+        introOverlay.style.display = 'none';
+        introTourBar.style.display = 'none';
+        AudioEngine.unlockOnFirstGesture();
+        AudioEngine.playSfx('upgrade');
+        spawnVoxelBurst(playerObj.position.clone().add(new THREE.Vector3(0, 1.2, 0)), 0x38bdf8, 18);
+        spawnFloatingText(
+          playerObj.position.clone().add(new THREE.Vector3(0, 3.0, 0)),
+          tr('⚔️ เริ่มการผจญภัยในนครลอยฟ้า!', '⚔️ Sky City Adventure Begins!'),
+          '#fde047'
+        );
+      }
+
+      document.getElementById('btn-start-game').addEventListener('click', exitIntroFlyover);
+      document.getElementById('btn-exit-tour').addEventListener('click', exitIntroFlyover);
+      document.getElementById('btn-watch-flyover').addEventListener('click', () => {
+        AudioEngine.unlockOnFirstGesture();
+        startSkyTour(false);
+      });
+      document.getElementById('btn-sky-tour').addEventListener('click', () => {
+        startSkyTour(false);
+      });
+      document.getElementById('btn-intro-lang').addEventListener('click', () => {
+        document.getElementById('btn-lang-toggle').click();
+      });
+
+      // --- Bilingual (TH / EN) UI Switcher ---
+      function applyLanguageUI() {
+        const en = isEn();
+        document.documentElement.lang = en ? 'en' : 'th';
+        document.getElementById('btn-lang-toggle').textContent = en ? '🌐 ภาษา: EN (Switch to TH)' : '🌐 ภาษา: TH (Switch to EN)';
+        document.getElementById('btn-intro-lang').textContent = en ? '🌐 Language: EN (ไทย)' : '🌐 ภาษา: ไทย (EN)';
+        document.getElementById('intro-top-pill').textContent = tr(
+          '🎬 กำลังบินชมรอบมหานครลอยฟ้า 360° (3D Sky City Showcase)',
+          '🎬 360° Sky Metropolis Flyover Showcase'
+        );
+        document.getElementById('intro-game-sub').textContent = tr(
+          'ผจญภัยแนว Action RPG 3 มิติเหนือหมู่เกาะลอยฟ้าทั้ง 6 โซน ต่อสู้ทัพโกเลมคลั่ง ปราบราชันย์โกเลม และทะยานด้วยเรือเหาะข้ามทะเลเมฆ!',
+          'Explore 6 floating Voxel islands in 3D Action RPG combat! Defend the plaza from invading Golems, defeat Giant Bosses, and soar across the clouds by Airship!'
+        );
+        document.getElementById('btn-start-game').textContent = tr('⚔️ เริ่มผจญภัยทันที (Start Game)', '⚔️ Start Adventure Now');
+        document.getElementById('btn-watch-flyover').textContent = tr('🎥 ซ่อนหน้าต่างเพื่อชมวิวรอบเมือง', '🎥 Watch Fullscreen City Tour');
+        document.getElementById('intro-footer-hint').textContent = tr(
+          '💡 กล้องกำลังบินพาทัวร์รอบ 6 เกาะลอยฟ้า — กด "เริ่มผจญภัยทันที" เพื่อเข้าควบคุมตัวละคร',
+          '💡 Camera is touring all 6 floating islands — Tap "Start Adventure Now" to play!'
+        );
+        document.getElementById('btn-exit-tour').textContent = tr('⚔️ เข้าสู่เกม (Play Now)', '⚔️ Play Now');
+        document.getElementById('btn-sky-tour').textContent = tr('🎬 บินชมรอบเมือง', '🎬 Sky Tour');
+        document.getElementById('btn-time-day').textContent = tr('☀️ กลางวัน', '☀️ Day');
+        document.getElementById('btn-time-sunset').textContent = tr('🌅 ยามสนธยา', '🌅 Sunset');
+        document.getElementById('btn-time-night').textContent = tr('🌙 ไซเบอร์ไนท์', '🌙 Cyber Night');
+
+        const camBtn = document.getElementById('btn-cam-mode');
+        if (camMode === 'follow') camBtn.textContent = tr('🎥 มุมกล้อง: ติดตาม', '🎥 Cam: Follow');
+        else if (camMode === 'iso') camBtn.textContent = tr('🎥 มุมกล้อง: มุมสูง RPG', '🎥 Cam: Isometric');
+        else camBtn.textContent = tr('🎥 มุมกล้อง: ชมวิวเมือง', '🎥 Cam: Orbit');
+
+        document.getElementById('btn-spawn-invasion').textContent = tr('👾 เรียกทัพโกเลมบุกเมือง', '👾 Spawn Golem Raid');
+        document.getElementById('btn-audio-toggle').textContent = AudioEngine.isEnabled()
+          ? tr('🔊 เสียง/BGM: เปิด', '🔊 Audio/BGM: ON')
+          : tr('🔇 เสียง/BGM: ปิด', '🔇 Audio/BGM: OFF');
+        document.getElementById('btn-save-game').textContent = tr('💾 เซฟเกม', '💾 Save');
+        document.getElementById('btn-load-game').textContent = tr('📂 โหลดเซฟ', '📂 Load Save');
+        document.getElementById('btn-reset-save').textContent = tr('🔄 เริ่มใหม่', '🔄 Reset');
+
+        document.getElementById('joy-hint-text').textContent = tr('ลากเพื่อเดิน / WASD', 'Drag to Move / WASD');
+        document.getElementById('slot-lbl-attack').textContent = tr('ฟันดาบ', 'Slash');
+        document.getElementById('slot-lbl-skill').textContent = tr('คลื่นเวหา', 'Wave');
+        document.getElementById('slot-lbl-jump').textContent = tr('กระโดด', 'Jump');
+        document.getElementById('slot-lbl-dash').textContent = tr('พุ่งตัว', 'Dash');
+        document.getElementById('slot-lbl-potion').textContent = tr('ยา HP', 'Potion');
+        document.getElementById('slot-lbl-teleport').textContent = tr('กลับเมือง', 'Plaza');
+
+        document.getElementById('leg-1').innerHTML = tr(
+          '<strong>WASD / ลูกศร</strong> : เดินสำรวจเมืองลอยฟ้า',
+          '<strong>WASD / Arrows</strong> : Move around Sky City'
+        );
+        document.getElementById('leg-2').innerHTML = tr(
+          '<strong>ลากเมาส์ / 2 นิ้วถ่างจอ</strong> : หมุนกล้อง 360° / ซูม',
+          '<strong>Drag / 2-Finger Pinch</strong> : Orbit 360° / Zoom'
+        );
+        document.getElementById('leg-3').innerHTML = tr(
+          '<strong>Space / Shift</strong> : กระโดด / พุ่งตัว',
+          '<strong>Space / Shift</strong> : Jump / Dash'
+        );
+        document.getElementById('leg-4').innerHTML = tr(
+          '<strong>J / K / E</strong> : โจมตี / สกิลเอเธอร์ / โต้ตอบ',
+          '<strong>J / K / E</strong> : Slash / Aether Wave / Interact'
+        );
+
+        airshipLabel.textContent = tr('🚢 เรือเหาะเวหา (เดินทางข้ามด่าน)', '🚢 Sky Airship (Next Stage)');
+        npcs.forEach((n) => {
+          n.label.textContent = '💬 ' + (en ? n.nameEn : n.name);
+        });
+        shards.forEach((s, idx) => {
+          s.label.textContent = tr('💎 ผลึกเอเธอร์ #' + (idx + 1), '💎 Aether Shard #' + (idx + 1));
+        });
+
+        updateHUD(false);
+      }
+
+      document.getElementById('btn-lang-toggle').addEventListener('click', () => {
+        playerState.lang = playerState.lang === 'en' ? 'th' : 'en';
+        AudioEngine.playSfx('shard');
+        closeDialogue();
+        applyLanguageUI();
+        saveGameToStorage(false);
+        spawnFloatingText(
+          playerObj.position.clone().add(new THREE.Vector3(0, 3.0, 0)),
+          tr('🌐 เปลี่ยนเป็นภาษาไทยแล้ว!', '🌐 Switched Language to English!'),
+          '#38bdf8'
+        );
+      });
+
       // --- Audio & Save Toolbar Controls ---
       document.getElementById('btn-audio-toggle').addEventListener('click', (e) => {
         const on = AudioEngine.toggle();
-        e.currentTarget.textContent = on ? '🔊 เสียง/BGM: เปิด' : '🔇 เสียง/BGM: ปิด';
+        e.currentTarget.textContent = on
+          ? tr('🔊 เสียง/BGM: เปิด', '🔊 Audio/BGM: ON')
+          : tr('🔇 เสียง/BGM: ปิด', '🔇 Audio/BGM: OFF');
         e.currentTarget.classList.toggle('active', on);
       });
 
@@ -2005,27 +2604,42 @@
         saveGameToStorage(true);
       });
 
+      document.getElementById('btn-load-game').addEventListener('click', () => {
+        loadSavedGameInteractive();
+      });
+
       document.getElementById('btn-reset-save').addEventListener('click', () => {
         openDialogue(
-          '🔄 เริ่มเกมใหม่ตั้งแต่ด่านที่ 1',
-          'จัดการข้อมูลเซฟเกม',
-          'คุณต้องการล้างข้อมูลเซฟปัจจุบัน และเริ่มการผจญภัยใหม่ตั้งแต่ด่านที่ 1 (Lv.1) หรือไม่?',
+          tr('🔄 เริ่มเกมใหม่ตั้งแต่ด่านที่ 1', '🔄 Reset & Start New Game'),
+          tr('จัดการข้อมูลเซฟเกม', 'Save Data Management'),
+          tr(
+            'คุณต้องการล้างข้อมูลเซฟปัจจุบัน และเริ่มการผจญภัยใหม่ตั้งแต่ด่านที่ 1 (Lv.1) หรือไม่?',
+            'Do you want to clear your current save data and start a fresh adventure from Stage 1 (Lv.1)?'
+          ),
           [
             {
-              label: 'ยืนยันเริ่มเกมใหม่',
+              label: tr('ยืนยันเริ่มเกมใหม่', 'Confirm New Game'),
               onClick: () => {
+                const currentLang = playerState.lang;
                 try { localStorage.removeItem(SAVE_KEY); } catch (_) {}
+                standUpPlayer();
                 Object.assign(playerState, JSON.parse(JSON.stringify(defaultPlayerState)));
+                playerState.lang = currentLang;
                 applyStageVisuals();
+                applyLanguageUI();
                 playerObj.position.set(0, 1.5, 6);
                 playerVelY = 0;
                 updateHUD(true);
                 closeDialogue();
                 AudioEngine.playSfx('shard');
-                spawnFloatingText(playerObj.position.clone().add(new THREE.Vector3(0, 2.8, 0)), '🔄 เริ่มเกมใหม่เรียบร้อยแล้ว!', '#38bdf8');
+                spawnFloatingText(
+                  playerObj.position.clone().add(new THREE.Vector3(0, 2.8, 0)),
+                  tr('🔄 เริ่มเกมใหม่เรียบร้อยแล้ว!', '🔄 New Game Started!'),
+                  '#38bdf8'
+                );
               }
             },
-            { label: 'ยกเลิก', secondary: true, onClick: closeDialogue }
+            { label: tr('ยกเลิก', 'Cancel'), secondary: true, onClick: closeDialogue }
           ]
         );
       });
@@ -2103,8 +2717,10 @@
         try { window.focus(); } catch (_) {}
       });
 
-      // Camera Orbit with Mouse & iPhone Touch Drag on Canvas
+      // Camera Orbit with Mouse & iPhone Touch Drag + 2-Finger Pinch Zoom on Canvas
       let camTouchId = null;
+      let pinchStartDist = null;
+      let pinchStartCamDist = 15.5;
 
       canvas.addEventListener('mousedown', (e) => {
         isDraggingCam = true;
@@ -2128,6 +2744,15 @@
 
       canvas.addEventListener('touchstart', (e) => {
         AudioEngine.unlockOnFirstGesture();
+        if (e.touches.length === 2) {
+          camTouchId = null;
+          pinchStartDist = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+          );
+          pinchStartCamDist = camDist;
+          return;
+        }
         if (camTouchId !== null) return;
         const t = e.changedTouches[0];
         if (!t) return;
@@ -2137,6 +2762,15 @@
       }, { passive: true });
 
       canvas.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 2 && pinchStartDist) {
+          const curDist = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+          );
+          const delta = (pinchStartDist - curDist) * 0.04;
+          camDist = Math.max(7, Math.min(32, pinchStartCamDist + delta));
+          return;
+        }
         if (camTouchId === null) return;
         for (let i = 0; i < e.changedTouches.length; i++) {
           const t = e.changedTouches[i];
@@ -2153,6 +2787,9 @@
       }, { passive: true });
 
       const endCamTouch = (e) => {
+        if (e.touches.length < 2) {
+          pinchStartDist = null;
+        }
         if (camTouchId === null) return;
         for (let i = 0; i < e.changedTouches.length; i++) {
           if (e.changedTouches[i].identifier === camTouchId) {
@@ -2356,16 +2993,18 @@
 
       function damageEnemy(en, dmg) {
         AudioEngine.playSfx('hit');
-        en.hp = Math.max(0, en.hp - dmg);
-        spawnFloatingText(en.mesh.position.clone().add(new THREE.Vector3(0, 2.6, 0)), '-' + dmg + ' HP', '#f87171');
+        // Boss Golems have heavy armor (25% damage reduction) so boss fights are more intense and fun
+        const actualDmg = en.isBoss ? Math.max(4, Math.round(dmg * 0.75)) : dmg;
+        en.hp = Math.max(0, en.hp - actualDmg);
+        spawnFloatingText(en.mesh.position.clone().add(new THREE.Vector3(0, 2.6, 0)), '-' + actualDmg + ' HP', '#f87171');
         spawnVoxelBurst(en.mesh.position.clone().add(new THREE.Vector3(0, 1.2, 0)), 0xef4444, 8);
 
         if (en.hp <= 0) {
           en.alive = false;
           en.mesh.visible = false;
-          en.respawnTimer = en.isBoss ? 18 : 9;
-          const goldReward = en.isBoss ? 120 : 35;
-          const expReward = en.isBoss ? 110 : 45;
+          en.respawnTimer = en.isBoss ? 22 : 9;
+          const goldReward = en.isBoss ? 160 : 35;
+          const expReward = en.isBoss ? 140 : 45;
           playerState.gold += goldReward;
           playerState.golemsDefeated += en.isBoss ? 2 : 1;
 
@@ -2480,17 +3119,17 @@
           camMode = 'iso';
           camPitch = 0.78;
           camDist = 22;
-          e.currentTarget.textContent = '🎥 มุมกล้อง: มุมสูง RPG';
+          e.currentTarget.textContent = tr('🎥 มุมกล้อง: มุมสูง RPG', '🎥 Cam: Isometric');
         } else if (camMode === 'iso') {
           camMode = 'orbit';
           camPitch = 0.42;
           camDist = 28;
-          e.currentTarget.textContent = '🎥 มุมกล้อง: ชมวิวเมือง';
+          e.currentTarget.textContent = tr('🎥 มุมกล้อง: ชมวิวเมือง', '🎥 Cam: Orbit');
         } else {
           camMode = 'follow';
           camPitch = 0.48;
           camDist = 15.5;
-          e.currentTarget.textContent = '🎥 มุมกล้อง: ติดตาม';
+          e.currentTarget.textContent = tr('🎥 มุมกล้อง: ติดตาม', '🎥 Cam: Follow');
         }
       });
 
@@ -2523,6 +3162,9 @@
 
         if (activeInteractTarget.type === 'npc') {
           const npc = activeInteractTarget.data;
+          const npcTitle = isEn() ? npc.nameEn : npc.name;
+          const npcRole = isEn() ? npc.roleEn : npc.role;
+
           if (npc.id === 'eldrin') {
             if (!playerState.quests.talkedEldrin) {
               playerState.quests.talkedEldrin = true;
@@ -2532,42 +3174,61 @@
             const allDone = isReadyForAirship();
             const actions = [
               {
-                label: '✨ ฟื้นฟู HP/MP เต็ม & เซฟเกม (ฟรี)',
+                label: tr('✨ ฟื้นฟู HP/MP เต็ม & เซฟเกม (ฟรี)', '✨ Full Heal HP/MP & Save Game (Free)'),
                 onClick: () => {
                   playerState.hp = playerState.maxHp;
                   playerState.mp = playerState.maxMp;
                   updateHUD(true);
                   AudioEngine.playSfx('heal');
-                  spawnFloatingText(playerObj.position.clone().add(new THREE.Vector3(0, 2.5, 0)), '✨ ฟื้นฟูพลังเต็ม & บันทึกเกมแล้ว!', '#38bdf8');
+                  spawnFloatingText(
+                    playerObj.position.clone().add(new THREE.Vector3(0, 2.5, 0)),
+                    tr('✨ ฟื้นฟูพลังเต็ม & บันทึกเกมแล้ว!', '✨ HP/MP Restored & Game Saved!'),
+                    '#38bdf8'
+                  );
                   closeDialogue();
                 }
               }
             ];
             if (allDone) {
               actions.unshift({
-                label: '🚢 ขึ้นเรือเหาะเดินทางไปด่านที่ ' + (playerState.stage + 1) + ' ทันที!',
+                label: tr(
+                  '🚢 ขึ้นเรือเหาะเดินทางไปด่านที่ ' + (playerState.stage + 1) + ' ทันที!',
+                  '🚢 Board Airship to Stage ' + (playerState.stage + 1) + ' Now!'
+                ),
                 onClick: startAirshipCutscene
               });
             }
-            actions.push({ label: 'รับทราบ', secondary: true, onClick: closeDialogue });
+            actions.push({ label: tr('รับทราบ', 'Got it'), secondary: true, onClick: closeDialogue });
 
             openDialogue(
-              npc.name,
-              npc.role,
+              npcTitle,
+              npcRole,
               allDone
-                ? 'ภารกิจในด่านที่ ' + playerState.stage + ' สำเร็จครบถ้วนแล้ว! กดขึ้นเรือเหาะเพื่อออกเดินทางไปยังมหานครลอยฟ้าด่านที่ ' + (playerState.stage + 1) + ' และรับภารกิจใหม่ได้เลย!'
-                : `ขณะนี้เราอยู่ในด่านที่ ${playerState.stage}! กองทัพโกเลมคลั่งกำลังบุกเข้ามาในจัตุรัสกลางเมือง ช่วยรวบรวมผลึกเอเธอร์ให้ครบ ${playerState.totalShards} ชิ้น ปราบโกเลมบุกเมือง ${playerState.golemGoal} ตัว และไปจุดประภาคารเรือเหาะที่ท่าเรือตะวันออกเพื่อเดินทางสู่เมืองถัดไป!`,
+                ? tr(
+                    'ภารกิจในด่านที่ ' + playerState.stage + ' สำเร็จครบถ้วนแล้ว! กดขึ้นเรือเหาะเพื่อออกเดินทางไปยังมหานครลอยฟ้าด่านที่ ' + (playerState.stage + 1) + ' และรับภารกิจใหม่ได้เลย!',
+                    'All quests in Stage ' + playerState.stage + ' are complete! Board the Airship now to fly to Sky Metropolis Stage ' + (playerState.stage + 1) + '!'
+                  )
+                : tr(
+                    `ขณะนี้เราอยู่ในด่านที่ ${playerState.stage}! กองทัพโกเลมคลั่งกำลังบุกเข้ามาในจัตุรัสกลางเมือง ช่วยรวบรวมผลึกเอเธอร์ให้ครบ ${playerState.totalShards} ชิ้น ปราบโกเลมบุกเมือง ${playerState.golemGoal} ตัว และไปจุดประภาคารเรือเหาะที่ท่าเรือตะวันออกเพื่อเดินทางสู่เมืองถัดไป!`,
+                    `We are currently in Stage ${playerState.stage}! Berserk Golems are invading our central plaza. Collect ${playerState.totalShards} Aether Shards, defeat ${playerState.golemGoal} invading Golems, and light the East Dock Beacon to fly to the next Sky City!`
+                  ),
               actions
             );
           } else if (npc.id === 'blacksmith') {
             const upgCost = playerState.weaponLevel * 50;
             openDialogue(
-              npc.name,
-              npc.role,
-              `ต้องการตีบวกดาบเวหาสำหรับรับมือทัพโกเลมและบอสราชันย์โกเลมไหม? ตอนนี้ดาบของคุณอยู่ในระดับ +${playerState.weaponLevel}`,
+              npcTitle,
+              npcRole,
+              tr(
+                `ต้องการตีบวกดาบเวหาสำหรับรับมือทัพโกเลมและบอสราชันย์โกเลมไหม? ตอนนี้ดาบของคุณอยู่ในระดับ +${playerState.weaponLevel}`,
+                `Ready to upgrade your Aether Skyblade to fight the Golem Legion and Giant Bosses? Current weapon level: +${playerState.weaponLevel}`
+              ),
               [
                 {
-                  label: `ตีบวกดาบเวหา (+7 ATK) [${upgCost} 🪙]`,
+                  label: tr(
+                    `ตีบวกดาบเวหา (+7 ATK) [${upgCost} 🪙]`,
+                    `Upgrade Skyblade (+7 ATK) [${upgCost} 🪙]`
+                  ),
                   onClick: () => {
                     if (playerState.gold >= upgCost) {
                       playerState.gold -= upgCost;
@@ -2575,60 +3236,82 @@
                       playerState.atk += 7;
                       AudioEngine.playSfx('upgrade');
                       updateHUD(true);
-                      spawnFloatingText(playerObj.position.clone().add(new THREE.Vector3(0, 2.6, 0)), '⚔️ ตีบวกดาบสำเร็จ! +' + playerState.weaponLevel, '#fde047');
+                      spawnFloatingText(
+                        playerObj.position.clone().add(new THREE.Vector3(0, 2.6, 0)),
+                        tr('⚔️ ตีบวกดาบสำเร็จ! +' + playerState.weaponLevel, '⚔️ Weapon Upgraded! +' + playerState.weaponLevel),
+                        '#fde047'
+                      );
                       triggerInteract();
                     } else {
-                      spawnFloatingText(playerObj.position.clone().add(new THREE.Vector3(0, 2.6, 0)), 'เหรียญทองไม่พอ!', '#f87171');
+                      spawnFloatingText(
+                        playerObj.position.clone().add(new THREE.Vector3(0, 2.6, 0)),
+                        tr('เหรียญทองไม่พอ!', 'Not enough Gold!'),
+                        '#f87171'
+                      );
                     }
                   }
                 },
                 {
-                  label: 'ซื้อยา HP x1 [25 🪙]',
+                  label: tr('ซื้อยา HP x1 [25 🪙]', 'Buy HP Potion x1 [25 🪙]'),
                   onClick: () => {
                     if (playerState.gold >= 25) {
                       playerState.gold -= 25;
                       playerState.potions += 1;
                       AudioEngine.playSfx('heal');
                       updateHUD(true);
-                      spawnFloatingText(playerObj.position.clone().add(new THREE.Vector3(0, 2.6, 0)), '🧪 ได้รับยา HP +1', '#4ade80');
+                      spawnFloatingText(
+                        playerObj.position.clone().add(new THREE.Vector3(0, 2.6, 0)),
+                        tr('🧪 ได้รับยา HP +1', '🧪 +1 HP Potion'),
+                        '#4ade80'
+                      );
                     } else {
-                      spawnFloatingText(playerObj.position.clone().add(new THREE.Vector3(0, 2.6, 0)), 'เหรียญทองไม่พอ!', '#f87171');
+                      spawnFloatingText(
+                        playerObj.position.clone().add(new THREE.Vector3(0, 2.6, 0)),
+                        tr('เหรียญทองไม่พอ!', 'Not enough Gold!'),
+                        '#f87171'
+                      );
                     }
                   }
                 },
-                { label: 'ปิดหน้าต่าง', secondary: true, onClick: closeDialogue }
+                { label: tr('ปิดหน้าต่าง', 'Close'), secondary: true, onClick: closeDialogue }
               ]
             );
           } else if (npc.id === 'lumina') {
             openDialogue(
-              npc.name,
-              npc.role,
-              'ตอนนี้เมืองลอยฟ้าของเราขยายใหญ่ขึ้นเป็น 6 หมู่เกาะ พร้อมระบบเซฟเกมอัตโนมัติและดนตรีบรรยากาศเวหาแล้ว! หากทำภารกิจครบทั้ง 4 ข้อ คุณสามารถขึ้นเรือเหาะที่ท่าเรือตะวันออกเพื่อบินไปยังมหานครลอยฟ้าด่านถัดไปได้ทันที!',
+              npcTitle,
+              npcRole,
+              tr(
+                'ตอนนี้เมืองลอยฟ้าของเราขยายใหญ่ขึ้นเป็น 6 หมู่เกาะ พร้อมระบบเซฟเกมอัตโนมัติและดนตรีบรรยากาศเวหาแล้ว! หากทำภารกิจครบทั้ง 4 ข้อ คุณสามารถขึ้นเรือเหาะที่ท่าเรือตะวันออกเพื่อบินไปยังมหานครลอยฟ้าด่านถัดไปได้ทันที!',
+                'Our Sky City spans 6 floating islands with Auto-Save and ambient music! Complete all 4 stage quests and board the Airship at the East Dock to fly to the next Sky Metropolis!'
+              ),
               [
                 {
-                  label: 'รับพรสายลม (+35 EXP)',
+                  label: tr('รับพรสายลม (+35 EXP)', 'Receive Wind Blessing (+35 EXP)'),
                   onClick: () => {
                     gainExp(35);
                     closeDialogue();
                   }
                 },
-                { label: 'ขอบคุณ', secondary: true, onClick: closeDialogue }
+                { label: tr('ขอบคุณ', 'Thank you'), secondary: true, onClick: closeDialogue }
               ]
             );
           } else if (npc.id === 'valkyrie') {
             openDialogue(
-              npc.name,
-              npc.role,
-              'ระวังตัวด้วยนักสำรวจ! ทางทิศตะวันตกเฉียงเหนือของป้อมปราการแห่งนี้คือ "ลานประลองราชันย์โกเลม" ที่มีบอสโกเลมยักษ์เฝ้าผลึกเอเธอร์อยู่ หรือจะเรียกทัพโกเลมบุกเมืองมาฝึกฝีมือก็ได้นะ!',
+              npcTitle,
+              npcRole,
+              tr(
+                'ระวังตัวด้วยนักสำรวจ! ทางทิศตะวันตกเฉียงเหนือของป้อมปราการแห่งนี้คือ "ลานประลองราชันย์โกเลม" ที่มีบอสโกเลมยักษ์เฝ้าผลึกเอเธอร์อยู่ และในด่านที่สูงขึ้นจะมีบอสยักษ์ปรากฏตัวพร้อมกันหลายตัว!',
+                'Stay sharp, Sky Walker! Northwest of this bastion lies the Golem King Citadel guarded by a Giant Boss Golem—and in higher stages, multiple Giant Bosses will appear!'
+              ),
               [
                 {
-                  label: '🚨 เรียกทัพโกเลมบุกเมืองเดี๋ยวนี้!',
+                  label: tr('🚨 เรียกทัพโกเลมบุกเมืองเดี๋ยวนี้!', '🚨 Summon Golem Raid Wave Now!'),
                   onClick: () => {
                     closeDialogue();
                     triggerCityInvasionWave();
                   }
                 },
-                { label: 'รับทราบ', secondary: true, onClick: closeDialogue }
+                { label: tr('รับทราบ', 'Understood'), secondary: true, onClick: closeDialogue }
               ]
             );
           }
@@ -2640,23 +3323,33 @@
             gainExp(65);
             playerState.gold += 90;
             spawnVoxelBurst(beaconCrystal.position.clone(), 0x38bdf8, 24);
-            spawnFloatingText(beaconCrystal.position.clone().add(new THREE.Vector3(0, 2, 0)), '🚢 เปิดใช้งานประภาคารเรือเหาะแล้ว!', '#38bdf8');
+            spawnFloatingText(
+              beaconCrystal.position.clone().add(new THREE.Vector3(0, 2, 0)),
+              tr('🚢 เปิดใช้งานประภาคารเรือเหาะแล้ว!', '🚢 Airship Beacon Activated!'),
+              '#38bdf8'
+            );
             updateHUD(true);
           }
 
           openDialogue(
-            '🚢 เรือเหาะเวหาข้ามมิติ (Sky Armada Flagship)',
-            'พร้อมเดินทางสู่ด่านที่ ' + (playerState.stage + 1),
+            tr('🚢 เรือเหาะเวหาข้ามมิติ (Sky Armada Flagship)', '🚢 Sky Armada Flagship'),
+            tr('พร้อมเดินทางสู่ด่านที่ ' + (playerState.stage + 1), 'Ready to Depart for Stage ' + (playerState.stage + 1)),
             isReadyForAirship()
-              ? 'ภารกิจทั้งหมดของด่านที่ ' + playerState.stage + ' เสร็จสมบูรณ์แล้ว! คุณต้องการขึ้นเรือเหาะเพื่อชมฉากเดินทางข้ามทะเลเมฆไปยังมหานครลอยฟ้าด่านที่ ' + (playerState.stage + 1) + ' และเริ่มภารกิจใหม่เลยหรือไม่?'
-              : 'ประภาคารเรือเหาะเปิดทำงานแล้ว! คุณสามารถออกเดินทางสู่เมืองลอยฟ้าด่านที่ ' + (playerState.stage + 1) + ' ได้ทันที หรือจะอยู่เก็บผลึกและปราบโกเลมในด่านนี้ต่อก็ได้!',
+              ? tr(
+                  'ภารกิจทั้งหมดของด่านที่ ' + playerState.stage + ' เสร็จสมบูรณ์แล้ว! คุณต้องการขึ้นเรือเหาะเพื่อชมฉากเดินทางข้ามทะเลเมฆไปยังมหานครลอยฟ้าด่านที่ ' + (playerState.stage + 1) + ' และเริ่มภารกิจใหม่เลยหรือไม่?',
+                  'All quests for Stage ' + playerState.stage + ' are complete! Would you like to board the Airship and fly across the cloud sea to Stage ' + (playerState.stage + 1) + '?'
+                )
+              : tr(
+                  'ประภาคารเรือเหาะเปิดทำงานแล้ว! คุณสามารถออกเดินทางสู่เมืองลอยฟ้าด่านที่ ' + (playerState.stage + 1) + ' ได้ทันที หรือจะอยู่เก็บผลึกและปราบโกเลมในด่านนี้ต่อก็ได้!',
+                  'The Airship Beacon is active! You can depart for Stage ' + (playerState.stage + 1) + ' right now, or stay to collect more shards and fight Golems!'
+                ),
             [
               {
-                label: '🚢 ขึ้นเรือเหาะไปด่านที่ ' + (playerState.stage + 1) + ' เลย!',
+                label: tr('🚢 ขึ้นเรือเหาะไปด่านที่ ' + (playerState.stage + 1) + ' เลย!', '🚢 Board Airship to Stage ' + (playerState.stage + 1) + '!'),
                 onClick: startAirshipCutscene
               },
               {
-                label: 'สำรวจเมืองนี้ต่ออีกนิด',
+                label: tr('สำรวจเมืองนี้ต่ออีกนิด', 'Keep Exploring Current Stage'),
                 secondary: true,
                 onClick: closeDialogue
               }
@@ -2819,17 +3512,19 @@
         });
 
         // Player Movement Input (Supports both EN and TH keyboard layouts + Joystick)
-        let moveX = joyVec.x;
-        let moveZ = joyVec.y;
-        if (codes['KeyW'] || keys['w'] || keys['ไ'] || keys['arrowup']) moveZ -= 1;
-        if (codes['KeyS'] || keys['s'] || keys['ห'] || keys['arrowdown']) moveZ += 1;
-        if (codes['KeyA'] || keys['a'] || keys['ฟ'] || keys['arrowleft']) moveX -= 1;
-        if (codes['KeyD'] || keys['d'] || keys['ก'] || keys['arrowright']) moveX += 1;
+        let moveX = isPlayerDead ? 0 : joyVec.x;
+        let moveZ = isPlayerDead ? 0 : joyVec.y;
+        if (!isPlayerDead) {
+          if (codes['KeyW'] || keys['w'] || keys['ไ'] || keys['arrowup']) moveZ -= 1;
+          if (codes['KeyS'] || keys['s'] || keys['ห'] || keys['arrowdown']) moveZ += 1;
+          if (codes['KeyA'] || keys['a'] || keys['ฟ'] || keys['arrowleft']) moveX -= 1;
+          if (codes['KeyD'] || keys['d'] || keys['ก'] || keys['arrowright']) moveX += 1;
+        }
 
         const moveLen = Math.hypot(moveX, moveZ);
         const speed = 8.2;
 
-        if (moveLen > 0.05) {
+        if (!isPlayerDead && moveLen > 0.05) {
           moveX /= moveLen;
           moveZ /= moveLen;
 
@@ -2875,21 +3570,27 @@
         if (dashTimer > 0) dashTimer -= dt;
 
         // Vertical Gravity & Island Floor Detection
-        const currentPlat = getPlatformAt(playerObj.position.x, playerObj.position.z);
-        playerVelY -= 24 * dt;
-        playerObj.position.y += playerVelY * dt;
+        if (!isPlayerDead) {
+          const currentPlat = getPlatformAt(playerObj.position.x, playerObj.position.z);
+          playerVelY -= 24 * dt;
+          playerObj.position.y += playerVelY * dt;
 
-        if (currentPlat && playerObj.position.y <= currentPlat.topY && playerObj.position.y >= currentPlat.topY - 2.4 && playerVelY <= 0) {
-          playerObj.position.y = currentPlat.topY;
-          playerVelY = 0;
-          isGrounded = true;
-          document.getElementById('zone-name').textContent = currentPlat.zoneTitle;
-        } else {
-          isGrounded = false;
-        }
+          if (currentPlat && playerObj.position.y <= currentPlat.topY && playerObj.position.y >= currentPlat.topY - 2.4 && playerVelY <= 0) {
+            playerObj.position.y = currentPlat.topY;
+            playerVelY = 0;
+            isGrounded = true;
+            document.getElementById('zone-name').textContent = currentPlat.zoneTitle;
+          } else {
+            isGrounded = false;
+          }
 
-        if (playerObj.position.y < -22) {
-          teleportHome();
+          // Falling off the sky island counts as Heroic Death!
+          if (playerObj.position.y < -18) {
+            triggerPlayerDeath(
+              'เดินพลัดตกจากเกาะลอยฟ้า (Sky Island) สิ้นชีพกลางเวหาอย่างวีรชน!',
+              'Fell off the floating Sky Island into the cloud abyss!'
+            );
+          }
         }
 
         // Check Collectible Shards
@@ -2911,7 +3612,10 @@
             spawnVoxelBurst(s.mesh.position.clone(), 0x38bdf8, 16);
             spawnFloatingText(
               s.mesh.position.clone().add(new THREE.Vector3(0, 2, 0)),
-              `💎 เก็บผลึกเอเธอร์สำเร็จ! (${playerState.shards}/${playerState.totalShards})`,
+              tr(
+                `💎 เก็บผลึกเอเธอร์สำเร็จ! (${playerState.shards}/${playerState.totalShards})`,
+                `💎 Aether Shard Collected! (${playerState.shards}/${playerState.totalShards})`
+              ),
               '#38bdf8'
             );
             if (playerState.shards >= playerState.totalShards && !playerState.quests.collectedShards) {
@@ -2976,18 +3680,20 @@
           }
 
           const attackRange = en.isBoss ? 2.6 : 1.9;
-          if (distToPlayer <= attackRange) {
+          if (!isPlayerDead && distToPlayer <= attackRange) {
             en.attackCooldown -= dt;
             if (en.attackCooldown <= 0) {
               en.attackCooldown = 1.5;
-              const rawAtk = (en.isBoss ? 24 : 14) + (playerState.stage - 1) * 3;
+              const rawAtk = (en.isBoss ? 28 : 14) + (playerState.stage - 1) * 4;
               const dmg = Math.max(3, rawAtk - playerState.def);
               playerState.hp = Math.max(0, playerState.hp - dmg);
               AudioEngine.playSfx('hit');
               spawnFloatingText(playerObj.position.clone().add(new THREE.Vector3(0, 2.4, 0)), '-' + dmg + ' HP', '#ef4444');
               if (playerState.hp <= 0) {
-                playerState.hp = playerState.maxHp;
-                teleportHome();
+                triggerPlayerDeath(
+                  'พ่ายแพ้ในการศึกปะทะ ' + en.name + ' นอนตายอย่างวีรชน!',
+                  'Defeated in battle by ' + (en.nameEn || en.name) + '!'
+                );
               }
               updateHUD(false);
             }
@@ -2996,8 +3702,9 @@
           const labelOffsetY = en.isBoss ? 4.8 : 2.8;
           const sc = projectToScreen(en.mesh.position.clone().add(new THREE.Vector3(0, labelOffsetY, 0)));
           if (sc) {
+            const dispName = isEn() ? (en.nameEn || en.name) : en.name;
             en.label.style.display = 'block';
-            en.label.textContent = `${en.isBoss ? '👑' : '👾'} ${en.name} HP ${en.hp}/${en.maxHp}`;
+            en.label.textContent = `${en.isBoss ? '👑' : '👾'} ${dispName} HP ${en.hp}/${en.maxHp}`;
             en.label.style.left = sc.x + 'px';
             en.label.style.top = sc.y + 'px';
           } else {
@@ -3034,12 +3741,16 @@
           interactPrompt.style.display = 'inline-flex';
           if (activeInteractTarget.type === 'beacon') {
             interactText.textContent = playerState.quests.activatedBeacon
-              ? '🚢 ขึ้นเรือเหาะเดินทางไปด่านถัดไป'
-              : '🔥 จุดประภาคาร & ขึ้นเรือเหาะไปด่านใหม่';
+              ? tr('🚢 ขึ้นเรือเหาะเดินทางไปด่านถัดไป', '🚢 Board Airship to Next Stage')
+              : tr('🔥 จุดประภาคาร & ขึ้นเรือเหาะไปด่านใหม่', '🔥 Light Beacon & Board Airship');
           } else if (activeInteractTarget.type === 'airship') {
-            interactText.textContent = '🚢 ขึ้นเรือเหาะเดินทางไปเมืองลอยฟ้าด่านที่ ' + (playerState.stage + 1);
+            interactText.textContent = tr(
+              '🚢 ขึ้นเรือเหาะเดินทางไปเมืองลอยฟ้าด่านที่ ' + (playerState.stage + 1),
+              '🚢 Board Airship to Sky City Stage ' + (playerState.stage + 1)
+            );
           } else {
-            interactText.textContent = 'คุยกับ ' + activeInteractTarget.data.name;
+            const npcDisp = isEn() ? activeInteractTarget.data.nameEn : activeInteractTarget.data.name;
+            interactText.textContent = tr('คุยกับ ' + npcDisp, 'Talk to ' + npcDisp);
           }
         } else {
           interactPrompt.style.display = 'none';
@@ -3071,17 +3782,46 @@
           }
         }
 
-        // Camera Positioning
-        if (camMode === 'orbit') {
-          camYaw += dt * 0.25;
+        // Camera Positioning (Intro 360° Sky City Flyover Tour vs. Gameplay Camera)
+        if (introFlyover.active) {
+          introFlyover.timer += dt;
+          const totalWaypoints = skyTourWaypoints.length;
+          const totalCycle = totalWaypoints * introFlyover.segDuration;
+          const tCycle = introFlyover.timer % totalCycle;
+          const segIdx = Math.floor(tCycle / introFlyover.segDuration);
+          const nextIdx = (segIdx + 1) % totalWaypoints;
+          const localT = (tCycle % introFlyover.segDuration) / introFlyover.segDuration;
+          // Smoothstep interpolation between island landmarks
+          const smoothT = localT * localT * (3 - 2 * localT);
+
+          const wpA = skyTourWaypoints[segIdx];
+          const wpB = skyTourWaypoints[nextIdx];
+
+          const targetPos = wpA.camCenter.clone().lerp(wpB.camCenter, smoothT);
+          targetPos.x += Math.sin(elapsed * 0.7) * 5.5;
+          targetPos.y += Math.cos(elapsed * 0.9) * 1.8;
+          targetPos.z += Math.cos(elapsed * 0.7) * 5.5;
+
+          const targetLook = wpA.look.clone().lerp(wpB.look, smoothT);
+          camera.position.lerp(targetPos, Math.min(1, dt * 3.5));
+          introFlyover.curLook.lerp(targetLook, Math.min(1, dt * 4.0));
+          camera.lookAt(introFlyover.curLook);
+
+          const poiText = isEn() ? wpA.titleEn : wpA.titleTh;
+          document.getElementById('intro-poi-badge').textContent = poiText;
+          document.getElementById('tour-poi-live').textContent = '🎬 ' + poiText;
+        } else {
+          if (camMode === 'orbit') {
+            camYaw += dt * 0.25;
+          }
+          const camOffset = new THREE.Vector3(
+            Math.sin(camYaw) * Math.cos(camPitch) * camDist,
+            Math.sin(camPitch) * camDist,
+            Math.cos(camYaw) * Math.cos(camPitch) * camDist
+          );
+          camera.position.copy(playerObj.position).add(new THREE.Vector3(0, 1.5, 0)).add(camOffset);
+          camera.lookAt(playerObj.position.x, playerObj.position.y + 1.4, playerObj.position.z);
         }
-        const camOffset = new THREE.Vector3(
-          Math.sin(camYaw) * Math.cos(camPitch) * camDist,
-          Math.sin(camPitch) * camDist,
-          Math.cos(camYaw) * Math.cos(camPitch) * camDist
-        );
-        camera.position.copy(playerObj.position).add(new THREE.Vector3(0, 1.5, 0)).add(camOffset);
-        camera.lookAt(playerObj.position.x, playerObj.position.y + 1.4, playerObj.position.z);
 
         renderMinimap();
         renderer.render(scene, camera);
@@ -3096,12 +3836,15 @@
       // Load saved game on startup if present
       const loadedSave = loadGameFromStorage();
       applyStageVisuals();
-      updateHUD(false);
+      applyLanguageUI();
       if (loadedSave) {
         setTimeout(() => {
           spawnFloatingText(
             playerObj.position.clone().add(new THREE.Vector3(0, 3.0, 0)),
-            '💾 โหลดข้อมูลเซฟอัตโนมัติ (ด่าน ' + playerState.stage + ' / Lv.' + playerState.level + ')',
+            tr(
+              '💾 โหลดข้อมูลเซฟอัตโนมัติ (ด่าน ' + playerState.stage + ' / Lv.' + playerState.level + ')',
+              '💾 Auto-Loaded Saved Game (Stage ' + playerState.stage + ' / Lv.' + playerState.level + ')'
+            ),
             '#38bdf8'
           );
         }, 400);
