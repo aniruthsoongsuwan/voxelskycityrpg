@@ -91,11 +91,65 @@
     }
 
     /* Player Status Card */
+    .hero-left-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+      pointer-events: auto;
+    }
+
+    #hero-mini-pill {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      background: rgba(15, 23, 42, 0.72);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(56, 189, 248, 0.45);
+      border-radius: 999px;
+      padding: 5px 12px;
+      color: #f8fafc;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+      transition: transform 0.12s ease, background 0.15s ease;
+    }
+
+    #hero-mini-pill:hover {
+      background: rgba(30, 41, 59, 0.9);
+      transform: scale(1.03);
+    }
+
     .hero-card {
       display: flex;
       flex-direction: column;
       gap: 8px;
       min-width: 270px;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    .hero-card.collapsed {
+      display: none !important;
+    }
+
+    .hero-close-btn {
+      background: rgba(51, 65, 85, 0.75);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: #cbd5e1;
+      border-radius: 6px;
+      padding: 2px 7px;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .hero-close-btn:hover {
+      background: rgba(239, 68, 68, 0.35);
+      color: #fff;
     }
 
     .hero-header {
@@ -1031,7 +1085,8 @@
           ผจญภัยแนว Action RPG 3 มิติเหนือหมู่เกาะลอยฟ้าทั้ง 6 โซน ต่อสู้ทัพโกเลมคลั่ง ปราบราชันย์โกเลม และทะยานด้วยเรือเหาะข้ามทะเลเมฆ!
         </div>
         <div class="intro-btn-group">
-          <button class="btn-start-main" id="btn-start-game" type="button">⚔️ เริ่มผจญภัยทันที (Start Game)</button>
+          <button class="btn-start-main" id="btn-start-game" type="button">⚔️ เริ่มผจญภัยใหม่ Lv.1 (New Game)</button>
+          <button class="btn-action" id="btn-intro-load" type="button">📂 โหลดเซฟเดิม (Load Save)</button>
           <button class="btn-action secondary" id="btn-watch-flyover" type="button">🎥 ซ่อนหน้าต่างเพื่อชมวิวรอบเมือง</button>
           <button class="btn-action secondary" id="btn-intro-lang" type="button">🌐 EN / TH</button>
         </div>
@@ -1062,42 +1117,54 @@
     <!-- Main HUD -->
     <div class="hud-layer">
       <div class="hud-top">
-        <!-- Player Status -->
-        <div class="panel hero-card">
-          <div class="hero-header">
-            <div class="hero-identity">
-              <div class="voxel-avatar" id="hero-lvl-badge">Lv.1</div>
-              <div>
-                <div class="hero-title" id="hero-title-text">นักสำรวจเวหา (Sky Walker)</div>
-                <div class="hero-subtitle" id="hero-weapon-name">ดาบเวหาอารยธรรม +1</div>
+        <!-- Player Status (Collapsible & Auto-Hiding so it never blocks the view) -->
+        <div class="hero-left-wrap">
+          <button id="hero-mini-pill" type="button" title="แตะเพื่อดูสถานะตัวละคร">
+            <span id="mini-lvl">⚔️ Lv.1</span>
+            <span style="color: #f87171;">❤️ <span id="mini-hp">140</span></span>
+            <span style="color: #fcd34d;">🪙 <span id="mini-gold">150</span></span>
+            <span style="color: #38bdf8; font-size: 10px;">▾</span>
+          </button>
+
+          <div class="panel hero-card" id="hero-card-box">
+            <div class="hero-header">
+              <div class="hero-identity">
+                <div class="voxel-avatar" id="hero-lvl-badge">Lv.1</div>
+                <div>
+                  <div class="hero-title" id="hero-title-text">นักสำรวจเวหา (Sky Walker)</div>
+                  <div class="hero-subtitle" id="hero-weapon-name">ดาบเวหาอารยธรรม +1</div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <div class="gold-badge" title="Sky Gold">
+                  <span>🪙</span>
+                  <span id="gold-val">150</span>
+                </div>
+                <button class="hero-close-btn" id="btn-collapse-hero" type="button" title="ซ่อนหน้าต่างสถานะ">✕</button>
               </div>
             </div>
-            <div class="gold-badge" title="Sky Gold">
-              <span>🪙</span>
-              <span id="gold-val">150</span>
+
+            <div class="stat-row">
+              <span class="stat-label">HP</span>
+              <div class="bar-track"><div class="bar-fill bar-hp" id="hp-bar" style="width: 100%;"></div></div>
+              <span class="stat-val" id="hp-text">140 / 140</span>
             </div>
-          </div>
+            <div class="stat-row">
+              <span class="stat-label">MP</span>
+              <div class="bar-track"><div class="bar-fill bar-mp" id="mp-bar" style="width: 100%;"></div></div>
+              <span class="stat-val" id="mp-text">70 / 70</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">EXP</span>
+              <div class="bar-track"><div class="bar-fill bar-exp" id="exp-bar" style="width: 0%;"></div></div>
+              <span class="stat-val" id="exp-text">0 / 100</span>
+            </div>
 
-          <div class="stat-row">
-            <span class="stat-label">HP</span>
-            <div class="bar-track"><div class="bar-fill bar-hp" id="hp-bar" style="width: 100%;"></div></div>
-            <span class="stat-val" id="hp-text">140 / 140</span>
-          </div>
-          <div class="stat-row">
-            <span class="stat-label">MP</span>
-            <div class="bar-track"><div class="bar-fill bar-mp" id="mp-bar" style="width: 100%;"></div></div>
-            <span class="stat-val" id="mp-text">70 / 70</span>
-          </div>
-          <div class="stat-row">
-            <span class="stat-label">EXP</span>
-            <div class="bar-track"><div class="bar-fill bar-exp" id="exp-bar" style="width: 0%;"></div></div>
-            <span class="stat-val" id="exp-text">0 / 100</span>
-          </div>
-
-          <div class="hero-attributes">
-            <span>⚔️ <span id="lbl-atk">โจมตี</span>: <strong id="atk-val">22</strong></span>
-            <span>🛡️ <span id="lbl-def">ป้องกัน</span>: <strong id="def-val">7</strong></span>
-            <span>💎 <span id="lbl-shard">ผลึกเอเธอร์</span>: <strong id="shard-val">0 / 5</strong></span>
+            <div class="hero-attributes">
+              <span>⚔️ <span id="lbl-atk">โจมตี</span>: <strong id="atk-val">22</strong></span>
+              <span>🛡️ <span id="lbl-def">ป้องกัน</span>: <strong id="def-val">7</strong></span>
+              <span>💎 <span id="lbl-shard">ผลึกเอเธอร์</span>: <strong id="shard-val">0 / 5</strong></span>
+            </div>
           </div>
         </div>
 
@@ -1642,6 +1709,42 @@
         );
       }
 
+      // --- Collapsible & Auto-Hiding Left Hero Status Card ---
+      const heroCardBox = document.getElementById('hero-card-box');
+      const heroMiniPill = document.getElementById('hero-mini-pill');
+      let heroCardTimer = null;
+
+      function collapseHeroCard() {
+        if (heroCardTimer) {
+          clearTimeout(heroCardTimer);
+          heroCardTimer = null;
+        }
+        heroCardBox.classList.add('collapsed');
+        heroMiniPill.style.display = 'inline-flex';
+      }
+
+      function showHeroCardBriefly(durationMs = 3500) {
+        heroCardBox.classList.remove('collapsed');
+        heroMiniPill.style.display = 'none';
+        if (heroCardTimer) clearTimeout(heroCardTimer);
+        heroCardTimer = setTimeout(() => {
+          collapseHeroCard();
+        }, durationMs);
+      }
+
+      heroMiniPill.addEventListener('click', () => {
+        AudioEngine.playSfx('jump');
+        showHeroCardBriefly(4000);
+      });
+
+      document.getElementById('btn-collapse-hero').addEventListener('click', (e) => {
+        e.stopPropagation();
+        collapseHeroCard();
+      });
+
+      // Track whether current player explicitly saved or loaded a save in this session
+      let hasExplicitSaveSession = false;
+
       // --- Update HUD UI ---
       function updateHUD(autoSave = false) {
         const theme = getCurrentTheme();
@@ -1666,6 +1769,11 @@
         document.getElementById('def-val').textContent = playerState.def;
         document.getElementById('shard-val').textContent = playerState.shards + ' / ' + playerState.totalShards;
         document.getElementById('potion-count').textContent = 'x' + playerState.potions;
+
+        // Update Compact Mini-Pill
+        document.getElementById('mini-lvl').textContent = '⚔️ Lv.' + playerState.level;
+        document.getElementById('mini-hp').textContent = Math.ceil(playerState.hp);
+        document.getElementById('mini-gold').textContent = playerState.gold;
 
         const hpPct = Math.max(0, Math.min(100, (playerState.hp / playerState.maxHp) * 100));
         const mpPct = Math.max(0, Math.min(100, (playerState.mp / playerState.maxMp) * 100));
@@ -1720,7 +1828,7 @@
           airshipBanner.style.display = 'none';
         }
 
-        if (autoSave) {
+        if (autoSave && hasExplicitSaveSession) {
           saveGameToStorage(false);
         }
       }
@@ -1738,7 +1846,13 @@
           playerState.atk += 5;
           playerState.def += 2;
           AudioEngine.playSfx('upgrade');
-          spawnFloatingText(playerObj.position.clone().add(new THREE.Vector3(0, 3.2, 0)), '🎉 เลเวลอัป! Lv.' + playerState.level, '#fde047');
+          // Pop open the status card briefly on Level Up, then auto-hide!
+          showHeroCardBriefly(3800);
+          spawnFloatingText(
+            playerObj.position.clone().add(new THREE.Vector3(0, 3.2, 0)),
+            tr('🎉 เลเวลอัป! Lv.' + playerState.level, '🎉 Level Up! Lv.' + playerState.level),
+            '#fde047'
+          );
         }
         updateHUD(true);
       }
@@ -2529,11 +2643,13 @@
         standUpPlayer();
         applyLanguageUI();
         if (ok) {
+          hasExplicitSaveSession = true;
           if (playerState.hp <= 0) playerState.hp = playerState.maxHp;
           applyStageVisuals();
           playerObj.position.set(0, 1.5, 6);
           playerVelY = 0;
           updateHUD(false);
+          showHeroCardBriefly(3800);
           AudioEngine.playSfx('heal');
           spawnVoxelBurst(playerObj.position.clone(), 0x38bdf8, 18);
           spawnFloatingText(
@@ -2545,17 +2661,13 @@
             '#38bdf8'
           );
         } else {
-          playerState.hp = playerState.maxHp;
-          playerState.mp = playerState.maxMp;
-          playerObj.position.set(0, 1.5, 6);
-          playerVelY = 0;
-          updateHUD(true);
-          AudioEngine.playSfx('heal');
+          showHeroCardBriefly(3200);
+          AudioEngine.playSfx('hit');
           spawnFloatingText(
             playerObj.position.clone().add(new THREE.Vector3(0, 3.0, 0)),
             tr(
-              '✨ ยังไม่มีเซฟก่อนหน้า — ชุบชีวิตและเซฟเกมปัจจุบันให้แล้ว!',
-              '✨ No previous save found — Revived & Saved current game!'
+              'ℹ️ ยังไม่มีข้อมูลเซฟที่บันทึกไว้ (กด "💾 เซฟเกม" เพื่อบันทึกได้ทุกเมื่อ)',
+              'ℹ️ No saved game found yet (Tap "💾 Save" anytime to save!)'
             ),
             '#fde047'
           );
@@ -2664,15 +2776,20 @@
         introTourBar.style.display = 'none';
         AudioEngine.unlockOnFirstGesture();
         AudioEngine.playSfx('upgrade');
+        showHeroCardBriefly(3000);
         spawnVoxelBurst(playerObj.position.clone().add(new THREE.Vector3(0, 1.2, 0)), 0x38bdf8, 18);
         spawnFloatingText(
           playerObj.position.clone().add(new THREE.Vector3(0, 3.0, 0)),
-          tr('⚔️ เริ่มการผจญภัยในนครลอยฟ้า!', '⚔️ Sky City Adventure Begins!'),
+          tr('⚔️ เริ่มการผจญภัยในนครลอยฟ้า! (Lv.1)', '⚔️ Sky City Adventure Begins! (Lv.1)'),
           '#fde047'
         );
       }
 
       document.getElementById('btn-start-game').addEventListener('click', exitIntroFlyover);
+      document.getElementById('btn-intro-load').addEventListener('click', () => {
+        exitIntroFlyover();
+        loadSavedGameInteractive();
+      });
       document.getElementById('btn-exit-tour').addEventListener('click', exitIntroFlyover);
       document.getElementById('btn-watch-flyover').addEventListener('click', () => {
         AudioEngine.unlockOnFirstGesture();
@@ -2696,10 +2813,11 @@
           '🎬 360° Sky Metropolis Flyover Showcase'
         );
         document.getElementById('intro-game-sub').textContent = tr(
-          'ผจญภัยแนว Action RPG 3 มิติเหนือหมู่เกาะลอยฟ้าทั้ง 6 โซน ต่อสู้ทัพโกเลมคลั่ง ปราบราชันย์โกเลม และทะยานด้วยเรือเหาะข้ามทะเลเมฆ!',
-          'Explore 6 floating Voxel islands in 3D Action RPG combat! Defend the plaza from invading Golems, defeat Giant Bosses, and soar across the clouds by Airship!'
+          'ผจญภัยแนว Action RPG 3 มิติเหนือหมู่เกาะลอยฟ้าทั้ง 8 โซน ต่อสู้ทัพโกเลมคลั่ง ปราบราชันย์โกเลม และทะยานด้วยเรือเหาะข้ามทะเลเมฆ!',
+          'Explore 8 floating Voxel islands in 3D Action RPG combat! Defend the plaza from invading Golems, defeat Giant Bosses, and soar across the clouds by Airship!'
         );
-        document.getElementById('btn-start-game').textContent = tr('⚔️ เริ่มผจญภัยทันที (Start Game)', '⚔️ Start Adventure Now');
+        document.getElementById('btn-start-game').textContent = tr('⚔️ เริ่มผจญภัยใหม่ Lv.1 (New Game)', '⚔️ Start New Game (Lv.1)');
+        document.getElementById('btn-intro-load').textContent = tr('📂 โหลดเซฟเดิม (Load Save)', '📂 Load Saved Game');
         document.getElementById('btn-watch-flyover').textContent = tr('🎥 ซ่อนหน้าต่างเพื่อชมวิวรอบเมือง', '🎥 Watch Fullscreen City Tour');
         document.getElementById('intro-footer-hint').textContent = tr(
           '💡 กล้องกำลังบินพาทัวร์รอบ 6 เกาะลอยฟ้า — กด "เริ่มผจญภัยทันที" เพื่อเข้าควบคุมตัวละคร',
@@ -2784,6 +2902,8 @@
       });
 
       document.getElementById('btn-save-game').addEventListener('click', () => {
+        hasExplicitSaveSession = true;
+        showHeroCardBriefly(3200);
         saveGameToStorage(true);
       });
 
@@ -4103,22 +4223,11 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
       });
 
-      // Load saved game on startup if present
-      const loadedSave = loadGameFromStorage();
+      // Always start fresh from Lv.1 (Stage 1) on startup so multiple players can share one device.
+      // Saved progress is only loaded when the player explicitly taps "📂 โหลดเซฟ (Load Save)".
       applyStageVisuals();
       applyLanguageUI();
-      if (loadedSave) {
-        setTimeout(() => {
-          spawnFloatingText(
-            playerObj.position.clone().add(new THREE.Vector3(0, 3.0, 0)),
-            tr(
-              '💾 โหลดข้อมูลเซฟอัตโนมัติ (ด่าน ' + playerState.stage + ' / Lv.' + playerState.level + ')',
-              '💾 Auto-Loaded Saved Game (Stage ' + playerState.stage + ' / Lv.' + playerState.level + ')'
-            ),
-            '#38bdf8'
-          );
-        }, 400);
-      }
+      collapseHeroCard();
       requestAnimationFrame(animate);
     })();
   </script>
