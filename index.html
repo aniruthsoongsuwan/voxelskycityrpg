@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Aetheris: Voxel Sky City RPG — ผจญภัยในเมืองลอยฟ้า</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%230f172a'/%3E%3Cstop offset='50%25' stop-color='%231e3a8a'/%3E%3Cstop offset='100%25' stop-color='%230284c7'/%3E%3C/linearGradient%3E%3ClinearGradient id='blade' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23e0f2fe'/%3E%3Cstop offset='50%25' stop-color='%2338bdf8'/%3E%3Cstop offset='100%25' stop-color='%230284c7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23bg)' stroke='%2338bdf8' stroke-width='2'/%3E%3Cpolygon points='32,8 40,22 32,36 24,22' fill='%2338bdf8' opacity='0.35'/%3E%3Crect x='14' y='42' width='36' height='8' rx='2' fill='%234ade80'/%3E%3Crect x='18' y='50' width='28' height='6' rx='2' fill='%2364748b'/%3E%3Cpath d='M32 6 L37 14 L35 38 L29 38 L27 14 Z' fill='url(%23blade)' stroke='%23ffffff' stroke-width='1.2'/%3E%3Crect x='22' y='36' width='20' height='4' rx='1.5' fill='%23f59e0b' stroke='%23fef08a' stroke-width='1'/%3E%3Crect x='29.5' y='40' width='5' height='8' rx='1' fill='%23b45309'/%3E%3Ccircle cx='32' cy='38' r='2.5' fill='%2338bdf8'/%3E%3C/svg%3E">
   <style>
     :root {
       --bg-dark: #0b1021;
@@ -621,6 +622,35 @@
     .slot-icon {
       font-size: 20px;
       line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slot-icon svg {
+      width: 24px;
+      height: 24px;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.55));
+      transition: transform 0.15s ease;
+    }
+
+    .slot-btn:hover .slot-icon svg {
+      transform: scale(1.12);
+    }
+
+    .intro-app-icon {
+      width: 74px;
+      height: 74px;
+      border-radius: 18px;
+      box-shadow: 0 10px 28px rgba(2, 132, 199, 0.55), 0 0 0 2px rgba(125, 211, 252, 0.65);
+      margin-bottom: 2px;
+    }
+
+    .mini-svg-ico {
+      width: 14px;
+      height: 14px;
+      vertical-align: -2px;
+      display: inline-block;
     }
 
     .slot-name {
@@ -1133,6 +1163,32 @@
     <div id="intro-showcase-overlay">
       <div class="intro-top-pill" id="intro-top-pill">🎬 กำลังบินชมรอบมหานครลอยฟ้า 360° (3D Sky City Showcase)</div>
       <div class="intro-hero-box" id="intro-hero-box">
+        <!-- Custom Voxel Sky City RPG App Icon -->
+        <svg class="intro-app-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="appBg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#0f172a"/>
+              <stop offset="55%" stop-color="#1e3a8a"/>
+              <stop offset="100%" stop-color="#0284c7"/>
+            </linearGradient>
+            <linearGradient id="appBlade" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="50%" stop-color="#7dd3fc"/>
+              <stop offset="100%" stop-color="#0284c7"/>
+            </linearGradient>
+          </defs>
+          <rect width="64" height="64" rx="14" fill="url(#appBg)"/>
+          <circle cx="32" cy="24" r="18" fill="#38bdf8" opacity="0.22"/>
+          <!-- Floating Voxel Island Base -->
+          <rect x="12" y="42" width="40" height="6" rx="2" fill="#4ade80"/>
+          <rect x="16" y="48" width="32" height="5" rx="1.5" fill="#64748b"/>
+          <rect x="22" y="53" width="20" height="4" rx="1.5" fill="#334155"/>
+          <!-- Glowing Aether Crystal & Skyblade -->
+          <polygon points="32,5 38,15 35,38 29,38 26,15" fill="url(#appBlade)" stroke="#e0f2fe" stroke-width="1.2"/>
+          <rect x="21" y="36" width="22" height="4.5" rx="2" fill="#f59e0b" stroke="#fef08a" stroke-width="1"/>
+          <rect x="29.5" y="40.5" width="5" height="7" rx="1.2" fill="#b45309"/>
+          <circle cx="32" cy="38.2" r="2.5" fill="#38bdf8"/>
+        </svg>
         <div class="intro-poi-badge" id="intro-poi-badge">📍 จุดชมวิว: จัตุรัสกลางเวหา (Central Sky Plaza)</div>
         <div class="intro-game-logo">AETHERIS: VOXEL SKY CITY</div>
         <div class="intro-game-sub" id="intro-game-sub">
@@ -1287,33 +1343,84 @@
         <div class="panel hotbar">
           <button class="slot-btn" id="act-attack" type="button" title="Sword Slash (J)">
             <span class="slot-key">J</span>
-            <span class="slot-icon">⚔️</span>
+            <span class="slot-icon" aria-hidden="true">
+              <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="icoSword" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#ffffff"/>
+                    <stop offset="50%" stop-color="#38bdf8"/>
+                    <stop offset="100%" stop-color="#0284c7"/>
+                  </linearGradient>
+                </defs>
+                <polygon points="27,3 29,5 15,21 11,17" fill="url(#icoSword)" stroke="#e0f2fe" stroke-width="1"/>
+                <polygon points="8,14 18,24 16,26 6,16" fill="#f59e0b" stroke="#fef08a" stroke-width="0.9"/>
+                <polygon points="9,21 11,23 6,28 4,26" fill="#b45309"/>
+                <circle cx="13" cy="19" r="1.8" fill="#38bdf8"/>
+              </svg>
+            </span>
             <span class="slot-name" id="slot-lbl-attack">ฟันดาบ</span>
           </button>
           <button class="slot-btn" id="act-skill" type="button" title="Aether Wave (K) - 15 MP">
             <span class="slot-key">K</span>
-            <span class="slot-icon">🌀</span>
+            <span class="slot-icon" aria-hidden="true">
+              <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <radialGradient id="icoVortex" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#f0abfc"/>
+                    <stop offset="55%" stop-color="#a855f7"/>
+                    <stop offset="100%" stop-color="#38bdf8"/>
+                  </radialGradient>
+                </defs>
+                <circle cx="16" cy="16" r="10.5" fill="none" stroke="url(#icoVortex)" stroke-width="3" stroke-dasharray="14 5"/>
+                <polygon points="16,6 20,16 16,26 12,16" fill="url(#icoVortex)"/>
+                <polygon points="6,16 16,12 26,16 16,20" fill="#e879f9" opacity="0.85"/>
+                <circle cx="16" cy="16" r="3.2" fill="#ffffff"/>
+              </svg>
+            </span>
             <span class="slot-name" id="slot-lbl-skill">คลื่นเวหา</span>
           </button>
           <button class="slot-btn" id="act-jump" type="button" title="Jump (Space)">
             <span class="slot-key">SPC</span>
-            <span class="slot-icon">🪽</span>
+            <span class="slot-icon" aria-hidden="true">
+              <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 22 C6 13, 13 8, 25 6 C21 12, 19 15, 23 15 C17 18, 15 20, 18 21 C12 23, 9 24, 5 22 Z" fill="#7dd3fc" stroke="#e0f2fe" stroke-width="1.1"/>
+                <path d="M9 26 L16 19 L23 26" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round"/>
+              </svg>
+            </span>
             <span class="slot-name" id="slot-lbl-jump">กระโดด</span>
           </button>
           <button class="slot-btn" id="act-dash" type="button" title="Dash (Shift)">
             <span class="slot-key">SHF</span>
-            <span class="slot-icon">⚡</span>
+            <span class="slot-icon" aria-hidden="true">
+              <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="18,3 7,17 15,17 12,29 25,14 16,14" fill="#facc15" stroke="#fef08a" stroke-width="1.1" stroke-linejoin="round"/>
+              </svg>
+            </span>
             <span class="slot-name" id="slot-lbl-dash">พุ่งตัว</span>
           </button>
           <button class="slot-btn" id="act-potion" type="button" title="Heal HP Potion (1)">
             <span class="slot-key">1</span>
-            <span class="slot-icon">🧪</span>
+            <span class="slot-icon" aria-hidden="true">
+              <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                <rect x="13" y="4" width="6" height="3" rx="1" fill="#f59e0b"/>
+                <path d="M12 7 L20 7 L19 12 L25 20 C26 22, 25 26, 22 27 L10 27 C7 26, 6 22, 7 20 L13 12 Z" fill="#1e293b" stroke="#94a3b8" stroke-width="1.3"/>
+                <path d="M8.5 20.5 C12 19, 20 21, 23.5 20.5 L22 25.5 L10 25.5 Z" fill="#ef4444"/>
+                <path d="M14 17 L18 17 M16 15 L16 19" stroke="#fecaca" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </span>
             <span class="slot-name" id="slot-lbl-potion">ยา HP</span>
             <span class="slot-count" id="potion-count">x4</span>
           </button>
           <button class="slot-btn" id="act-teleport" type="button" title="Teleport to Plaza (R)">
             <span class="slot-key">R</span>
-            <span class="slot-icon">🧭</span>
+            <span class="slot-icon" aria-hidden="true">
+              <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="16" cy="16" r="11" fill="#0f172a" stroke="#38bdf8" stroke-width="1.8"/>
+                <polygon points="16,6 19,16 16,14 13,16" fill="#ef4444"/>
+                <polygon points="16,26 19,16 16,18 13,16" fill="#e2e8f0"/>
+                <circle cx="16" cy="16" r="2" fill="#facc15"/>
+              </svg>
+            </span>
             <span class="slot-name" id="slot-lbl-teleport">กลับเมือง</span>
           </button>
         </div>
