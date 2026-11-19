@@ -911,18 +911,32 @@
 
     @media (max-width: 768px) {
       .controls-legend { display: none; }
-      .hud-top { gap: 6px; align-items: stretch; }
-      .hero-card { min-width: 155px; flex: 1; padding: 7px 9px; gap: 4px; }
-      .hero-title { font-size: 12px; }
-      .hero-subtitle { font-size: 10px; }
-      .voxel-avatar { width: 28px; height: 28px; font-size: 11px; }
-      .gold-badge { padding: 2px 7px; font-size: 11px; }
-      .stat-row { font-size: 10px; gap: 5px; }
-      .bar-track { height: 7px; }
-      .stat-val { width: 52px; font-size: 10px; }
-      .hero-attributes { font-size: 10px; gap: 6px; flex-wrap: wrap; }
-      .zone-banner { order: 3; width: 100%; gap: 4px; }
-      .zone-pill { padding: 4px 10px; font-size: 11px; }
+      .hud-layer {
+        padding: max(6px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+      }
+      .hud-top { gap: 4px; align-items: flex-start; }
+      .hero-card {
+        min-width: 0;
+        max-width: 146px;
+        flex: 0 1 auto;
+        padding: 4px 7px;
+        gap: 2px;
+        background: rgba(15, 23, 42, 0.62);
+        border-radius: 9px;
+      }
+      .hero-header { gap: 4px; }
+      .hero-identity { gap: 5px; }
+      .hero-title { font-size: 9.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 78px; }
+      .hero-subtitle { font-size: 8.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 78px; }
+      .voxel-avatar { width: 20px; height: 20px; font-size: 9px; border-radius: 5px; border-width: 1px; }
+      .gold-badge { padding: 1px 5px; font-size: 9px; gap: 2px; }
+      .stat-row { font-size: 8.5px; gap: 3px; line-height: 1.1; }
+      .stat-label { width: 20px; }
+      .bar-track { height: 4px; }
+      .stat-val { width: 38px; font-size: 8px; }
+      .hero-attributes { font-size: 8.5px; gap: 4px; padding-top: 2px; flex-wrap: wrap; line-height: 1.15; }
+      .zone-banner { order: 3; width: 100%; gap: 3px; }
+      .zone-pill { padding: 3px 9px; font-size: 10px; }
       .toolbar-btns {
         display: flex;
         flex-wrap: nowrap;
@@ -932,31 +946,33 @@
         padding-bottom: 2px;
         -webkit-overflow-scrolling: touch;
       }
-      .btn-chip { padding: 4px 8px; font-size: 11px; flex-shrink: 0; }
-      .right-hud { max-width: 165px; gap: 5px; flex-direction: row; align-items: flex-start; }
-      .minimap-wrap { padding: 4px; }
-      #minimap-canvas { width: 64px; height: 64px; }
-      .quest-card { width: 155px; padding: 6px 8px; }
-      .quest-header { font-size: 10px; margin-bottom: 3px; }
-      .quest-list { font-size: 9.5px; gap: 3px; }
-      .joystick-zone { width: 98px; height: 98px; flex-shrink: 0; }
-      .joystick-knob { width: 40px; height: 40px; }
-      .joystick-hint { font-size: 10px; bottom: -16px; }
+      .btn-chip { padding: 3px 7px; font-size: 10px; flex-shrink: 0; }
+      .right-hud { max-width: 155px; gap: 4px; flex-direction: row; align-items: flex-start; }
+      .minimap-wrap { padding: 3px; background: rgba(15, 23, 42, 0.62); }
+      #minimap-canvas { width: 52px; height: 52px; }
+      .quest-card { width: 138px; padding: 4px 6px; background: rgba(15, 23, 42, 0.62); }
+      .quest-header { font-size: 9px; margin-bottom: 2px; }
+      .quest-list { font-size: 8.5px; gap: 2px; }
+      .quest-item { padding: 2px 4px; gap: 4px; }
+      .quest-check { width: 11px; height: 11px; font-size: 8px; }
+      .joystick-zone { width: 92px; height: 92px; flex-shrink: 0; }
+      .joystick-knob { width: 36px; height: 36px; }
+      .joystick-hint { font-size: 9.5px; bottom: -15px; }
       .hotbar {
         display: grid;
-        grid-template-columns: repeat(3, 52px);
-        gap: 6px;
-        padding: 7px;
+        grid-template-columns: repeat(3, 48px);
+        gap: 5px;
+        padding: 6px;
       }
-      .slot-btn { width: 52px; height: 52px; }
-      #interact-prompt { bottom: 146px; font-size: 13px; padding: 7px 14px; }
-      #dialogue-box { bottom: 135px; padding: 10px 12px; }
+      .slot-btn { width: 48px; height: 48px; }
+      #interact-prompt { bottom: 138px; font-size: 12px; padding: 6px 12px; }
+      #dialogue-box { bottom: 128px; padding: 10px 12px; }
       #airship-ready-banner {
-        top: 118px;
+        top: 98px;
         width: 94vw;
-        padding: 8px 12px;
+        padding: 7px 10px;
         flex-direction: column;
-        gap: 6px;
+        gap: 5px;
         text-align: center;
       }
     }
@@ -1094,6 +1110,7 @@
           </div>
           <div class="toolbar-btns">
             <button class="btn-chip active" id="btn-lang-toggle" type="button" style="border-color: rgba(56,189,248,0.75); color: #7dd3fc;" title="Switch Language (Thai / English)">🌐 EN / TH</button>
+            <button class="btn-chip" id="btn-stage-select" type="button" style="border-color: rgba(251,191,36,0.75); color: #fde047;" title="Select / Preview Stages 1-7">🗺️ แผนที่ 7 ด่าน</button>
             <button class="btn-chip active" id="btn-time-day" type="button">☀️ กลางวัน</button>
             <button class="btn-chip" id="btn-time-sunset" type="button">🌅 ยามสนธยา</button>
             <button class="btn-chip" id="btn-time-night" type="button">🌙 ไซเบอร์ไนท์</button>
@@ -1367,12 +1384,12 @@
           golemGoal: 8,
           q1Text: 'รายงานตัวกับผู้บัญชาการ เอลดริน ที่มหานครใหม่',
           q1TextEn: 'Report to Commander Eldrin in Neo-Zephyria',
-          q2Text: 'เก็บผลึกสุริยะเอเธอร์ทั่ว 6 หมู่เกาะ',
-          q2TextEn: 'Collect Solar Aether Shards across 6 islands',
-          q3Text: 'สกัดกั้นกองทัพโกเลมเพลิงและบอสบุกเมือง',
+          q2Text: 'เก็บผลึกสุริยะเอเธอร์ทั่วหมู่เกาะ',
+          q2TextEn: 'Collect Solar Aether Shards across the islands',
+          q3Text: 'สกัดกั้นกองทัพโกเลมเพลิงและบอสคู่',
           q3TextEn: 'Defeat Solar Golem Army & Twin Bosses',
-          q4Text: 'เปิดประภาคารดาราจักรเพื่อทะยานสู่ด่านถัดไป',
-          q4TextEn: 'Activate Astral Beacon & Board Airship'
+          q4Text: 'เปิดประภาคารดาราจักรเพื่อทะยานสู่ด่านที่ 3',
+          q4TextEn: 'Activate Astral Beacon & Fly to Stage 3'
         },
         {
           stage: 3,
@@ -1390,16 +1407,124 @@
           roofPrimary: 0x0284c7,
           roofSecondary: 0x9333ea,
           crystalHex: 0xa855f7,
-          shardGoal: 7,
+          shardGoal: 6,
           golemGoal: 10,
-          q1Text: 'รับคำสั่งศึกตัดสินจากผู้บัญชาการ เอลดริน',
-          q1TextEn: 'Receive Final Orders from Commander Eldrin',
+          q1Text: 'รับคำสั่งศึกดาราจักรจากผู้บัญชาการ เอลดริน',
+          q1TextEn: 'Receive Astral Orders from Commander Eldrin',
           q2Text: 'รวบรวมผลึกดาราจักรพลังงานสูง',
           q2TextEn: 'Collect High-Energy Astral Shards',
-          q3Text: 'ถล่มกองทัพโกเลมดาราจักรและราชันย์โกเลม',
+          q3Text: 'ถล่มกองทัพโกเลมดาราจักรและ 3 ราชันย์บอส',
           q3TextEn: 'Crush Astral Golem Legion & 3 Bosses',
-          q4Text: 'เดินเครื่องเรือเหาะธงเดินทางข้ามมิติเวหา',
-          q4TextEn: 'Launch Flagship Airship to Next Dimension'
+          q4Text: 'เดินเครื่องเรือเหาะมุ่งสู่เกาะภูเขาไฟลาวา (ด่าน 4)',
+          q4TextEn: 'Launch Airship to Magma Volcano (Stage 4)'
+        },
+        {
+          stage: 4,
+          name: 'เกาะภูเขาไฟลาวาออบซิเดียน (Magma Core Caldera)',
+          nameEn: 'Magma Core Caldera (Volcano Island)',
+          shortTitle: 'ภารกิจด่านที่ 4: เกาะภูเขาไฟลาวา',
+          shortTitleEn: 'Stage 4 Quests: Magma Volcano',
+          skyMode: 'volcano',
+          grassMain: 0x7f1d1d,
+          grassEast: 0x991b1b,
+          grassWest: 0xb91c1c,
+          grassSouth: 0xc2410c,
+          grassNorth: 0x450a0a,
+          grassBoss: 0xea580c,
+          roofPrimary: 0x1e293b,
+          roofSecondary: 0xdc2626,
+          crystalHex: 0xff5722,
+          shardGoal: 7,
+          golemGoal: 12,
+          q1Text: 'วางแผนสกัดลาวาปะทุกับผู้บัญชาการ เอลดริน',
+          q1TextEn: 'Plan Magma Defense with Commander Eldrin',
+          q2Text: 'เก็บผลึกหัวใจแมกมาเหนือปากปล่องภูเขาไฟ',
+          q2TextEn: 'Collect Magma Core Shards across the Caldera',
+          q3Text: 'ปราบกองทัพโกเลมลาวาคลั่งและ 3 บอสออบซิเดียน',
+          q3TextEn: 'Defeat Lava Golem Legion & 3 Obsidian Bosses',
+          q4Text: 'ขึ้นเรือเหาะฝ่าเถ้าถ่านมุ่งสู่วิหารน้ำแข็ง (ด่าน 5)',
+          q4TextEn: 'Fly Airship to Glacia Frost Sanctuary (Stage 5)'
+        },
+        {
+          stage: 5,
+          name: 'วิหารน้ำแข็งลอยฟ้ากลาเซีย (Glacia Frost Sanctuary)',
+          nameEn: 'Glacia Frost Sanctuary (Ice Temple)',
+          shortTitle: 'ภารกิจด่านที่ 5: วิหารน้ำแข็งลอยฟ้า',
+          shortTitleEn: 'Stage 5 Quests: Frost Sanctuary',
+          skyMode: 'frost',
+          grassMain: 0xe0f2fe,
+          grassEast: 0xbae6fd,
+          grassWest: 0x7dd3fc,
+          grassSouth: 0xcffafe,
+          grassNorth: 0x93c5fd,
+          grassBoss: 0x38bdf8,
+          roofPrimary: 0x0369a1,
+          roofSecondary: 0x1d4ed8,
+          crystalHex: 0x67e8f9,
+          shardGoal: 7,
+          golemGoal: 14,
+          q1Text: 'รับภารกิจฝ่าพายุหิมะจากผู้บัญชาการ เอลดริน',
+          q1TextEn: 'Receive Frost Orders from Commander Eldrin',
+          q2Text: 'รวบรวมผลึกน้ำแข็งนิรันดร์ท่ามกลางเสาเหมันต์',
+          q2TextEn: 'Collect Eternal Frost Shards across the Ice Spires',
+          q3Text: 'โค่นทัพโกเลมน้ำแข็งและ 4 ราชันย์บอสเหมันต์',
+          q3TextEn: 'Shatter Frost Golem Army & 4 Ice Bosses',
+          q4Text: 'จุดประภาคารแสงเหนือเดินทางสู่นครมรกต (ด่าน 6)',
+          q4TextEn: 'Light Aurora Beacon & Fly to Emerald Canopy (Stage 6)'
+        },
+        {
+          stage: 6,
+          name: 'นครมรกตพฤกษาพันปี (Sylvan Emerald Canopy)',
+          nameEn: 'Sylvan Emerald Canopy (Ancient Forest)',
+          shortTitle: 'ภารกิจด่านที่ 6: นครมรกตพฤกษาพันปี',
+          shortTitleEn: 'Stage 6 Quests: Emerald Canopy',
+          skyMode: 'sylvan',
+          grassMain: 0x10b981,
+          grassEast: 0x059669,
+          grassWest: 0x34d399,
+          grassSouth: 0x047857,
+          grassNorth: 0x14b8a6,
+          grassBoss: 0x84cc16,
+          roofPrimary: 0xb45309,
+          roofSecondary: 0x065f46,
+          crystalHex: 0x4ade80,
+          shardGoal: 8,
+          golemGoal: 16,
+          q1Text: 'ปลุกพลังพฤกษาโบราณร่วมกับผู้บัญชาการ เอลดริน',
+          q1TextEn: 'Awaken Ancient Sylvan Spirit with Eldrin',
+          q2Text: 'เก็บผลึกวิญญาณมรกตครบทั้ง 8 เกาะลอยฟ้า',
+          q2TextEn: 'Gather all 8 Emerald Spirit Shards across 8 islands',
+          q3Text: 'พิชิตกองทัพโกเลมศิลาพฤกษาและ 4 มหาบอส',
+          q3TextEn: 'Vanquish Sylvan Golems & 4 Elder Bosses',
+          q4Text: 'ทะยานเรือเหาะสู่บัลลังก์เทพสุริยันต์ (ด่าน 7 สุดท้าย)',
+          q4TextEn: 'Ascend by Airship to Celestial Throne (Stage 7)'
+        },
+        {
+          stage: 7,
+          name: 'บัลลังก์เทพสุริยันต์นิรันดร์กาล (Celestial Sovereign Throne)',
+          nameEn: 'Celestial Sovereign Throne (Final Stage)',
+          shortTitle: 'ภารกิจด่านที่ 7: บัลลังก์เทพสุริยันต์',
+          shortTitleEn: 'Stage 7 Quests: Celestial Throne',
+          skyMode: 'celestial',
+          grassMain: 0xfef3c7,
+          grassEast: 0xfde68a,
+          grassWest: 0xfcd34d,
+          grassSouth: 0xfef08a,
+          grassNorth: 0xe9d5ff,
+          grassBoss: 0xf59e0b,
+          roofPrimary: 0xd97706,
+          roofSecondary: 0x6d28d9,
+          crystalHex: 0xfacc15,
+          shardGoal: 8,
+          golemGoal: 18,
+          q1Text: 'รับคำอวยพรศึกตัดสินสูงสุดจากผู้บัญชาการ เอลดริน',
+          q1TextEn: 'Receive Supreme Blessing from Commander Eldrin',
+          q2Text: 'รวบรวมผลึกสุริยเทพทั้ง 8 จุดทั่วดินแดนสวรรค์',
+          q2TextEn: 'Collect all 8 Celestial Sun Shards',
+          q3Text: 'ปราบ 4 จักรพรรดิบอสโกเลมและทัพสวรรค์คลั่ง',
+          q3TextEn: 'Defeat the 4 Sovereign Golem Emperors',
+          q4Text: 'จุดประภาคารนิรันดร์เพื่อครองบัลลังก์จ้าวแห่งเวหา!',
+          q4TextEn: 'Ignite Eternal Beacon & Claim the Sky Throne!'
         }
       ];
 
@@ -1481,15 +1606,15 @@
       function getCurrentTheme() {
         const idx = (playerState.stage - 1) % stageThemes.length;
         const base = stageThemes[idx];
-        if (playerState.stage <= 3) return base;
+        if (playerState.stage <= 7) return base;
         return Object.assign({}, base, {
           stage: playerState.stage,
           name: base.name + ' (ระดับ ' + playerState.stage + ')',
           nameEn: base.nameEn + ' (Tier ' + playerState.stage + ')',
           shortTitle: 'ภารกิจด่านที่ ' + playerState.stage + ': มิติเวหาขั้นสูง',
           shortTitleEn: 'Stage ' + playerState.stage + ' Quests: High Aether',
-          shardGoal: 7,
-          golemGoal: 10 + (playerState.stage - 3) * 2
+          shardGoal: 8,
+          golemGoal: 18 + (playerState.stage - 7) * 2
         });
       }
 
@@ -1618,38 +1743,40 @@
         updateHUD(true);
       }
 
-      // --- Initialize Three.js Scene ---
-      const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+      // --- Initialize Three.js Scene (Mobile-Optimized for 60 FPS on Android & iPhone) ---
+      const isMobileScreen = window.innerWidth <= 768;
+      const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: !isMobileScreen, powerPreference: 'high-performance' });
       renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobileScreen ? 1.5 : 2));
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
       const scene = new THREE.Scene();
       scene.background = new THREE.Color(0x68b5e8);
-      scene.fog = new THREE.FogExp2(0x68b5e8, 0.0065);
+      scene.fog = new THREE.FogExp2(0x68b5e8, 0.0055);
 
-      const camera = new THREE.PerspectiveCamera(52, window.innerWidth / window.innerHeight, 0.1, 350);
+      const camera = new THREE.PerspectiveCamera(52, window.innerWidth / window.innerHeight, 0.1, 380);
 
       // Lighting
       const ambientLight = new THREE.AmbientLight(0xdbeafe, 0.68);
       scene.add(ambientLight);
 
       const sunLight = new THREE.DirectionalLight(0xfffbeb, 1.05);
-      sunLight.position.set(45, 75, 35);
+      sunLight.position.set(45, 78, 35);
       sunLight.castShadow = true;
-      sunLight.shadow.mapSize.width = 2048;
-      sunLight.shadow.mapSize.height = 2048;
+      const shadowRes = isMobileScreen ? 1024 : 2048;
+      sunLight.shadow.mapSize.width = shadowRes;
+      sunLight.shadow.mapSize.height = shadowRes;
       sunLight.shadow.camera.near = 10;
-      sunLight.shadow.camera.far = 180;
-      const d = 65;
+      sunLight.shadow.camera.far = 200;
+      const d = 75;
       sunLight.shadow.camera.left = -d;
       sunLight.shadow.camera.right = d;
       sunLight.shadow.camera.top = d;
       sunLight.shadow.camera.bottom = -d;
       scene.add(sunLight);
 
-      const cityGlowLight = new THREE.PointLight(0x38bdf8, 1.4, 45);
+      const cityGlowLight = new THREE.PointLight(0x38bdf8, 1.4, 52);
       cityGlowLight.position.set(0, 8, 0);
       scene.add(cityGlowLight);
 
@@ -1697,7 +1824,7 @@
         solidObstacles.push({ x, z, radius });
       }
 
-      // --- Build Voxel Sky Islands (Expanded 6-Island Metropolis) ---
+      // --- Build Voxel Sky Islands (Expanded 8-Island Metropolis, Lightweight Instanced/Shared Voxel Meshes) ---
       const worldGroup = new THREE.Group();
       scene.add(worldGroup);
 
@@ -1721,10 +1848,10 @@
         return island;
       }
 
-      // 1. Central Sky Plaza Island (38x38)
-      createFloatingIsland(0, 0, 0, 38, 38, 8, 0x4ade80, 'จัตุรัสกลางเวหา (Central Sky Plaza)');
-      addVoxelBox(worldGroup, 0, 0.06, 0, 22, 0.12, 22, 0xcbd5e1, 0, 0, false);
-      addVoxelBox(worldGroup, 0, 0.12, 0, 10, 0.12, 10, 0x94a3b8, 0, 0, false);
+      // 1. Central Sky Plaza Island (Expanded Wider to 44x44)
+      createFloatingIsland(0, 0, 0, 44, 44, 8, 0x4ade80, 'จัตุรัสกลางเวหา (Central Sky Plaza)');
+      addVoxelBox(worldGroup, 0, 0.06, 0, 26, 0.12, 26, 0xcbd5e1, 0, 0, false);
+      addVoxelBox(worldGroup, 0, 0.12, 0, 12, 0.12, 12, 0x94a3b8, 0, 0, false);
 
       // Central Aether Fountain & Floating Spire
       addVoxelBox(worldGroup, 0, 0.6, 0, 4.5, 1.0, 4.5, 0xe2e8f0);
@@ -1749,7 +1876,7 @@
         worldGroup.add(g);
         registerObstacle(x, z, 3.1);
       }
-      buildClocktower(8, -12.5);
+      buildClocktower(9, -14.5);
 
       // Build Voxel Houses / Shops
       function buildVoxelHouse(x, y, z, w, h, d, wallColor, roofColor) {
@@ -1764,10 +1891,10 @@
         registerObstacle(x, z, Math.max(w, d) * 0.55);
       }
 
-      buildVoxelHouse(-12, 0, -10, 5.5, 4.5, 5, 0xfef3c7, 0xd97706);
-      buildVoxelHouse(13, 0, -6, 5.5, 5.0, 5, 0xe0f2fe, 0x0284c7);
-      buildVoxelHouse(-13, 0, 10, 5.2, 4.2, 4.8, 0xf3e8ff, 0x7c3aed);
-      buildVoxelHouse(13, 0, 10, 5.2, 4.2, 4.8, 0xdcfce7, 0x059669);
+      buildVoxelHouse(-14, 0, -12, 5.5, 4.5, 5, 0xfef3c7, 0xd97706);
+      buildVoxelHouse(15, 0, -7, 5.5, 5.0, 5, 0xe0f2fe, 0x0284c7);
+      buildVoxelHouse(-15, 0, 12, 5.2, 4.2, 4.8, 0xf3e8ff, 0x7c3aed);
+      buildVoxelHouse(15, 0, 12, 5.2, 4.2, 4.8, 0xdcfce7, 0x059669);
 
       // Voxel Trees
       function buildVoxelTree(x, y, z, leafColor = 0xf472b6) {
@@ -1777,44 +1904,44 @@
         registerObstacle(x, z, 0.75);
       }
 
-      buildVoxelTree(-15, 0, 3, 0xf472b6);
-      buildVoxelTree(15, 0, 3, 0xf472b6);
-      buildVoxelTree(-8, 0, 15, 0x34d399);
-      buildVoxelTree(8, 0, 15, 0x34d399);
+      buildVoxelTree(-17, 0, 3, 0xf472b6);
+      buildVoxelTree(17, 0, 3, 0xf472b6);
+      buildVoxelTree(-9, 0, 17, 0x34d399);
+      buildVoxelTree(9, 0, 17, 0x34d399);
 
       // Street Lamps
       function buildStreetLamp(x, y, z) {
         addVoxelBox(worldGroup, x, y + 1.6, z, 0.35, 3.2, 0.35, 0x334155);
         addVoxelBox(worldGroup, x, y + 3.4, z, 0.9, 0.9, 0.9, 0xfef08a, 0xf59e0b, 0.95);
       }
-      buildStreetLamp(-7, 0, -7);
-      buildStreetLamp(7, 0, -7);
-      buildStreetLamp(-7, 0, 7);
-      buildStreetLamp(7, 0, 7);
+      buildStreetLamp(-8, 0, -8);
+      buildStreetLamp(8, 0, -8);
+      buildStreetLamp(-8, 0, 8);
+      buildStreetLamp(8, 0, 8);
 
-      // 2. East Island: Artisan Market & Airship Dock (cx = 38, topY = 2, cz = 0, 28x28)
-      createFloatingIsland(38, 2, 0, 28, 28, 7, 0x34d399, 'ท่าเรือเหาะและตลาดช่างฝีมือ (Airship Dock)');
+      // 2. East Island: Artisan Market & Airship Dock (cx = 40, topY = 2, cz = 0, expanded to 30x30)
+      createFloatingIsland(40, 2, 0, 30, 30, 7, 0x34d399, 'ท่าเรือเหาะและตลาดช่างฝีมือ (Airship Dock)');
       for (let i = 0; i < 4; i++) {
-        const bx = 20.2 + i * 1.4;
+        const bx = 22.2 + i * 1.1;
         const by = 0.5 * (i + 1);
-        addVoxelBox(worldGroup, bx, by - 0.25, 0, 2.2, 0.5, 4.8, 0xe2e8f0);
-        addVoxelBox(worldGroup, bx, by + 0.3, -2.2, 1.8, 0.4, 0.3, 0x38bdf8, 0x0284c7, 0.6);
-        addVoxelBox(worldGroup, bx, by + 0.3, 2.2, 1.8, 0.4, 0.3, 0x38bdf8, 0x0284c7, 0.6);
-        registerPlatform(bx, 0, 2.5, 4.8, by, 'สะพานเวหาตะวันออก (East Sky Bridge)');
+        addVoxelBox(worldGroup, bx, by - 0.25, 0, 2.4, 0.5, 5.6, 0xe2e8f0);
+        addVoxelBox(worldGroup, bx, by + 0.3, -2.6, 1.8, 0.4, 0.3, 0x38bdf8, 0x0284c7, 0.6);
+        addVoxelBox(worldGroup, bx, by + 0.3, 2.6, 1.8, 0.4, 0.3, 0x38bdf8, 0x0284c7, 0.6);
+        registerPlatform(bx, 0, 2.8, 5.6, by, 'สะพานเวหาตะวันออก (East Sky Bridge)');
       }
 
       // Airship Boarding Pier
-      addVoxelBox(worldGroup, 53.5, 2.2, 4, 7.5, 0.6, 4.8, 0xb45309);
-      registerPlatform(53.5, 4, 8.0, 5.0, 2.5, 'สะพานเทียบเรือเหาะเวหา (Airship Boarding Pier)');
+      addVoxelBox(worldGroup, 55.5, 2.2, 4, 8.0, 0.6, 5.4, 0xb45309);
+      registerPlatform(55.5, 4, 8.5, 5.6, 2.5, 'สะพานเทียบเรือเหาะเวหา (Airship Boarding Pier)');
 
-      buildVoxelHouse(35, 2, -8, 6, 4.5, 5, 0xe2e8f0, 0xb91c1c);
-      buildVoxelHouse(35, 2, 8.5, 5.5, 4.2, 4.8, 0xfef3c7, 0x0284c7);
-      addVoxelBox(worldGroup, 45, 4.5, -1, 2.6, 5, 2.6, 0x475569);
-      const beaconCrystal = addVoxelBox(worldGroup, 45, 8.2, -1, 1.6, 2.0, 1.6, 0x64748b, 0x000000, 0);
-      registerObstacle(45, -1, 1.8);
+      buildVoxelHouse(36, 2, -9, 6, 4.5, 5, 0xe2e8f0, 0xb91c1c);
+      buildVoxelHouse(36, 2, 9.5, 5.5, 4.2, 4.8, 0xfef3c7, 0x0284c7);
+      addVoxelBox(worldGroup, 46, 4.5, -1, 2.6, 5, 2.6, 0x475569);
+      const beaconCrystal = addVoxelBox(worldGroup, 46, 8.2, -1, 1.6, 2.0, 1.6, 0x64748b, 0x000000, 0);
+      registerObstacle(46, -1, 1.8);
 
       // Floating Voxel Airship
-      const airshipBasePos = new THREE.Vector3(60, 4.2, 4);
+      const airshipBasePos = new THREE.Vector3(62, 4.2, 4);
       const airshipGroup = new THREE.Group();
       airshipGroup.position.copy(airshipBasePos);
       addVoxelBox(airshipGroup, 0, 0, 0, 11, 2.4, 4.4, 0x78350f);
@@ -1825,55 +1952,55 @@
       roofMeshes.push(airshipStripe);
       scene.add(airshipGroup);
 
-      // 3. West Island: Ancient Cloud Sanctuary (cx = -38, topY = 3, cz = 0, 28x28)
-      createFloatingIsland(-38, 3, 0, 28, 28, 8, 0x86efac, 'วิหารเมฆาโบราณ (Ancient Cloud Sanctuary)');
+      // 3. West Island: Ancient Cloud Sanctuary (cx = -40, topY = 3, cz = 0, expanded to 30x30)
+      createFloatingIsland(-40, 3, 0, 30, 30, 8, 0x86efac, 'วิหารเมฆาโบราณ (Ancient Cloud Sanctuary)');
       for (let i = 0; i < 4; i++) {
-        const bx = -20.2 - i * 1.4;
+        const bx = -22.2 - i * 1.1;
         const by = 0.75 * (i + 1);
-        addVoxelBox(worldGroup, bx, by - 0.25, 0, 2.2, 0.5, 4.8, 0xe2e8f0);
-        addVoxelBox(worldGroup, bx, by + 0.3, -2.2, 1.8, 0.4, 0.3, 0xf59e0b, 0xd97706, 0.6);
-        addVoxelBox(worldGroup, bx, by + 0.3, 2.2, 1.8, 0.4, 0.3, 0xf59e0b, 0xd97706, 0.6);
-        registerPlatform(bx, 0, 2.5, 4.8, by, 'สะพานวิหารเมฆา (Sanctuary Bridge)');
+        addVoxelBox(worldGroup, bx, by - 0.25, 0, 2.4, 0.5, 5.6, 0xe2e8f0);
+        addVoxelBox(worldGroup, bx, by + 0.3, -2.6, 1.8, 0.4, 0.3, 0xf59e0b, 0xd97706, 0.6);
+        addVoxelBox(worldGroup, bx, by + 0.3, 2.6, 1.8, 0.4, 0.3, 0xf59e0b, 0xd97706, 0.6);
+        registerPlatform(bx, 0, 2.8, 5.6, by, 'สะพานวิหารเมฆา (Sanctuary Bridge)');
       }
 
-      addVoxelBox(worldGroup, -38, 3.3, 0, 14, 0.6, 14, 0xe2e8f0);
-      [[-43, -5.5], [-43, 5.5], [-33, -5.5], [-33, 5.5]].forEach(([px, pz]) => {
+      addVoxelBox(worldGroup, -40, 3.3, 0, 15, 0.6, 15, 0xe2e8f0);
+      [[-45, -6], [-45, 6], [-35, -6], [-35, 6]].forEach(([px, pz]) => {
         addVoxelBox(worldGroup, px, 6.5, pz, 1.4, 7, 1.4, 0xf1f5f9);
         const pc = addVoxelBox(worldGroup, px, 10.3, pz, 1.8, 0.8, 1.8, 0x38bdf8, 0x0284c7, 0.8);
         crystalMeshes.push(pc);
         registerObstacle(px, pz, 1.1);
       });
 
-      // 4. South Island: Windmill Observatory (cx = 0, topY = 2, cz = 36, 24x24)
-      createFloatingIsland(0, 2, 36, 24, 24, 6, 0x6ee7b7, 'เกาะหอคอยกังหันลม (Windmill Observatory)');
+      // 4. South Island: Windmill Observatory (cx = 0, topY = 2, cz = 38, expanded to 28x28)
+      createFloatingIsland(0, 2, 38, 28, 28, 6, 0x6ee7b7, 'เกาะหอคอยกังหันลม (Windmill Observatory)');
       for (let i = 0; i < 4; i++) {
-        const bz = 20.0 + i * 1.45;
+        const bz = 22.0 + i * 1.1;
         const by = 0.5 * (i + 1);
-        addVoxelBox(worldGroup, 0, by - 0.25, bz, 4.6, 0.5, 2.2, 0xe2e8f0);
-        registerPlatform(0, bz, 4.6, 2.5, by, 'สะพานหอคอยกังหันลม (Windmill Bridge)');
+        addVoxelBox(worldGroup, 0, by - 0.25, bz, 5.4, 0.5, 2.4, 0xe2e8f0);
+        registerPlatform(0, bz, 5.4, 2.8, by, 'สะพานหอคอยกังหันลม (Windmill Bridge)');
       }
-      addVoxelBox(worldGroup, 0, 6.5, 40, 4.5, 9, 4.5, 0xfef3c7);
-      const wmRoof = addVoxelBox(worldGroup, 0, 11.8, 40, 5.0, 2, 5.0, 0xd97706);
+      addVoxelBox(worldGroup, 0, 6.5, 42, 4.5, 9, 4.5, 0xfef3c7);
+      const wmRoof = addVoxelBox(worldGroup, 0, 11.8, 42, 5.0, 2, 5.0, 0xd97706);
       roofMeshes.push(wmRoof);
-      registerObstacle(0, 40, 2.8);
+      registerObstacle(0, 42, 2.8);
       const windmillBlades = new THREE.Group();
-      windmillBlades.position.set(0, 9.2, 37.5);
+      windmillBlades.position.set(0, 9.2, 39.5);
       addVoxelBox(windmillBlades, 0, 0, 0, 0.8, 0.8, 0.8, 0x78350f);
       addVoxelBox(windmillBlades, 0, 0, -0.3, 9.5, 0.7, 0.2, 0xfef08a);
       addVoxelBox(windmillBlades, 0, 0, -0.3, 0.7, 9.5, 0.2, 0xfef08a);
       scene.add(windmillBlades);
 
-      // 5. North Island: North Crystal Bastion (cx = 0, topY = 2.5, cz = -38, 28x26)
-      createFloatingIsland(0, 2.5, -38, 28, 26, 7, 0x2dd4bf, 'ป้อมปราการคริสตัลทิศเหนือ (North Crystal Bastion)');
+      // 5. North Island: North Crystal Bastion (cx = 0, topY = 2.5, cz = -40, expanded to 30x28)
+      createFloatingIsland(0, 2.5, -40, 30, 28, 7, 0x2dd4bf, 'ป้อมปราการคริสตัลทิศเหนือ (North Crystal Bastion)');
       for (let i = 0; i < 4; i++) {
-        const bz = -20.0 - i * 1.45;
+        const bz = -22.0 - i * 1.15;
         const by = 0.6 * (i + 1);
-        addVoxelBox(worldGroup, 0, by - 0.25, bz, 4.8, 0.5, 2.2, 0xe2e8f0);
-        addVoxelBox(worldGroup, -2.2, by + 0.3, bz, 0.3, 0.4, 1.8, 0x38bdf8, 0x0284c7, 0.6);
-        addVoxelBox(worldGroup, 2.2, by + 0.3, bz, 0.3, 0.4, 1.8, 0x38bdf8, 0x0284c7, 0.6);
-        registerPlatform(0, bz, 4.8, 2.5, by, 'สะพานป้อมปราการเหนือ (North Bastion Bridge)');
+        addVoxelBox(worldGroup, 0, by - 0.25, bz, 5.6, 0.5, 2.4, 0xe2e8f0);
+        addVoxelBox(worldGroup, -2.6, by + 0.3, bz, 0.3, 0.4, 1.8, 0x38bdf8, 0x0284c7, 0.6);
+        addVoxelBox(worldGroup, 2.6, by + 0.3, bz, 0.3, 0.4, 1.8, 0x38bdf8, 0x0284c7, 0.6);
+        registerPlatform(0, bz, 5.6, 2.8, by, 'สะพานป้อมปราการเหนือ (North Bastion Bridge)');
       }
-      [[-8, -42], [8, -42]].forEach(([tx, tz]) => {
+      [[-9, -44], [9, -44]].forEach(([tx, tz]) => {
         addVoxelBox(worldGroup, tx, 6.5, tz, 4.2, 8, 4.2, 0xe2e8f0);
         const tr = addVoxelBox(worldGroup, tx, 11.2, tz, 4.8, 1.6, 4.8, 0x1d4ed8);
         const tc = addVoxelBox(worldGroup, tx, 13.0, tz, 1.4, 2.0, 1.4, 0x38bdf8, 0x0284c7, 0.85);
@@ -1881,29 +2008,69 @@
         crystalMeshes.push(tc);
         registerObstacle(tx, tz, 2.6);
       });
-      buildVoxelTree(-10, 2.5, -32, 0xf472b6);
-      buildVoxelTree(10, 2.5, -32, 0xf472b6);
+      buildVoxelTree(-11, 2.5, -33, 0xf472b6);
+      buildVoxelTree(11, 2.5, -33, 0xf472b6);
 
-      // 6. Northwest Island: Starlight Boss Arena (cx = -38, topY = 3.5, cz = -38, 28x28)
-      createFloatingIsland(-38, 3.5, -38, 28, 28, 8, 0x38bdf8, 'ลานประลองราชันย์โกเลม (Golem King Citadel)');
-      for (let i = 0; i < 6; i++) {
-        const bx = -15.5 - i * 1.65;
-        const by = 2.5 + (i + 1) * 0.16;
-        addVoxelBox(worldGroup, bx, by - 0.25, -38, 2.2, 0.5, 4.6, 0xcbd5e1);
-        registerPlatform(bx, -38, 2.5, 4.6, by, 'สะพานศิลาดาราจักร (Citadel Bridge)');
+      // 6. Northwest Island: Starlight Boss Arena (cx = -40, topY = 3.5, cz = -40, expanded to 30x30)
+      createFloatingIsland(-40, 3.5, -40, 30, 30, 8, 0x38bdf8, 'ลานประลองราชันย์โกเลม (Golem King Citadel)');
+      for (let i = 0; i < 5; i++) {
+        const bx = -16.5 - i * 1.9;
+        const by = 2.5 + (i + 1) * 0.2;
+        addVoxelBox(worldGroup, bx, by - 0.25, -40, 2.5, 0.5, 5.4, 0xcbd5e1);
+        registerPlatform(bx, -40, 2.8, 5.4, by, 'สะพานศิลาดาราจักร (Citadel Bridge)');
       }
-      for (let i = 0; i < 6; i++) {
-        const bz = -15.5 - i * 1.65;
-        const by = 3.0 + (i + 1) * 0.08;
-        addVoxelBox(worldGroup, -38, by - 0.25, bz, 4.6, 0.5, 2.2, 0xcbd5e1);
-        registerPlatform(-38, bz, 4.6, 2.5, by, 'สะพานวิหารเหนือ (Sanctuary North Bridge)');
+      for (let i = 0; i < 5; i++) {
+        const bz = -16.5 - i * 1.9;
+        const by = 3.0 + (i + 1) * 0.1;
+        addVoxelBox(worldGroup, -40, by - 0.25, bz, 5.4, 0.5, 2.5, 0xcbd5e1);
+        registerPlatform(-40, bz, 5.4, 2.8, by, 'สะพานวิหารเหนือ (Sanctuary North Bridge)');
       }
-      [[-46, -46], [-30, -46], [-46, -30], [-30, -30]].forEach(([ox, oz]) => {
+      [[-48, -48], [-32, -48], [-48, -32], [-32, -32]].forEach(([ox, oz]) => {
         addVoxelBox(worldGroup, ox, 7.0, oz, 1.6, 7, 1.6, 0x1e293b);
         const oc = addVoxelBox(worldGroup, ox, 11.2, oz, 2.0, 1.2, 2.0, 0xec4899, 0xbe185d, 0.9);
         crystalMeshes.push(oc);
         registerObstacle(ox, oz, 1.2);
       });
+
+      // 7. NEW Northeast Island: Magma Caldera & Elemental Forge (cx = 40, topY = 3.0, cz = -40, 28x28)
+      createFloatingIsland(40, 3.0, -40, 28, 28, 8, 0xf97316, 'เกาะปล่องภูเขาไฟลาวา (Magma Core Caldera)');
+      for (let i = 0; i < 5; i++) {
+        const bx = 16.5 + i * 1.9;
+        const by = 2.5 + (i + 1) * 0.1;
+        addVoxelBox(worldGroup, bx, by - 0.25, -40, 2.5, 0.5, 5.2, 0xcbd5e1);
+        registerPlatform(bx, -40, 2.8, 5.2, by, 'สะพานแมกมาตะวันออกเฉียงเหนือ (Magma Bridge)');
+      }
+      for (let i = 0; i < 5; i++) {
+        const bz = -16.5 - i * 1.9;
+        const by = 2.0 + (i + 1) * 0.2;
+        addVoxelBox(worldGroup, 40, by - 0.25, bz, 5.2, 0.5, 2.5, 0xcbd5e1);
+        registerPlatform(40, bz, 5.2, 2.8, by, 'สะพานช่างฝีมือเพลิง (Forge North Bridge)');
+      }
+      // Volcano Crater & Glowing Lava Core on Northeast Island
+      addVoxelBox(worldGroup, 40, 5.2, -42, 7.5, 4.4, 7.5, 0x334155);
+      addVoxelBox(worldGroup, 40, 8.2, -42, 5.2, 3.0, 5.2, 0x1e293b);
+      addVoxelBox(worldGroup, 40, 10.2, -42, 3.4, 1.4, 3.4, 0xff5722, 0xea580c, 0.95);
+      registerObstacle(40, -42, 4.2);
+
+      // 8. NEW Southwest Island: Frost & Sylvan Spire Sanctuary (cx = -40, topY = 2.5, cz = 38, 28x28)
+      createFloatingIsland(-40, 2.5, 38, 28, 28, 7, 0x7dd3fc, 'วิหารน้ำแข็งและสวนพฤกษา (Frost & Sylvan Spire)');
+      for (let i = 0; i < 5; i++) {
+        const bx = -16.0 - i * 1.9;
+        const by = 2.0 + (i + 1) * 0.1;
+        addVoxelBox(worldGroup, bx, by - 0.25, 38, 2.5, 0.5, 5.2, 0xe0f2fe);
+        registerPlatform(bx, 38, 2.8, 5.2, by, 'สะพานเหมันต์ทิศใต้ (Frost South Bridge)');
+      }
+      for (let i = 0; i < 5; i++) {
+        const bz = 16.5 + i * 1.8;
+        const by = 3.0 - (i + 1) * 0.1;
+        addVoxelBox(worldGroup, -40, by - 0.25, bz, 5.2, 0.5, 2.5, 0xe0f2fe);
+        registerPlatform(-40, bz, 5.2, 2.8, by, 'สะพานพฤกษาตะวันตก (Sylvan West Bridge)');
+      }
+      // Giant Ice & Emerald Crystal Monolith on Southwest Island
+      addVoxelBox(worldGroup, -40, 6.0, 38, 3.6, 7.0, 3.6, 0xbae6fd, 0x0284c7, 0.65);
+      const frostSpire = addVoxelBox(worldGroup, -40, 10.8, 38, 2.0, 3.5, 2.0, 0x67e8f9, 0x38bdf8, 0.95);
+      crystalMeshes.push(frostSpire);
+      registerObstacle(-40, 38, 2.5);
 
       // --- Drifting Voxel Clouds ---
       const clouds = [];
@@ -1989,15 +2156,16 @@
       addNPC('นักปราชญ์ ลูมินา', 'Sage Lumina', 'ผู้ดูแลหอคอยกังหันลม', 'Windmill Observatory Keeper', 3.2, 2, 33, 0x7c3aed, 0x38bdf8, 'lumina');
       addNPC('อัศวินหญิง วาลคีเรีย', 'Captain Valkyrie', 'แม่ทัพป้อมปราการเหนือ', 'North Bastion Commander', 0, 2.5, -33, 0x059669, 0xfacc15, 'valkyrie');
 
-      // Collectible Aether Shards (7 positions across the 6 islands)
+      // Collectible Aether Shards (8 positions across the 8 islands)
       const shardCoords = [
-        [8, 0, -16.5, 'หลังหอนาฬิกาเวหา'],
-        [15, 0, 14, 'สวนซากุระตะวันออก'],
-        [43, 2, -9, 'ท่าเรือเหาะตะวันออก'],
-        [-38, 3.6, 0, 'แท่นบูชาวิหารเมฆา'],
-        [0, 2, 44.5, 'จุดชมวิวหอคอยกังหันลม'],
-        [0, 2.5, -45.5, 'ยอดป้อมปราการคริสตัลเหนือ'],
-        [-38, 3.5, -44, 'แท่นศิลาลานประลองราชันย์']
+        [9, 0, -18.5, 'หลังหอนาฬิกาเวหา'],
+        [16, 0, 15, 'สวนซากุระตะวันออก'],
+        [45, 2, -10, 'ท่าเรือเหาะตะวันออก'],
+        [-40, 3.6, 0, 'แท่นบูชาวิหารเมฆา'],
+        [0, 2, 46.5, 'จุดชมวิวหอคอยกังหันลม'],
+        [0, 2.5, -47.5, 'ยอดป้อมปราการคริสตัลเหนือ'],
+        [-40, 3.5, -46, 'แท่นศิลาลานประลองราชันย์'],
+        [40, 3.0, -32, 'ปากปล่องภูเขาไฟลาวาตะวันออกเฉียงเหนือ']
       ];
 
       shardCoords.forEach(([sx, sy, sz, locName], idx) => {
@@ -2010,8 +2178,8 @@
         shards.push({ idx, mesh: sg, baseY: sy, collected: false, label, locName });
       });
 
-      // Expanded Golem Invasion Forces + Multi-Boss System for Higher Stages
-      // bossMinStage: 1 = Boss in all stages, 2 = Boss in Stage 2+, 3 = Boss in Stage 3+
+      // Expanded Golem Invasion Forces + Multi-Boss System for Stages 1-7
+      // bossMinStage: 1 = Boss in Stage 1+, 2 = Boss in Stage 2+, 3 = Boss in Stage 3+, 5 = Boss in Stage 5+
       const golemSpawns = [
         { pos: [-16, 0, 0], invader: true, patrolTarget: new THREE.Vector3(-5, 0, 2), bossMinStage: 0, name: 'โกเลมทัพหน้าบุกเมือง', nameEn: 'Vanguard Invader Golem' },
         { pos: [0, 0, -16], invader: true, patrolTarget: new THREE.Vector3(2, 0, -6), bossMinStage: 0, name: 'โกเลมบุกจัตุรัสเหนือ', nameEn: 'North Plaza Raider Golem' },
@@ -2021,8 +2189,10 @@
         { pos: [6, 2.5, -38], invader: false, patrolTarget: new THREE.Vector3(0, 2.5, -36), bossMinStage: 2, name: 'โกเลมพิทักษ์คริสตัล', nameEn: 'Crystal Sentinel Golem', bossName: '👑 จอมทัพโกเลมสุริยะ (Boss #2)', bossNameEn: '👑 Solar Golem Warlord (Boss #2)' },
         { pos: [-34, 3, -6], invader: false, patrolTarget: new THREE.Vector3(-38, 3, 0), bossMinStage: 0, name: 'โกเลมวิหารเมฆา', nameEn: 'Cloud Sanctuary Golem' },
         { pos: [-42, 3, 5], invader: true, patrolTarget: new THREE.Vector3(-12, 0, 0), bossMinStage: 3, name: 'โกเลมศิลาโบราณ', nameEn: 'Ancient Monolith Golem', bossName: '👑 จักรพรรดิโกเลมดาราจักร (Boss #3)', bossNameEn: '👑 Astral Golem Emperor (Boss #3)' },
-        { pos: [-32, 3.5, -34], invader: false, patrolTarget: new THREE.Vector3(-36, 3.5, -36), bossMinStage: 0, name: 'โกเลมองครักษ์', nameEn: 'Citadel Royal Guard' },
-        { pos: [-38, 3.5, -38], invader: false, patrolTarget: new THREE.Vector3(-38, 3.5, -36), bossMinStage: 1, name: '👑 ราชันย์โกเลมคลั่ง (Boss)', nameEn: '👑 Berserk Golem King (Boss)', bossName: '👑 ราชันย์โกเลมคลั่ง (Boss #1)', bossNameEn: '👑 Berserk Golem King (Boss #1)' }
+        { pos: [35, 3.0, -35], invader: false, patrolTarget: new THREE.Vector3(38, 3.0, -38), bossMinStage: 5, name: 'โกเลมเพลิงแมกมา', nameEn: 'Magma Caldera Golem', bossName: '👑 มหาเทพโกเลมบรรพกาล (Boss #4)', bossNameEn: '👑 Primordial Golem Titan (Boss #4)' },
+        { pos: [-38, 2.5, 34], invader: false, patrolTarget: new THREE.Vector3(-40, 2.5, 38), bossMinStage: 0, name: 'โกเลมเหมันต์พฤกษา', nameEn: 'Frost Sylvan Golem' },
+        { pos: [-34, 3.5, -34], invader: false, patrolTarget: new THREE.Vector3(-38, 3.5, -36), bossMinStage: 0, name: 'โกเลมองครักษ์', nameEn: 'Citadel Royal Guard' },
+        { pos: [-40, 3.5, -40], invader: false, patrolTarget: new THREE.Vector3(-40, 3.5, -38), bossMinStage: 1, name: '👑 ราชันย์โกเลมคลั่ง (Boss)', nameEn: '👑 Berserk Golem King (Boss)', bossName: '👑 ราชันย์โกเลมคลั่ง (Boss #1)', bossNameEn: '👑 Berserk Golem King (Boss #1)' }
       ];
 
       golemSpawns.forEach((cfg, idx) => {
@@ -2417,39 +2587,51 @@
       const skyTourWaypoints = [
         {
           look: new THREE.Vector3(0, 4.5, -2),
-          camCenter: new THREE.Vector3(0, 18, 22),
-          titleTh: '📍 จุดชมวิว 1/6: จัตุรัสกลางเวหา & หอนาฬิกา',
-          titleEn: '📍 Landmark 1/6: Central Sky Plaza & Clocktower'
+          camCenter: new THREE.Vector3(0, 19, 25),
+          titleTh: '📍 จุดชมวิว 1/8: จัตุรัสกลางเวหา & หอนาฬิกา (ขยายกว้าง 44x44)',
+          titleEn: '📍 Landmark 1/8: Expanded Central Sky Plaza & Clocktower'
         },
         {
-          look: new THREE.Vector3(44, 4.5, 2),
-          camCenter: new THREE.Vector3(62, 17, 22),
-          titleTh: '📍 จุดชมวิว 2/6: ท่าเรือเหาะ & เรือเหาะธงข้ามมิติ',
-          titleEn: '📍 Landmark 2/6: Airship Dock & Sky Flagship'
+          look: new THREE.Vector3(46, 4.5, 2),
+          camCenter: new THREE.Vector3(64, 17, 22),
+          titleTh: '📍 จุดชมวิว 2/8: ท่าเรือเหาะ & เรือเหาะธงข้ามมิติ',
+          titleEn: '📍 Landmark 2/8: Airship Dock & Sky Flagship'
         },
         {
-          look: new THREE.Vector3(0, 5.5, -38),
-          camCenter: new THREE.Vector3(18, 19, -56),
-          titleTh: '📍 จุดชมวิว 3/6: ป้อมปราการคริสตัลทิศเหนือ',
-          titleEn: '📍 Landmark 3/6: North Crystal Bastion'
+          look: new THREE.Vector3(40, 6.0, -40),
+          camCenter: new THREE.Vector3(58, 19, -56),
+          titleTh: '📍 จุดชมวิว 3/8: เกาะปล่องภูเขาไฟลาวา (Magma Caldera)',
+          titleEn: '📍 Landmark 3/8: Magma Core Caldera (Volcano Island)'
         },
         {
-          look: new THREE.Vector3(-38, 6.0, -38),
-          camCenter: new THREE.Vector3(-56, 20, -20),
-          titleTh: '📍 จุดชมวิว 4/6: ลานประลองราชันย์โกเลม (Boss Arena)',
-          titleEn: '📍 Landmark 4/6: Golem King Citadel (Boss Arena)'
+          look: new THREE.Vector3(0, 5.5, -40),
+          camCenter: new THREE.Vector3(16, 19, -58),
+          titleTh: '📍 จุดชมวิว 4/8: ป้อมปราการคริสตัลทิศเหนือ',
+          titleEn: '📍 Landmark 4/8: North Crystal Bastion'
         },
         {
-          look: new THREE.Vector3(-38, 5.5, 0),
-          camCenter: new THREE.Vector3(-58, 18, 18),
-          titleTh: '📍 จุดชมวิว 5/6: วิหารเมฆาโบราณทิศตะวันตก',
-          titleEn: '📍 Landmark 5/6: Ancient Cloud Sanctuary'
+          look: new THREE.Vector3(-40, 6.0, -40),
+          camCenter: new THREE.Vector3(-58, 20, -22),
+          titleTh: '📍 จุดชมวิว 5/8: ลานประลองราชันย์โกเลม (Boss Arena)',
+          titleEn: '📍 Landmark 5/8: Golem King Citadel (Boss Arena)'
         },
         {
-          look: new THREE.Vector3(0, 6.5, 36),
-          camCenter: new THREE.Vector3(-18, 18, 56),
-          titleTh: '📍 จุดชมวิว 6/6: เกาะหอคอยกังหันลมทิศใต้',
-          titleEn: '📍 Landmark 6/6: Windmill Observatory Island'
+          look: new THREE.Vector3(-40, 5.5, 0),
+          camCenter: new THREE.Vector3(-60, 18, 18),
+          titleTh: '📍 จุดชมวิว 6/8: วิหารเมฆาโบราณทิศตะวันตก',
+          titleEn: '📍 Landmark 6/8: Ancient Cloud Sanctuary'
+        },
+        {
+          look: new THREE.Vector3(-40, 6.5, 38),
+          camCenter: new THREE.Vector3(-56, 18, 56),
+          titleTh: '📍 จุดชมวิว 7/8: วิหารน้ำแข็ง & สวนพฤกษาสวรรค์',
+          titleEn: '📍 Landmark 7/8: Glacia Frost & Sylvan Spire'
+        },
+        {
+          look: new THREE.Vector3(0, 6.5, 38),
+          camCenter: new THREE.Vector3(18, 18, 58),
+          titleTh: '📍 จุดชมวิว 8/8: เกาะหอคอยกังหันลมทิศใต้',
+          titleEn: '📍 Landmark 8/8: Windmill Observatory Island'
         }
       ];
 
@@ -2524,6 +2706,7 @@
           '💡 Camera is touring all 6 floating islands — Tap "Start Adventure Now" to play!'
         );
         document.getElementById('btn-exit-tour').textContent = tr('⚔️ เข้าสู่เกม (Play Now)', '⚔️ Play Now');
+        document.getElementById('btn-stage-select').textContent = tr('🗺️ แผนที่ 7 ด่าน', '🗺️ 7 Stages Map');
         document.getElementById('btn-sky-tour').textContent = tr('🎬 บินชมรอบเมือง', '🎬 Sky Tour');
         document.getElementById('btn-time-day').textContent = tr('☀️ กลางวัน', '☀️ Day');
         document.getElementById('btn-time-sunset').textContent = tr('🌅 ยามสนธยา', '🌅 Sunset');
@@ -3080,7 +3263,7 @@
       bindActionBtn('act-potion', usePotion);
       bindActionBtn('act-teleport', teleportHome);
 
-      // --- Atmosphere & Camera Presets ---
+      // --- Atmosphere & Camera Presets (Supports All 7 Stage Sky Modes) ---
       function setTimeOfDay(mode) {
         document.querySelectorAll('#btn-time-day, #btn-time-sunset, #btn-time-night').forEach(b => b.classList.remove('active'));
         if (mode === 'day') {
@@ -3107,8 +3290,95 @@
           ambientLight.intensity = 0.38;
           sunLight.color.setHex(0x818cf8);
           sunLight.intensity = 0.5;
+        } else if (mode === 'volcano') {
+          scene.background.setHex(0x3b0a0a);
+          scene.fog.color.setHex(0x450a0a);
+          ambientLight.color.setHex(0xfca5a5);
+          ambientLight.intensity = 0.52;
+          sunLight.color.setHex(0xff5722);
+          sunLight.intensity = 0.95;
+        } else if (mode === 'frost') {
+          scene.background.setHex(0x082f49);
+          scene.fog.color.setHex(0x0c4a6e);
+          ambientLight.color.setHex(0xe0f2fe);
+          ambientLight.intensity = 0.78;
+          sunLight.color.setHex(0x7dd3fc);
+          sunLight.intensity = 1.0;
+        } else if (mode === 'sylvan') {
+          scene.background.setHex(0x064e3b);
+          scene.fog.color.setHex(0x065f46);
+          ambientLight.color.setHex(0xa7f3d0);
+          ambientLight.intensity = 0.68;
+          sunLight.color.setHex(0xfde68a);
+          sunLight.intensity = 1.0;
+        } else if (mode === 'celestial') {
+          scene.background.setHex(0x2e1065);
+          scene.fog.color.setHex(0x3b0764);
+          ambientLight.color.setHex(0xfef3c7);
+          ambientLight.intensity = 0.76;
+          sunLight.color.setHex(0xfde047);
+          sunLight.intensity = 1.15;
         }
       }
+
+      function warpToStageNumber(targetStage) {
+        standUpPlayer();
+        closeDialogue();
+        playerState.stage = targetStage;
+        const theme = getCurrentTheme();
+
+        playerState.shards = 0;
+        playerState.totalShards = theme.shardGoal;
+        playerState.collectedShardIndices = [];
+        playerState.golemsDefeated = 0;
+        playerState.golemGoal = theme.golemGoal;
+        playerState.quests.talkedEldrin = false;
+        playerState.quests.collectedShards = false;
+        playerState.quests.defeatedGolems = false;
+        playerState.quests.activatedBeacon = false;
+
+        applyStageVisuals();
+        enemies.forEach((en) => {
+          en.alive = true;
+          en.mesh.visible = true;
+          en.mesh.position.copy(en.spawnPos);
+        });
+
+        playerObj.position.set(0, 1.5, 6);
+        playerVelY = 0;
+        AudioEngine.playSfx('airship');
+        updateHUD(true);
+        spawnVoxelBurst(playerObj.position.clone(), theme.crystalHex, 24);
+        spawnFloatingText(
+          playerObj.position.clone().add(new THREE.Vector3(0, 3.2, 0)),
+          tr(
+            '🚢 เดินทางถึง ด่านที่ ' + targetStage + ': ' + theme.name,
+            '🚢 Arrived at Stage ' + targetStage + ': ' + theme.nameEn
+          ),
+          '#fde047'
+        );
+      }
+
+      document.getElementById('btn-stage-select').addEventListener('click', () => {
+        const stageBtns = stageThemes.map((st) => ({
+          label: tr(
+            `ด่าน ${st.stage}: ${st.name.split(' (')[0]}`,
+            `Stage ${st.stage}: ${st.nameEn}`
+          ),
+          onClick: () => warpToStageNumber(st.stage)
+        }));
+        stageBtns.push({ label: tr('ปิดหน้าต่าง', 'Close'), secondary: true, onClick: closeDialogue });
+
+        openDialogue(
+          tr('🗺️ แผนที่การเดินทางทั้ง 7 ด่าน (Sky World Campaign Map)', '🗺️ 7-Stage Sky World Campaign Map'),
+          tr('เลือกด่านเพื่อเดินทางด้วยเรือเหาะทันที', 'Select a Stage to Travel Immediately'),
+          tr(
+            'เกมประกอบด้วย 7 ด่านหลักที่มีเอกลักษณ์เฉพาะตัว (ด่าน 1 นครเอเธอร์ริส, ด่าน 2 นีโอ-เซฟีเรีย, ด่าน 3 ปราการดาราจักร, ด่าน 4 เกาะภูเขาไฟลาวา, ด่าน 5 วิหารน้ำแข็งลอยฟ้า, ด่าน 6 นครมรกตพฤกษาพันปี, และด่าน 7 บัลลังก์เทพสุริยันต์) สามารถกดเลือกด่านด้านล่างเพื่อเดินทางไปสำรวจได้เลย!',
+            'Explore all 7 unique Sky Worlds (Stage 1 Aetheris, Stage 2 Neo-Zephyria, Stage 3 Astral Bastion, Stage 4 Magma Volcano, Stage 5 Glacia Frost Temple, Stage 6 Sylvan Emerald Canopy, and Stage 7 Celestial Sovereign Throne). Select any stage below to travel!'
+          ),
+          stageBtns
+        );
+      });
 
       document.getElementById('btn-time-day').addEventListener('click', () => setTimeOfDay('day'));
       document.getElementById('btn-time-sunset').addEventListener('click', () => setTimeOfDay('sunset'));
